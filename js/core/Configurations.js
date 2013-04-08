@@ -1,0 +1,7 @@
+Configurations = Backbone.Model.extend({
+
+
+
+
+
+});
