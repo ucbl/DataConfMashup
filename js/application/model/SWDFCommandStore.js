@@ -19,6 +19,7 @@ getAuthorSuggestion :   new Command({
                                   method : "GET",
                                   getQuery : function(parameters){ //JSON file parameters 
                                                 var trackUri = parameters.trackUri;
+												alert("pop");
                                                 var author = parameters.author;
                                                 var query = 'SELECT DISTINCT ?name WHERE  { '+
                                                             '   ?author foaf:name ?name.         '+

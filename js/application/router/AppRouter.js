@@ -9,6 +9,13 @@ AppRouter = Backbone.Router.extend({
 			this.datasources = this.configuration.datasources;
 			this.routes = this.configuration.routes;
 			
+		  $.each(this.datasources,function(i,item){
+				/*self.on(this.hash, function(this.parameters) {
+					
+				});*/
+				console.log(this.commands.getAuthor.getQuery);
+				JSON.parse(this.commands.getAuthor.getQuery);
+			});
 		    $.each(this.routes.route,function(i,item){
 				/*self.on(this.hash, function(this.parameters) {
 					
@@ -65,7 +72,7 @@ AppRouter = Backbone.Router.extend({
 			jQuery.support.cors = this.corsEnable;
 			
 			$.ajax({
-				url: this.sparqlEndPointURL ,
+				url: this.sparqlEndPointURL,
 				type: this.method,
 				cache: this.cache,
 				dataType: this.dataType,
