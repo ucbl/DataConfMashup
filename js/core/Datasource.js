@@ -14,8 +14,15 @@ Datasource = Backbone.Model.extend({
 	initialize: function(options){
 		this.url = options.uri,
 		this.crossDomainMode = options.crossDomainMode,
-		this.commandList = options.commandList
-	}
+		this.commandList = [];
+	},
 	
+	addCommand : function(command){
+		this.commandList.push(command);
+	},
+	
+	getCommand : function(commandName){
+		this.commandList.get(commandName);
+	}
 	
 });

@@ -14,11 +14,14 @@ Command = Backbone.Model.extend({
 	initialize: function(options){
 		this.method = options.method,
 		this.cache = options.cache,
-		this.dataType = options.dataType
+	
+		this.getQuery = options.getQuery
 	},
 	
-	getQuery: function(options){
 	
+	getQuery: function(){
+	
+		
 	
 	}
 	

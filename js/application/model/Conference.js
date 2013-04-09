@@ -1,7 +1,0 @@
-Conference = Backbone.Model.extend({
-
-
-
-
-
-});

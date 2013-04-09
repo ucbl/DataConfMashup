@@ -2,17 +2,17 @@
 AppRouter = Backbone.Router.extend({
 
 		initialize: function (options){
-		
+			var self = this;
+			this.configuration = options.configuration;
 			
-			this.conference = new Conference({ name: "www2012", logoUri: "http://data.semanticweb.org/images/logo_www2012.jpg"});
-		
-	
-			//this.swdfDatasource = new SparqlEndPoint ({ uri : "semanticwebdofood/", method:"GET", cache : false, dataType : "XML", xDomainMode : "JSONP"});
-			//this.evenCalDatasource = new RestWebService ({ uri : "simpleSchedul/", method:"GET", cache : false, dataType : "XML", xDomainMode : "JSONP"});
-			//this.dblpDatasource = new SparqlEndPoint ({ uri : "dblp/", method:"GET", cache : false, dataType : "XML", xDomainMode : "JSONP"});
+			this.conference = configuration.conference;
+			this.datasources = configuration.datasources;
+			this.routes = configuration.routes;
 			
-			
-			
+		    $.each(this.routes.route,function(i,item){
+				self.on(this.hash, function(this.parameters) {
+					
+				});
 			this.firstPage = true;
 	
 		},
@@ -20,8 +20,7 @@ AppRouter = Backbone.Router.extend({
 		/************************************************      ROUTES         **************************************/
         routes: {
             "": "home",
-            "search" : "searchChoice",
-			"search/:id" : "searchForm",
+          
 		
         },
 		
@@ -56,12 +55,11 @@ AppRouter = Backbone.Router.extend({
 			}
 			$.mobile.changePage($(page.el), {changeHash:false, transition: transition});
 			
-    
-
+   
 		
 		},
 		
-		executeCommand: function (command,callback) {
+		executeCommand: function (command) {
 		
 			jQuery.support.cors = this.corsEnable;
 			
@@ -71,7 +69,7 @@ AppRouter = Backbone.Router.extend({
 				cache: this.cache,
 				dataType: this.dataType,
 				data: query,							
-				success:callback,
+				success:command.callback,
 				error: function(jqXHR, textStatus, errorThrown) { 
 					alert(errorThrown);
 				}
@@ -79,11 +77,6 @@ AppRouter = Backbone.Router.extend({
 		}
 	
 		
-		/*app_router.on('route:Home', function (id) {
-        // Note the variable in the route definition being passed in here
-        alert( "display" + id );   
-		});
-		app_router.on('route:defaultRoute', function (actions) {
-			alert( actions ); 
-		});*/
+		
+		
 });

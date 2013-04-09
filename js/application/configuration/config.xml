@@ -7,63 +7,59 @@
 
 	<datasources>
 		<datasource id="conferenceDatasource">
-			<serviceUri>http://data.semanticweb.org/sparql</serviceUri> 
-			<xDomainMode>cors</xDomainMode>
-			<commands file="conferenceDatasourceCommands.js">
-			   <command>getPaper</command>
-			   <command>getAuthor</command>
-            </commands>
+			 <serviceUri>http://data.semanticweb.org/sparql</serviceUri> 
+			 <type>SparqlEndPoint</type>
+			 <method>GET</method>
+			 <dataType>XML</dataType>
+			 <xDomainMode>cors</xDomainMode>
 		</datasource>
 		
 		<datasource id="publicationDatasource">
 			<serviceUri>http://dblp.l3s.de/d2r/sparql</serviceUri>
+			<type>SparqlEndPoint</type>
+			<method>GET</method>
+			<dataType>JSONP</dataType>
 			<xDomainMode>JSONP</xDomainMode>
-			<commands file="publicationDatasource.js">
-			   <command>getPaper</command>
-			   <command>getAuthor</command>
-            </commands>
 		</datasource>
 		
 		<datasource id="webDatasource">
 			<serviceUri>http://api.duckduckgo.com/</serviceUri>
+			<type>RestEndPoint</type>
+			<method>GET</method>
+			<dataType>JSONP</dataType>
 			<xDomainMode>JSONP</xDomainMode>
-			<commands file="webDatasource.js">
-			   <command>getPaper</command>
-			   <command>getAuthor</command>
-            </commands>
 		</datasource>
 		
 		<datasource id="eventDatasource">
 			<serviceUri>http://calendar.labs.idci.fr/api/schedule_event.jsonp?</serviceUri>
+			<type>RestEndPoint</type>
+			<method>GET</method>
+			<dataType>JSONP</dataType>
 			<xDomainMode>JSONP</xDomainMode>
-			<commands file="eventDatasource.js">
-			   <command>getPaper</command>
-			   <command>getAuthor</command>
-            </commands>
 		</datasource>	
 	</datasources>
 	
 	
 	<routes>
-		<route hashPath="/Home" action="home"  view="HomeView">
+		<route hash="/Home" action="home"  view="HomeView">
 			<command name="getEvent" datasource="eventDatasource"></command>		
 		</route>
-		<route hashPath="/Person" action="person"  view="PersonView">
+		<route hash="/Person" action="person"  view="PersonView">
 			<command  datasource="publicationDatasource" name="getPublications"></command>	
 			<command  datasource="conferenceDatasource" name="getPublications"></command>	
 			<command  datasource="webDatasource" name="getHomePage"></command>			
 		</route>
-		<route hashPath="/Publication" action="Publication"  view="PublicationView">
+		<route hash="/Publication" action="Publication"  view="PublicationView">
 			<command  datasource="conferenceDatasource" name="getOrganization"></command>	
 			<command  datasource="eventDatasource" name="getEventRelated"></command>		
 		</route>
-		<route hashPath="/Event" action="Event"  view="EventView">
+		<route hash="/Event" action="Event"  view="EventView">
 			<command  datasource="eventDatasource" name="getSubEvent"></command>
 			<command  datasource="eventDatasource" name="getRelatedDocument"></command>			
 		</route>
-		<route hashPath="/Organization" action="organization"  view="OrganizationView">
+		<route hash="/Organization" action="organization"  view="OrganizationView">
 			<command  datasource="conferenceDatasource" name="getOrganization"></command>	
 		</route>
-	</routes>
-	
+	</actions>
+
 </configuration>
