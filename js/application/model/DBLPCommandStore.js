@@ -9,7 +9,7 @@
  
  
  //Command getAuthor 
- var getAuthor = new Command({
+ /*var getAuthor = new Command({
                             name: "getAuthorSuggestion",
                             dataType : "JSONP",
                             method : "GET",
@@ -114,4 +114,4 @@ var getAuthorGraphView  = new Command({
                                   
 
                                   
- 
+ */

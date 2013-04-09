@@ -16,9 +16,9 @@ var HomeView = Backbone.View.extend({
 	},
 	
 	render: function(){
-		$(this.el).append(this.headerTpl(this.model.toJSON()));
-		$(this.el).append(this.contentTpl(this.model.toJSON()));
-		$(this.el).append(this.footerTpl(this.model.toJSON()));
+		$(this.el).append(this.headerTpl(this.model));
+		$(this.el).append(this.contentTpl(this.model));
+		$(this.el).append(this.footerTpl(this.model));
 	}
 
 });

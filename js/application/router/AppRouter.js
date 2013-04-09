@@ -5,14 +5,15 @@ AppRouter = Backbone.Router.extend({
 			var self = this;
 			this.configuration = options.configuration;
 			
-			this.conference = configuration.conference;
-			this.datasources = configuration.datasources;
-			this.routes = configuration.routes;
+			this.conference = this.configuration.conference;
+			this.datasources = this.configuration.datasources;
+			this.routes = this.configuration.routes;
 			
 		    $.each(this.routes.route,function(i,item){
-				self.on(this.hash, function(this.parameters) {
+				/*self.on(this.hash, function(this.parameters) {
 					
-				});
+				});*/
+			});
 			this.firstPage = true;
 	
 		},
@@ -27,7 +28,7 @@ AppRouter = Backbone.Router.extend({
 		/************************************************      ACTIONS        **************************************/
 		home: function (){
 			this.changePage(new HomeView({ model : this.conference}));
-			this.SWDFManager.getAuthor();
+			//this.SWDFManager.getAuthor();
 		},
 		
 		searchChoice: function (){

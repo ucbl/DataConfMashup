@@ -10,7 +10,7 @@
 					"id"  : "conferenceDatasource",
 					"uri" : "http://data.semanticweb.org/sparql",
 					"crossDomainMode" : "Cors",
-					"commands" : "conferenceDatasourceCommands",
+					"commands" : SWDFCommandStore,
 					
 				},
 				
