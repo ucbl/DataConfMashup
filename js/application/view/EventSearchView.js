@@ -1,10 +1,12 @@
-var HomeView = Backbone.View.extend({
+var EventSearchView = Backbone.View.extend({
 
   
 	initialize: function (options){
 		this.model = options.model;
+		console.log($("#header").length);
 		this.headerTpl = _.template($("#header").html());
-		this.contentTpl = _.template($("#home").html());
+		this.navBarTpl = _.template($("#navBar").html());
+		this.contentTpl = _.template($("#event-search").html());
 		this.footerTpl = _.template($("#footer").html());
 	},
 	open: function(){
@@ -17,6 +19,7 @@ var HomeView = Backbone.View.extend({
 	
 	render: function(){
 		$(this.el).append(this.headerTpl(this.model));
+		$(this.el).append(this.navBarTpl(this.model));
 		$(this.el).append(this.contentTpl(this.model));
 		$(this.el).append(this.footerTpl(this.model));
 	}

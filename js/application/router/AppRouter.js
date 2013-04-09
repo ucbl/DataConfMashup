@@ -5,13 +5,17 @@ AppRouter = Backbone.Router.extend({
 			var self = this;
 			this.configuration = options.configuration;
 			
-			this.conference = configuration.conference;
-			this.datasources = configuration.datasources;
-			this.routes = configuration.routes;
+			this.conference = this.configuration.conference;
+			this.datasources = this.configuration.datasources;
+			this.routes = this.configuration.routes;
 			
-		    $.each(this.routes.route,function(i,item){
+		    $.each(this.routes,function(i){
+		    console.log(this.hash);
+		    
+		    /*
 				self.on(this.hash, function(this.parameters) {
-					
+				*/
+					 
 				});
 			this.firstPage = true;
 	
@@ -20,25 +24,26 @@ AppRouter = Backbone.Router.extend({
 		/************************************************      ROUTES         **************************************/
         routes: {
             "": "home",
-          
+            "event-search": "eventSearch",
+            ":route/:action": "loadView",
 		
         },
 		
 		/************************************************      ACTIONS        **************************************/
 		home: function (){
 			this.changePage(new HomeView({ model : this.conference}));
-			this.SWDFManager.getAuthor();
+			//this.SWDFManager.getAuthor();
 		},
-		
-		searchChoice: function (){
-			this.changePage(new SearchView({ model : this.conference}));
+		eventSearch: function (){
+			this.changePage(new EventSearchView({ model : this.conference}));
+			//this.SWDFManager.getAuthor();
 		},
-		
-		searchForm: function (id){
-			this.changePage(new SearchForm({ model : this.conference}));
-		},
-		
-	
+		loadView: function (){
+		alert(route + "_" + action); // dashboard_graph
+		    
+			this.changePage(new HomeView({ model : this.conference}));
+			//this.SWDFManager.getAuthor();
+		}, 
 		
 		
 		/************************************************      PAGE CHANGE HANDLERS            **************************************/

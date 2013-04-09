@@ -16,28 +16,28 @@
           dataType: "",
           method: "",
           query : ""
-        }
-        
+        },
+        /*
         // Constructor with options JSON file 
-        initialize: function(options) {
+        initialize: {
           name: options.name,
           dataType: options.dataType,
           method : options.method,
           getQuery : options.getQuery
-        }
+        },
         // Any time a Model attribute is set, this method is called
         validate: function(attrs) {
 
-        }
+        },
         
         //ModelCallBack : callback query fonction 
         ModelCallBack : function(){
             
-        }
+        },
         
         //ViewCallBack : 
         ViewCallBack : function(){
         }
-
+*/
     });
 
