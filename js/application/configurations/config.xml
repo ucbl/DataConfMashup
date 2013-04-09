@@ -7,35 +7,39 @@
 
 	<datasources>
 		<datasource id="conferenceDatasource">
-			 <serviceUri>http://data.semanticweb.org/sparql</serviceUri> 
-			 <type>SparqlEndPoint</type>
-			 <method>GET</method>
-			 <dataType>XML</dataType>
-			 <xDomainMode>cors</xDomainMode>
+			<serviceUri>http://data.semanticweb.org/sparql</serviceUri> 
+			<xDomainMode>cors</xDomainMode>
+			<commands file="conferenceDatasourceCommands.js">
+			   <command>getPaper</command>
+			   <command>getAuthor</command>
+            </commands>
 		</datasource>
 		
 		<datasource id="publicationDatasource">
 			<serviceUri>http://dblp.l3s.de/d2r/sparql</serviceUri>
-			<type>SparqlEndPoint</type>
-			<method>GET</method>
-			<dataType>JSONP</dataType>
 			<xDomainMode>JSONP</xDomainMode>
+			<commands file="publicationDatasource.js">
+			   <command>getPaper</command>
+			   <command>getAuthor</command>
+            </commands>
 		</datasource>
 		
 		<datasource id="webDatasource">
 			<serviceUri>http://api.duckduckgo.com/</serviceUri>
-			<type>RestEndPoint</type>
-			<method>GET</method>
-			<dataType>JSONP</dataType>
 			<xDomainMode>JSONP</xDomainMode>
+			<commands file="webDatasource.js">
+			   <command>getPaper</command>
+			   <command>getAuthor</command>
+            </commands>
 		</datasource>
 		
 		<datasource id="eventDatasource">
 			<serviceUri>http://calendar.labs.idci.fr/api/schedule_event.jsonp?</serviceUri>
-			<type>RestEndPoint</type>
-			<method>GET</method>
-			<dataType>JSONP</dataType>
 			<xDomainMode>JSONP</xDomainMode>
+			<commands file="eventDatasource.js">
+			   <command>getPaper</command>
+			   <command>getAuthor</command>
+            </commands>
 		</datasource>	
 	</datasources>
 	
@@ -60,6 +64,6 @@
 		<route hashPath="/Organization" action="organization"  view="OrganizationView">
 			<command  datasource="conferenceDatasource" name="getOrganization"></command>	
 		</route>
-	</actions>
-
+	</routes>
+	
 </configuration>
