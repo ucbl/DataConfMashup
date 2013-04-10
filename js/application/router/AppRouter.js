@@ -22,10 +22,10 @@ AppRouter = Backbone.Router.extend({
 		
 		    $.each(this.routes,function(i,routeItem){
 				
-				self.route(routeItem.hash, function() {
+				self.route(routeItem.hash, function(id) {
+
+					self.changePage(new AbstractView({contentEl :  routeItem.view , model : this.conference}));
 					
-					alert("pop");
-					self.changePage(new HomeView({ model : this.conference}));
 				});
 			});
 		
@@ -40,28 +40,11 @@ AppRouter = Backbone.Router.extend({
         },
 		
 		/************************************************      ACTIONS        **************************************/
-		home: function (){
+		loadView: function (entity){
 			
 			//this.SWDFManager.getAuthor();
 		},
-		loadView: function (entity){
-		    switch (entity) 
-            { 
-            case "event": 
-			    this.changePage(new EventSearchView({ model : this.conference})); 
-            break;  
-            default: 
-			    this.changePage(new HomeView({ model : this.conference}));
-            break; 
-            } 
-		},
-		/*
-		loadView: function (){
-		alert(route + "_" + action); // dashboard_graph
-		    
-			this.changePage(new HomeView({ model : this.conference}));
-			//this.SWDFManager.getAuthor();
-		}, */
+	
 		
 		
 		/************************************************      PAGE CHANGE HANDLERS            **************************************/

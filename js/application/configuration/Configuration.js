@@ -38,9 +38,9 @@
 			
 			"routes" : [
 				{
-					"route" : "Home/:id",
+					"route" : "Home",
 					"hash" : "",
-					"view" : "HomeView",
+					"view" : "#home",
 					"commands" : [
 						{
 							"datasource" : "conferenceDatasource",
@@ -49,7 +49,7 @@
 					]
 				},
 				{
-					"hash" : "Person/",
+					"hash" : "Person/:id",
 					"view" : "PersonView",
 					"commands" : {
 						"command" : {
