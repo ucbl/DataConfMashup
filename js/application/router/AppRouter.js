@@ -9,12 +9,12 @@ AppRouter = Backbone.Router.extend({
 			this.datasources = this.configuration.datasources;
 			this.routes = this.configuration.routes;
 			
-		  $.each(this.datasources,function(i,item){
+		    $.each(this.datasources,function(i,item){
 				/*self.on(this.hash, function(this.parameters) {
 					
 				});*/
 				console.log(this.commands.getAuthor.getQuery);
-				JSON.parse(this.commands.getAuthor.getQuery);
+				this.commands.getAuthor.getQuery({parameters : "lol"});
 			});
 		    $.each(this.routes.route,function(i,item){
 				/*self.on(this.hash, function(this.parameters) {
