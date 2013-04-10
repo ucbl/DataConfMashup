@@ -6,6 +6,12 @@
 		
 		 <meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+		<link rel="stylesheet" href="css/appStyle.css" />
+		<!--<link rel="stylesheet" href="css/themes/A.min.css" />-->
+		<link rel="stylesheet" href="css/themes/E.min.css" />
+		<!--<link rel="stylesheet" href="css/themes/C.min.css" />-->
+		<!--<link rel="stylesheet" href="css/themes/D.min.css" />-->
+		<!--<link rel="stylesheet" href="css/themes/E.min.css" />-->
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="js/lib/jqm-config.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
@@ -57,9 +63,13 @@
 										
 		 <script type="text/template" id="header" >
 			<header data-role="header" data-position="inline" data-theme="a">
-				<a  data-role="button" class="ui-btn-left" href="" style='background:url(<%= logoUri %>)'></a>
+        <div id="logoContainer">
+          <a class="ui-btn-left" href="" style=''><img src ="<%= logoUri %>" alt="logoConference"/></a>
+				</div>
+				<div id="textHeader">
+				<h1 id="DataConf">DataConf</h1>
 				<h1><%= name %> - Publications</h1>
-				<h1>DataConf</h1>
+        </div>
 			</header>
 		</script>
 		
