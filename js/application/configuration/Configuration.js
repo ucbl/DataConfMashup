@@ -36,25 +36,20 @@
 				}
 			},
 			
-			"routes" : {
-				"route" : {
-					"hash" : "/Home",
-					"parameters" : {
-						"param" : "id",
-						"param" : "id"
-					},
+			"routes" : [
+				{
+					"route" : "Home",
+					"hash" : " ",
 					"view" : "HomeView",
-					"commands" : {
-						"command" : {
+					"commands" : [
+						{
 							"datasource" : "conferenceDatasource",
 							"name" : "getEvent",
 						}
-					}
+					]
 				},
-				
-				"route" : {
-					"hash" : "/Person",
-					"action" : "person",
+				{
+					"hash" : "Person/",
 					"view" : "PersonView",
 					"commands" : {
 						"command" : {
@@ -73,5 +68,5 @@
 						}
 					}
 				}
-			}
+			]
 		};

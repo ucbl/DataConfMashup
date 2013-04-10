@@ -8,18 +8,23 @@ AppRouter = Backbone.Router.extend({
 			this.conference = this.configuration.conference;
 			this.datasources = this.configuration.datasources;
 			this.routes = this.configuration.routes;
-			
-		    $.each(this.datasources,function(i,item){
+
+			$.each(this.datasources,function(i,datasourceItem){
+		    console.log(datasourceItem);
 				/*self.on(this.hash, function(this.parameters) {
 					
-				});*/
-				console.log(this.commands.getAuthor.getQuery);
-				this.commands.getAuthor.getQuery({parameters : "lol"});
+				});*/  
+				//A voir : le fichier SWDFCommandStore.js a changé le syntaxe ;)
+				//console.log(this.commands.getAuthor.ge tQuery({trackUri:"pop"})); 
+				//JSON.parse(this.commands.getAuthor.getQuery);
+
 			});
-		    $.each(this.routes.route,function(i,item){
-				/*self.on(this.hash, function(this.parameters) {
-					
-				});*/
+		
+		    $.each(this.routes,function(i,routeItem){
+				
+				self.route(routeItem.hash, function() {
+					self.changePage(new routeItem.view({ model : this.conference}));
+				});
 			});
 			this.firstPage = true;
 	
@@ -27,26 +32,33 @@ AppRouter = Backbone.Router.extend({
 		
 		/************************************************      ROUTES         **************************************/
         routes: {
-            "": "home",
           
-		
+            "search/:entity": "loadView",  
         },
 		
 		/************************************************      ACTIONS        **************************************/
 		home: function (){
-			this.changePage(new HomeView({ model : this.conference}));
+			
 			//this.SWDFManager.getAuthor();
 		},
-		
-		searchChoice: function (){
-			this.changePage(new SearchView({ model : this.conference}));
+		loadView: function (entity){
+		    switch (entity) 
+            { 
+            case "event": 
+			    this.changePage(new EventSearchView({ model : this.conference})); 
+            break;  
+            default: 
+			    this.changePage(new HomeView({ model : this.conference}));
+            break; 
+            } 
 		},
-		
-		searchForm: function (id){
-			this.changePage(new SearchForm({ model : this.conference}));
-		},
-		
-	
+		/*
+		loadView: function (){
+		alert(route + "_" + action); // dashboard_graph
+		    
+			this.changePage(new HomeView({ model : this.conference}));
+			//this.SWDFManager.getAuthor();
+		}, */
 		
 		
 		/************************************************      PAGE CHANGE HANDLERS            **************************************/
