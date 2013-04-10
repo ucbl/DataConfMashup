@@ -31,9 +31,9 @@ var SWDFCommandStore = {};
                                   ModelCallBack : "TODO",
                                      
                                   }
- /*
+
  //Command getKeywordSuggestion      
- var getKeywordSuggestion = SWDFCommandStore.getKeywordSuggestion = {
+ SWDFCommandStore.getKeywordSuggestion = {
                                   name: "getAuthorSuggestion",
                                   dataType : "XML",
                                   method : "GET",
@@ -58,7 +58,7 @@ var SWDFCommandStore = {};
                                   }
                                   
  //Command getTitleSuggestion       
-var getTitleSuggestion = SWDFCommandStore.getTitleSuggestion= {
+SWDFCommandStore.getTitleSuggestion= {
                                   name: "getTitleSuggestion",
                                   dataType : "XML",
                                   method : "GET",
@@ -77,7 +77,7 @@ var getTitleSuggestion = SWDFCommandStore.getTitleSuggestion= {
                                   
 
  //Command getPosterSearchByKeyword       
-var getPosterSearchByKeyword = SWDFCommandStore.getPosterSearchByKeyword = {
+SWDFCommandStore.getPosterSearchByKeyword = {
                                   name: "getPosterSearchByKeyword",
                                   dataType : "XML",
                                   method : "GET",
@@ -104,7 +104,7 @@ var getPosterSearchByKeyword = SWDFCommandStore.getPosterSearchByKeyword = {
                                   }
                              
 //Command getPosterSearchByTitle                                 
-var getPosterSearchByTitle = SWDFCommandStore.getPosterSearchByTitle = {
+SWDFCommandStore.getPosterSearchByTitle = {
                                   name: "getPosterSearchByTitle",
                                   dataType : "XML",
                                   method : "GET",
@@ -120,7 +120,7 @@ var getPosterSearchByTitle = SWDFCommandStore.getPosterSearchByTitle = {
                                               },
                                   ModelCallBack : getPosterSearchByKeywordByAuthorByTitle
                                   }
-                                  
+           /*                       
                                   
 //Command getPosterSearchByAuthor                                 
 var getPosterSearchByAuthor = SWDFCommandStore.getPosterSearchByAuthor = {
@@ -203,7 +203,7 @@ SWDFCommandStore.getAuthor = {
                                   getQuery : function(parameters){ //JSON file parameters 
 												//alert(parameters.trackUri); 
                                                 var conferenceUri = parameters.conferenceUri;
-                                                var authorName = parameters.id;  
+                                                var authorName = parameters.id;   
                                                 var query ='PREFIX iswm: <http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#> PREFIX dc: <http://purl.org/dc/elements/1.1/> PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT DISTINCT ?Publication ?uriPublication ?keywordLabel ?PDF ?Organization ?uriOrganization WHERE {     ' +
                                                            ' { ' +
                                                            '   ?uriOrganization       foaf:member <'+ authorName +'>  . '  +
@@ -443,7 +443,7 @@ function getPaperModelCallBack(dataXML,presenter){
  
  */
  //CallBack for the command getAuthor on SWDF                                  
-function getAuthorModelCallBack(dataXML,presenter){
+function getAuthorModelCallBack(dataXML,presenter){alert("prout");
                   //  Set root node of author's graph 
                  this.authorGraph.setRootNode(this.uriAuthorSWDF,this.authorName);
                   //  Parsing XML 

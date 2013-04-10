@@ -27,6 +27,7 @@ AppRouter = Backbone.Router.extend({
 						console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
+						console.log(currentDatasource);
 						var currentQuery      = currentCommand.getQuery({ conferenceUri : self.conference.baseUri, id : id });
 						self.executeCommand({datasource : currentDatasource, command : currentCommand, query : currentQuery});
 					});

@@ -37,11 +37,23 @@
 			    "Home" : { 
 					"hash" : "",
 					"view" : "#home",
+					"commands" : [ 
+					]
+				},
+			    "Proceedings-search" : { 
+					"hash" : "proceedings-search",
+					"view" : "#proceedingsSearch",
 					"commands" : [
-						{
+					]
+				},
+			    "Proceedings-search-by-author" : { 
+					"hash" : "proceedings-search/by-author",
+					"view" : "#searchFormAuthor",
+					"commands" : [
+					    {
 							"datasource" : "conferenceDatasource",
-							"name" : "getAuthor",
-						}
+							"name" : "getAuthorSuggestion",
+						} 
 					]
 				},
 				"Person" : {
