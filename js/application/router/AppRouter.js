@@ -19,9 +19,9 @@ AppRouter = Backbone.Router.extend({
 				//JSON.parse(this.commands.getAuthor.getQuery);
 			});
 		    $.each(this.routes.route,function(i,item){
-				/*self.on(this.hash, function(this.parameters) {
-					//
-				});*/
+				self.on(this.hash, function() {
+					alert("prout");
+				});
 			});
 			this.firstPage = true;
 	
@@ -30,9 +30,7 @@ AppRouter = Backbone.Router.extend({
 		/************************************************      ROUTES         **************************************/
         routes: {
             "": "home",
-            "event/search": "eventSearch",
-            /*":route/:action": "loadView",
-		*/
+            "search/:entity": "loadView",  
         },
 		
 		/************************************************      ACTIONS        **************************************/
@@ -40,9 +38,16 @@ AppRouter = Backbone.Router.extend({
 			this.changePage(new HomeView({ model : this.conference}));
 			//this.SWDFManager.getAuthor();
 		},
-		eventSearch: function (){
-			this.changePage(new EventSearchView({ model : this.conference}));
-			//this.SWDFManager.getAuthor();
+		loadView: function (entity){
+		    switch (entity) 
+            { 
+            case "event": 
+			    this.changePage(new EventSearchView({ model : this.conference})); 
+            break;  
+            default: 
+			    this.changePage(new HomeView({ model : this.conference}));
+            break; 
+            } 
 		},
 		/*
 		loadView: function (){
