@@ -14,7 +14,7 @@
 				},
 				
 				"publicationDatasource" : {
-					"Uri" : "http://data.semanticweb.org/sparql",
+					"Uri" : "http://dblp.l3s.de/d2r/sparql",
 					"crossDomainMode" : "Cors",
 					"commands" : "conferenceDatasourceCommands",
 				},
@@ -64,5 +64,6 @@
 						}
 					]
 				}
+				"
 			}
 		};
