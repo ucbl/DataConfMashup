@@ -9,50 +9,42 @@ AppRouter = Backbone.Router.extend({
 			this.datasources = this.configuration.datasources;
 			this.routes = this.configuration.routes;
 
-			$.each(this.datasources,function(i,itemDatasource){
+			$.each(this.datasources,function(i,datasourceItem){
 				console.log("******* DATASOURCE ********");
-				console.log(itemDatasource);
+				console.log(datasourceItem);
 
 			});
 		
 		/************************************************      ROUTES         **************************************/ 
 		    $.each(this.routes,function(i,routeItem){
 				
-
-				self.route(routeItem.hash, function(id) {
+				console.log("******* ROUTE ********");
+				console.log(routeItem);
 				
+				self.route(routeItem.hash, function(id) {
+					
 					self.changePage(new AbstractView({contentEl :  routeItem.view , model : self.conference}));
 						
 					$.each(routeItem.commands,function(i,commandItem){
 						console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
+<<<<<<< HEAD
 					
            
 						var currentQuery      = currentCommand.getQuery({ conferenceUri : self.conference.baseUri, id : id });
 					
+=======
+						var currentQuery      = currentCommand.getQuery({conferenceUri : self.conference.baseUri, id : id });
+
+>>>>>>> 624abd45fd348f399f7f54e83a7364932304bab2
 						self.executeCommand({datasource : currentDatasource, command : currentCommand, query : currentQuery});
+						
 					});
 					
 				});
 			});
-	
-				//Ton CODE
-				/*self.route(routeItem.hash, function(id) { 
-				 
-                    if(routeItem.commands){
-		                $.each(routeItem.commands,function(i,commandItem){    
-                            //getAuhtor n'existe pas...
-                            console.log(commandItem.datasource);
-                            console.log(self.datasources[commandItem.datasource].commands);
-                            //console.log(self.datasources[commandItem.datasource].commands[commandItem.name]); 
-				        });
-					    self.changePage(new AbstractView({contentEl :  routeItem.view , model : this.conference}));
-					}
-
-				});*/
-			
-		
+	  
 			this.firstPage = true;
 	
 		},
@@ -80,7 +72,7 @@ AppRouter = Backbone.Router.extend({
 		
 		executeCommand: function (parameters) {
 			
-			
+			var self = this;
 			var datasource = parameters.datasource;
 			var command    = parameters.command;
 			var query      = parameters.query;
@@ -92,14 +84,19 @@ AppRouter = Backbone.Router.extend({
 				jQuery.support.cors = false;
 			}
 			
+<<<<<<< HEAD
 		
+=======
+			
+			console.log(command);
+>>>>>>> 624abd45fd348f399f7f54e83a7364932304bab2
 			$.ajax({
 				url: datasource.uri,
 				type: command.method,
 				cache: false,
 				dataType: command.dataType,
 				data: {query : query },							
-				success: command.ModelCallBack,
+				success: function(data){command.ModelCallBack(data,self.conference.baseUri)},
 				error: function(jqXHR, textStatus, errorThrown) { 
 					alert(errorThrown);
 				}

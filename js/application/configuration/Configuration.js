@@ -1,8 +1,8 @@
  var Configuration = {
 			"conference" : {
-				"name": "example glossary",
-				"logoUri": "http://data.semanticweb.org/images/logo_www2012.jpg",
-				"baseUri": "http://data.semanticweb.org/conference/www/2012",
+				"name": "ISWC 2012",
+				"logoUri": "http://iswc2012.semanticweb.org/sites/default/files/iswc_logo.jpg",
+				"baseUri": "http://data.semanticweb.org/conference/iswc/2012",
 			},
 			
 			"datasources" : {
@@ -37,10 +37,56 @@
 			    "Home" : { 
 					"hash" : "",
 					"view" : "#home",
+					"commands" : [ 
+						{
+						"datasource" : "conferenceDatasource",
+						"name" : "getConferenceMainEvent",
+						}
+					]
+				}, 
+			    "Proceedings-search" : { 
+					"hash" : "proceedings-search",
+					"view" : "#proceedingsSearch",
+					"commands" : [
+					]
+				},
+			    "Proceedings-search-by-author" : { 
+					"hash" : "proceedings-search/by-author",
+					"view" : "#searchFormAuthor",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getAllAuthors",
+						} 
+					]
+				},
+			    "Proceedings-search-by-keyword" : { 
+					"hash" : "proceedings-search/by-keyword",
+					"view" : "#searchFormKeyword",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getAllKeyword",
+						} 
+					]
+				},
+			    "Proceedings-search-by-title" : { 
+					"hash" : "proceedings-search/by-title",
+					"view" : "#searchFormTitle",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getAllTitle",
+						} 
+					]
+				},
+				"Event" : { 
+					"hash" : "event/*id",
+					"view" : "#event",
 					"commands" : [
 						{
 							"datasource" : "conferenceDatasource",
-							"name" : "getConferenceMainEvent",
+							"name" : "getSubEvent",
 						}
 					]
 				},
@@ -74,6 +120,10 @@
 						}
 					]
 				}
+<<<<<<< HEAD
 				
+=======
+			
+>>>>>>> 624abd45fd348f399f7f54e83a7364932304bab2
 			}
 		};

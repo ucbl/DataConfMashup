@@ -8,10 +8,13 @@
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 		<link rel="stylesheet" href="css/appStyle.css" />
 		<!--<link rel="stylesheet" href="css/themes/A.min.css" />-->
+
+		<!--<link rel="stylesheet" href="css/themes/E.min.css" />-->
 		<link rel="stylesheet" href="css/themes/D.min.css" />
+
 		<!--<link rel="stylesheet" href="css/themes/C.min.css" />-->
 		<!--<link rel="stylesheet" href="css/themes/D.min.css" />-->
-		<!--<link rel="stylesheet" href="css/themes/E.min.css" />-->
+		<link rel="stylesheet" href="css/themes/C.min.css" />
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="js/lib/jqm-config.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
@@ -90,8 +93,8 @@
 				<div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation" >
 					<ul>
 						<li><a href="">Home</a></li>       
-						<li><a href="#searchPoster" id="navSearchPoster">Search Poster</a></li>  
-						<li><a href="#chatPage">Recommend publication</a></li>
+						<li><a href="#searchPoster" id="navSearchPoster">Search Publication</a></li>  
+						<li><a href="#chatPage">Recommended publications</a></li>
 					</ul>
 				</div> 
 		</script>		
@@ -102,34 +105,53 @@
 				<h3 style="text-align: center">From here, you can look for any publications :</h3>
 				<a href="scan/"  data-role="button" data-icon="arrow-r" data-iconpos="right">Scan a QRcode</a>    
 				<a href="#proceedings-search" data-role="button" data-icon="arrow-r" data-iconpos="right">Search in proceedings</a>
+<<<<<<< HEAD
 				<a href="#search/event"  data-role="button" data-icon="arrow-r" data-iconpos="right" >Search in events</a>
 				<div id="Author"></div>
+=======
+				
+>>>>>>> 624abd45fd348f399f7f54e83a7364932304bab2
 			</div>     	
 		</script>
  
 		
 		<!-- Search a publication  by Author,by Keyword,by Title... -->
-		<script type="text/template" id="proceedings-search"> 
+		<script type="text/template" id="proceedingsSearch"> 
 			<div class="content">
 				<h1 class="searchTrack"></h1>
 				<ul class="list gradWhite">   
 					<li><a href="#proceedings-search/by-author"  data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Author</a></li>
 					<li><a href="#proceedings-search/by-keyword" data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Keyword</a></li>
-					<li><a href="#proceedings-search/by-number"   data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Number</a></li>
 					<li><a href="#proceedings-search/by-title"  data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Title</a></li>
 				</ul>
 			</div>
 		</script>  
-			 
-			<!-- Search a publiation By Keyword  -->
+
+		<!-- View an event  -->
+		<script type="text/template" id="event"> 
+			<div class="content">
+				<h3>Search in event</h3>  
+				
+			</div>      
+		</script> 
+		
+			<!-- Search a publiation By Author  -->
 		<script type="text/template" id="searchFormAuthor"> 
 			<div class="content">
-			<h3>Search By Author</h3>  
-			<form action="/index.html" id="formSearchKeyword" class="searchform"  method="post">
-			
-					<input  type="search" data-validation-engine="validate[required,custom[onlyLetterSp]]" id="inputSearchByKeyword"  name="valueSearch"/>
-					<a href="index.html" data-role="button" data-inline="true">Go</a>	
-			</form>             
+			    <h3>Search By Author</h3>
+			</div>
+		</script>  
+			<!-- Search a publiation By searchFormTitle  -->
+		<script type="text/template" id="searchFormTitle"> 
+			<div class="content">
+			    <h3>Search By Title</h3>  
+			</div> 
+		</script>  
+			<!-- Search a publiation By searchFormTitle  -->
+		<script type="text/template" id="searchFormKeyword"> 
+			<div class="content">
+			    <h3>Search By Keyword</h3>
+			</div>   
 		</script>  
 	</head>
 <body>
