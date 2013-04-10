@@ -9,31 +9,26 @@ AppRouter = Backbone.Router.extend({
 			this.datasources = this.configuration.datasources;
 			this.routes = this.configuration.routes;
 
-			$.each(this.datasources,function(i,datasourceItem){
-				console.log("******* DATASOURCES ********");
-				console.log(datasourceItem);
-				/*self.on(this.hash, function(this.parameters) {
-					
-				});*/  
-				//A voir : le fichier SWDFCommandStore.js a changé le syntaxe ;)
-				//console.log(this.commands.getAuthor.ge tQuery({trackUri:"pop"})); 
-				//JSON.parse(this.commands.getAuthor.getQuery);
+			$.each(this.datasources,function(i,itemDatasource){
+				console.log("******* DATASOURCE ********");
+				console.log(itemDatasource);
 
 			});
 		
 		    $.each(this.routes,function(i,routeItem){
 				
-				/*self.route(routeItem.hash, function(id) {
-					//console.log(Route : routeItem.name);
+				self.route(routeItem.hash, function(id) {
+				
 					self.changePage(new AbstractView({contentEl :  routeItem.view , model : self.conference}));
 					
 					$.each(routeItem.commands,function(i,commandItem){
-					console.log(commandItem.name);
-					var getQuery = self.datasources[commandItem.datasource].commands[commandItem.name].getQuery);
-					getQuery({trackUri:"pop"});
-						//this.executeCommand(.commands.[commandItem.name];
+						console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
+						var currentDatasource = self.datasources[commandItem.datasource];
+						var currentCommand    = self.datasources[commandItem.datasource].commands[commandItem.name];
+						var currentQuery      = currentCommand.getQuery({ conferenceUri : self.conference.baseUri, id : id });
+						self.executeCommand({datasource : currentDatasource, command : currentCommand, query : currentQuery});
 					});
-				});*/
+				});
 			});
 		
 			this.firstPage = true;
@@ -72,16 +67,28 @@ AppRouter = Backbone.Router.extend({
 		
 		},
 		
-		executeCommand: function (command) {
-		
-			jQuery.support.cors = this.corsEnable;
+		executeCommand: function (parameters) {
 			
+			
+			var datasource = parameters.datasource;
+			var command    = parameters.command;
+			var query      = parameters.query;
+			
+			if(datasource.crossDomainMode == "CORS"){
+				
+				jQuery.support.cors = true;
+			}else{
+				jQuery.support.cors = false;
+			}
+			alert(query);
+		
+			console.log(command);
 			$.ajax({
-				url: this.sparqlEndPointURL,
-				type: this.method,
-				cache: this.cache,
-				dataType: this.dataType,
-				data: query,							
+				url: datasource.uri,
+				type: command.method,
+				cache: false,
+				dataType: command.dataType,
+				data: {query : query },							
 				success:command.callback,
 				error: function(jqXHR, textStatus, errorThrown) { 
 					alert(errorThrown);

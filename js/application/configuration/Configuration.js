@@ -5,10 +5,10 @@
 				"baseUri": "http://data.semanticweb.org/www/2012",
 			},
 			
-			"datasources" : [{
+			"datasources" : {
 				"conferenceDatasource" : {
 					"uri" : "http://data.semanticweb.org/sparql",
-					"crossDomainMode" : "Cors",
+					"crossDomainMode" : "CORS",
 					"commands" : SWDFCommandStore,
 					
 				},
@@ -30,11 +30,10 @@
 					"crossDomainMode" : "JSONP",
 					"commands" : "conferenceDatasourceCommands",
 				}
-			}],
+			},
 			
-			"routes" : [
-				{
-					"route" : "Home",
+			"routes" : {
+				"Home" : {
 					"hash" : "",
 					"view" : "#home",
 					"commands" : [
@@ -44,7 +43,7 @@
 						}
 					]
 				},
-				{
+				"Person" : {
 					"hash" : "Person/:id",
 					"view" : "PersonView",
 					"commands" : {
@@ -64,5 +63,5 @@
 						}
 					}
 				}
-			]
+			}
 		};

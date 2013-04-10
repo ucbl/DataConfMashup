@@ -202,16 +202,16 @@ SWDFCommandStore.getAuthor = {
                                   method : "GET",
                                   getQuery : function(parameters){ //JSON file parameters 
 												//alert(parameters.trackUri); 
-                                                var trackUri = parameters.trackUri;
-                                                var uriAuthor = parameters.uriAuthor;  
+                                                var conferenceUri = parameters.conferenceUri;
+                                                var authorName = parameters.id;  
                                                 var query =' SELECT DISTINCT ?Publication ?uriPublication ?keywordLabel ?PDF ?Organization ?uriOrganization WHERE {     ' +
                                                            ' { ' +
-                                                           '   ?uriOrganization       foaf:member <'+ uriAuthor +'>  . '  +
+                                                           '   ?uriOrganization       foaf:member <'+ authorName +'>  . '  +
                                                            '   ?uriOrganization       foaf:name   ?Organization .      '  +
                                                            ' } UNION ' 							+       // Auhtor's publication 
                                                            ' { ' +
-                                                           '   ?uriPublication    swc:isPartOf  <'+trackUri+'> ;  ' +
-                                                           '                      foaf:maker    <'+ uriAuthor +'> ;          ' +
+                                                           '   ?uriPublication    swc:isPartOf  <'+conferenceUri+'> ;  ' +
+                                                           '                      foaf:maker    <'+ authorName +'> ;          ' +
                                                            ' 			dc:title      ?Publication .               ' + // Auhtor's publication 
                                                            '   OPTIONAL {  '+
                                                            '              ?uriPublication       owl:sameAs    ?uirPosterWWW2012 .  '+
@@ -219,11 +219,11 @@ SWDFCommandStore.getAuthor = {
                                                            '             }  '+
                                                            ' } UNION ' +
                                                            ' { ' +
-                                                           '   ?uri               swc:isPartOf  <'+trackUri+'> ;  ' +  // a poster has many keywords...
-                                                           '                      foaf:maker    <'+ uriAuthor +'> ;          ' +
+                                                           '   ?uri               swc:isPartOf  <'+conferenceUri+'> ;  ' +  // a poster has many keywords...
+                                                           '                      foaf:maker    <'+ authorName +'> ;          ' +
                                                            '                      dc:subject    ?keywordLabel .              ' +  // Recommendation 
                                                            ' }} ORDER BY ?Organization ';
-                                                           console.log(query);
+                                                        
                                                            return query;
                                                     },
                                   ModelCallBack : getAuthorModelCallBack
