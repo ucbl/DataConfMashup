@@ -7,10 +7,11 @@
  **/
  //DBLP commands file 
  
- 
+//First Part SWDF commands file, Second Part : ModelCallBack function definition 
+ var DBLPCommandStore = { 
  //Command getAuthor 
- var getAuthor = new Command({
-                            name: "getAuthorSuggestion",
+getAuthor : new Command({
+                            name: "getAuthor",
                             dataType : "JSONP",
                             method : "GET",
                             getQuery : function(parameters){ //JSON file parameters 
@@ -32,12 +33,13 @@
                                                              ' }} ORDER BY (?uriAuthor )  DESC  (?Years)';
                                                              return query;
                                                   },
-                                      ModelCallBack : TODO
+                                      ModelCallBack : getAuthorMethodCallBack
                                          
-                                  });
+                                  })
+,
                                   
-                                  
-var getConfPublication = new Command({
+ //Command getConfPublication                                  
+getConfPublication : new Command({
                               name: "getConfPublication ",
                               dataType : "JSONP",
                               method : "GET",
@@ -62,11 +64,14 @@ var getConfPublication = new Command({
                                                              ' }} ';
                                                              return query;
                                                  },
-                                        ModelCallBack : TODO
+                                        ModelCallBack : getConfPublicationMethodCallBack
                                            
-                                  });
-                                  
-var getJournalPublication  = new Command({
+                                  })
+
+,
+ //Command getJournalPublication  
+ //.............TODO Method CallBack....................                                 
+getJournalPublication : new Command({
                                 name: "getJournalPublication  ",
                                 dataType : "JSONP",
                                 method : "GET",
@@ -90,12 +95,13 @@ var getJournalPublication  = new Command({
                                                              ' }} ';
                                                              return query;
                                                     },
-                                          ModelCallBack : TODO
+                                          ModelCallBack : "TODO"
                                      
-                                  });
+                                  })
                                   
-                                  
-var getAuthorGraphView  = new Command({
+ ,                                 
+ //Command getAuthorGraphView                                                          
+getAuthorGraphView : new Command({
                                 name: "getAuthorGraphView",
                                 dataType : "JSONP",
                                 method : "GET",
@@ -108,10 +114,131 @@ var getAuthorGraphView  = new Command({
                                                              ' }} ORDER BY  DESC  (?Years) LIMIT 5 ';
                                                              return query;
                                                   },
-                                ModelCallBack : TODO
+                                ModelCallBack : getAuthorGraphViewMethodCallBack
                                      
-                           });
+                           })
                                   
 
-                                  
+ }//End DBLPCommands JSON File   
+   
+   
+//.......................ModelCallBack................................   
+
+
+//CallBack for the command getConfPublication on DBLP  
+function getConfPublicationMethodCallBack(dataJSON,presenter){
+                var publicationTitle;
+                $.each(dataJSON.results.bindings,function(i,item){
+                    $.each(item, function(key, valueArr) {
+                        if(key == 'Title'){
+                            publicationTitle = valueArr.value;
+                        }
+                    });
+                });
+                this.graph.setRootNode(this.uriPublication,publicationTitle);
+		$.each(dataJSON.results.bindings,function(i,item){
+                        $.each(item, function(key, valueArr) {
+                                var idContent    = self.prefix + key;
+                                switch(key){
+                                    case 'Author':
+                                        var paramDogFoodName = 'person~' + (valueArr.value).toLowerCase();
+                                        var nameToSpace  = paramDogFoodName.replace(/\.+/g, ' ');
+                                        var nameSWDFtoDash = nameToSpace.replace(/\s+/g, '-');
+                                        var nameDBLPtoDash = (valueArr.value).replace(/\s+/g, '~');
+                                        self.graph.setChildNode('http://data.semanticweb.org/person/'+nameSWDFtoDash, valueArr.value, self.uriPublication, key);
+                                        $(idContent).append('<span><a href="#'+ nameSWDFtoDash +'~~'+ nameDBLPtoDash +'">' + valueArr.value +'</a></span>, ');
+                                        break;
+                                    case 'Url':
+                                        self.graph.setChildNode(valueArr.value, valueArr.value, self.uriPublication, key);
+                                        $(idContent).append('<div><a href="'+ valueArr.value +'" >' + valueArr.value +'</a></div>');
+                                        break;
+                                    default:
+                                        if($(idContent).text() == '')
+                                                $(self.prefix + key).append(valueArr.value);
+                                            if(key != 'Title') self.graph.setChildNode(valueArr.value, valueArr.value, self.uriPublication, key);
+                                        break;
+                                }
+                        });
+		});
+                /* toString Paper's Graph */
+                var graphJSON    = JSON.stringify(self.graph.getInstance());
+                var keyGraphStorage = self.uriPublication.replace("http://dblp.l3s.de/d2r/resource/publications/","");
+                /* store Paper's Graph with jstorage */
+                presenter.storeGraph("graph/"+keyGraphStorage,graphJSON);
+                /* Set link */
+                $(self.prefix+'Graph').append('<span><a href="#' + self.hashGraph + '" id="viewAs">View As Graph</a></span>');
+    }    
+    
+    
+//CallBack for the command getAuthor on DBLP     
+function getAuthorMethodCallBack(dataJSON,presenter){
+                var site = false;
+                $.each(dataJSON.results.bindings,function(i,item){
+                      $.each(item, function(key, valueArr) {
+                                var idContent    = self.prefix + key;
+                                switch(key){
+                                    case 'OtherPublication':
+                                            var keyPublication =  valueArr.value.replace(/[\.]/,'').toLowerCase().replace(/\s+/g,'_');                                          
+                                            /* Eliminate publications SWDF added in DOM*/
+                                            if(self.arrPublicationsSWDF[keyPublication] != true)
+                                                $(idContent).append('<div><a href="#'+ Dash.getValue(item.UriOtherPublication.value, 'http://dblp.l3s.de/d2r/resource/publications/') +'">' + valueArr.value + '(' +item.Years.value + ')' +'</a></div>');
+                                            break;
+                                    case 'CoAuthors':
+                                            var paramDogFoodName = 'person~' + (valueArr.value).toLowerCase();
+                                            var nameToSpace  = paramDogFoodName.replace(/\.+/g, ' ');
+                                            var nameSWDFtoDash = nameToSpace.replace(/\s+/g, '-');
+                                            var nameDBLPtoDash = (valueArr.value).replace(/\s+/g, '~');
+                                            // check if double author name
+                                            if(valueArr.value != self.authorName ) $('#author'+key).append('<span><a href="#'+ nameSWDFtoDash +'~~'+ nameDBLPtoDash +'">' + valueArr.value +'</a></span>, ');
+                                            break;
+                                    case 'Site':
+                                            site = true;
+                                            $(idContent).append('<a href="'+ valueArr.value +'" >' + valueArr.value +'</a>');
+                                            break;
+                                }                               
+                        });
+                });
+                // If homepage is not found => find it with DuckDuckGo!
+                if(!site){
+                    var author = '!ducky+'+this.authorName.replace(/\s+/g, '+') + '+professor' ;
+                    presenter.search(author);
+                }
+                /* toString Paper's Graph */
+                var graphJSON = JSON.stringify(this.authorGraph.rootNode);
+                var keyGraphStorage = this.uriAuthorSWDF.replace("http://data.semanticweb.org/","") ;
+               /*  store ontology with jstorage */
+               presenter.storeGraph("graph/"+keyGraphStorage,graphJSON);
+               /*  Set link */
+               $(self.prefix+'Graph').append('<span><a href="#' +this.hashGraph+ '" id="viewAs">View As Graph</a></span>');
+               return this;
+    } 
+    
+    
+//CallBack for the command getAuthorGraphView on DBLP      
+function getAuthorGraphViewMethodCallBack(dataJSON){
+ 
+    function render(dataJSON){               
+        $.each(dataJSON.results.bindings,function(i,item){
+            $.each(item, function(key, valueArr) {
+                if(key == 'Author'){
+                    var paramDogFoodName = 'person~' + (valueArr.value).toLowerCase();
+                    var nameToSpace      = paramDogFoodName.replace(/\.+/g, ' ');
+                    var uriAuthoSWDF     = 'http://data.semanticweb.org/person/'+nameToSpace.replace(/\s+/g, '-');
+                    self.graphJSON.setChildNode(uriAuthoSWDF  , valueArr.value, self.idCurrentNode, key);
+                }else if(key == 'Url'){			
+                    self.graphJSON.setChildNode(valueArr.value, valueArr.value, self.idCurrentNode, key);
+                }
+                else {	
+                    self.graphJSON.setChildNode(valueArr.value, valueArr.value, self.idCurrentNode, key);
+                }
+
+            });	
+        });
+        return this;
+    }
+    this.getGraph = function(){
+        return self.graphJSON;
+    } 
+    
+ }                         
  

@@ -9,14 +9,20 @@ AppRouter = Backbone.Router.extend({
 			this.datasources = this.configuration.datasources;
 			this.routes = this.configuration.routes;
 			
-		    $.each(this.routes,function(i){
-		    console.log(this.hash);
+		  $.each(this.datasources,function(i,item){
 		    
-		    /*
-				self.on(this.hash, function(this.parameters) {
-				*/
-					 
-				});
+				/*self.on(this.hash, function(this.parameters) {
+					
+				});*/  
+				//A voir : le fichier SWDFCommandStore.js a changé le syntaxe ;)
+				console.log(this.commands.getAuthor.getQuery({trackUri:"pop"})); 
+				//JSON.parse(this.commands.getAuthor.getQuery);
+			});
+		    $.each(this.routes.route,function(i,item){
+				/*self.on(this.hash, function(this.parameters) {
+					//
+				});*/
+			});
 			this.firstPage = true;
 	
 		},
@@ -24,9 +30,9 @@ AppRouter = Backbone.Router.extend({
 		/************************************************      ROUTES         **************************************/
         routes: {
             "": "home",
-            "event-search": "eventSearch",
-            ":route/:action": "loadView",
-		
+            "event/search": "eventSearch",
+            /*":route/:action": "loadView",
+		*/
         },
 		
 		/************************************************      ACTIONS        **************************************/
@@ -38,12 +44,13 @@ AppRouter = Backbone.Router.extend({
 			this.changePage(new EventSearchView({ model : this.conference}));
 			//this.SWDFManager.getAuthor();
 		},
+		/*
 		loadView: function (){
 		alert(route + "_" + action); // dashboard_graph
 		    
 			this.changePage(new HomeView({ model : this.conference}));
 			//this.SWDFManager.getAuthor();
-		}, 
+		}, */
 		
 		
 		/************************************************      PAGE CHANGE HANDLERS            **************************************/
@@ -69,7 +76,7 @@ AppRouter = Backbone.Router.extend({
 			jQuery.support.cors = this.corsEnable;
 			
 			$.ajax({
-				url: this.sparqlEndPointURL ,
+				url: this.sparqlEndPointURL,
 				type: this.method,
 				cache: this.cache,
 				dataType: this.dataType,

@@ -6,16 +6,23 @@
  *   Tags:  
  **/
  
+//SWDF commands file
 //First Part SWDF commands file, Second Part : ModelCallBack function definition 
- var SWDFCommands = { 
+
+
+ (function(){
+ var self = this;
+ var SWDFCommandStore=self.SWDFCommandStore = {};  
+ 
  
  //Command getAuthorSuggestion 
-getAuthorSuggestion :  var getAuthorSuggestion = new Command({
+   var getAuthorSuggestion = SWDFCommandStore.getAuthorSuggestion = {
                                   name: "getAuthorSuggestion",
                                   dataType : "XML",
                                   method : "GET",
                                   getQuery : function(parameters){ //JSON file parameters 
                                                 var trackUri = parameters.trackUri;
+												alert("pop");
                                                 var author = parameters.author;
                                                 var query = 'SELECT DISTINCT ?name WHERE  { '+
                                                             '   ?author foaf:name ?name.         '+
@@ -25,20 +32,19 @@ getAuthorSuggestion :  var getAuthorSuggestion = new Command({
                                                             ' } LIMIT 5 ';
                                                    return query ; 
                                            },
-                                  ModelCallBack : TODO
+                                  ModelCallBack : "TODO",
                                      
-                                  });
-                               
- ,       
+                                  }
+ /*
  //Command getKeywordSuggestion      
-getKeywordSuggestion : var getKeywordSuggestion = new Command({
+ var getKeywordSuggestion = SWDFCommandStore.getKeywordSuggestion = {
                                   name: "getAuthorSuggestion",
                                   dataType : "XML",
                                   method : "GET",
                                   getQuery : function(parameters){ //JSON file parameters 
                                                 var trackUri = parameters.trackUri;
                                                 var keyword = parameters.keyword;  
-                                                var query =  ' PREFIX key:<http://www.w3.org/2004/02/skos/core#> ' 
+                                                return  ' PREFIX key:<http://www.w3.org/2004/02/skos/core#> ' 
                                                               +
                                                              '  SELECT DISTINCT ?keyword WHERE {{ ' +
                                                              '  	 ?uriPaper       swc:isPartOf  <'+ trackUri+'> .' +
@@ -50,15 +56,13 @@ getKeywordSuggestion : var getKeywordSuggestion = new Command({
                                                              '  	       ?uriPaper       swc:isPartOf  <'+trackUri+'> .' +
                                                              '           ?uriPaper       dc:subject    ?keywork.      '+
                                                              '           FILTER REGEX( ?keywork , "'+ keyword +'","i").'+
-                                                             ' }} LIMIT 5 ';
-                                                         return query;
+                                                             ' }} LIMIT 5 '; 
                                               },
-                                   ModelCallBack : TODO
-                                  });
+                                   ModelCallBack : "TODO"
+                                  }
                                   
- ,                                 
  //Command getTitleSuggestion       
-getTitleSuggestion : var getTitleSuggestion = new Command({
+var getTitleSuggestion = SWDFCommandStore.getTitleSuggestion= {
                                   name: "getTitleSuggestion",
                                   dataType : "XML",
                                   method : "GET",
@@ -72,12 +76,12 @@ getTitleSuggestion : var getTitleSuggestion = new Command({
                                                             ' } LIMIT 5 ';
                                                     return query;
                                                  },
-                                  ModelCallBack : TODO
-                                  });
+                                  ModelCallBack : "TODO"
+                                  }
                                   
-,
+
  //Command getPosterSearchByKeyword       
-getPosterSearchByKeyword : var getPosterSearchByKeyword = new Command({
+var getPosterSearchByKeyword = SWDFCommandStore.getPosterSearchByKeyword = {
                                   name: "getPosterSearchByKeyword",
                                   dataType : "XML",
                                   method : "GET",
@@ -100,11 +104,11 @@ getPosterSearchByKeyword : var getPosterSearchByKeyword = new Command({
                                                            ' }} ';
                                                            return query;
                                                },
-                                  ModelCallBack : getPosterSearchByKeywordByAuthorByTitle
-                                  });
- ,                                 
+                                  ModelCallBack : getPosterSearchByKeywordByAuthorByTitle,
+                                  }
+                             
 //Command getPosterSearchByTitle                                 
-getPosterSearchByTitle : var getPosterSearchByTitle = new Command({
+var getPosterSearchByTitle = SWDFCommandStore.getPosterSearchByTitle = {
                                   name: "getPosterSearchByTitle",
                                   dataType : "XML",
                                   method : "GET",
@@ -119,11 +123,11 @@ getPosterSearchByTitle : var getPosterSearchByTitle = new Command({
                                                          return query;
                                               },
                                   ModelCallBack : getPosterSearchByKeywordByAuthorByTitle
-                                  });
+                                  }
                                   
-,                                  
+                                  
 //Command getPosterSearchByAuthor                                 
-getPosterSearchByAuthor : var getPosterSearchByAuthor = new Command({
+var getPosterSearchByAuthor = SWDFCommandStore.getPosterSearchByAuthor = {
                                   name: "getPosterSearchByAuthor",
                                   dataType : "XML",
                                   method : "GET",
@@ -139,11 +143,11 @@ getPosterSearchByAuthor : var getPosterSearchByAuthor = new Command({
                                                            return query;
                                                },
                                   ModelCallBack : getPosterSearchByKeywordByAuthorByTitle
-                                  });
+                                  }
                                   
-,                                  
+                    /*              
 //Command getAuthorSearchByName                               
-getAuthorSearchByName : var getAuthorSearchByName = new Command({
+getAuthorSearchByName :     new Command({
                                   name: "getAuthorSearchByName",
                                   dataType : "XML",
                                   method : "GET",
@@ -159,11 +163,11 @@ getAuthorSearchByName : var getAuthorSearchByName = new Command({
                                                                  return query;
                                               },
                                   ModelCallBack : getAuthorSearchByName
-                                  });
+                                  })
                                   
- ,                                 
+ ,                                 /*
 //Command getPaper                               
-getPaper : var getPaper =              new Command({
+getPaper :                  new Command({
                                   name: "getPaper",
                                   dataType : "XML",
                                   method : "GET",
@@ -192,44 +196,46 @@ getPaper : var getPaper =              new Command({
                                                            return query;
                                                  },
                                   ModelCallBack : getPaperModelCallBack
-                                  });
+                                  })
                                   
- ,                                 
+ ,     */                            
 //Command getAuthor                                
-getAuthor : var getAuthor  =              new Command({
+SWDFCommandStore.getAuthor = {
                                   name: "getAuthor",
                                   dataType : "XML",
                                   method : "GET",
                                   getQuery : function(parameters){ //JSON file parameters 
+                                  alert(parameters); 
                                                 var trackUri = parameters.trackUri;
                                                 var uriAuthor = parameters.uriAuthor;  
                                                 var query =' SELECT DISTINCT ?Publication ?uriPublication ?keywordLabel ?PDF ?Organization ?uriOrganization WHERE {     ' +
                                                            ' { ' +
                                                            '   ?uriOrganization       foaf:member <'+ uriAuthor +'>  . '  +
                                                            '   ?uriOrganization       foaf:name   ?Organization .      '  +
-                                                           ' } UNION ' 							+       /* Auhtor's publication */
+                                                           ' } UNION ' 							+       // Auhtor's publication 
                                                            ' { ' +
                                                            '   ?uriPublication    swc:isPartOf  <'+trackUri+'> ;  ' +
                                                            '                      foaf:maker    <'+ uriAuthor +'> ;          ' +
-                                                           ' 			dc:title      ?Publication .               ' +  /* Auhtor's publication */
+                                                           ' 			dc:title      ?Publication .               ' + // Auhtor's publication 
                                                            '   OPTIONAL {  '+
                                                            '              ?uriPublication       owl:sameAs    ?uirPosterWWW2012 .  '+
                                                            '              ?uirPosterWWW2012     iswm:hasPDF     ?PDF   .  '+
                                                            '             }  '+
                                                            ' } UNION ' +
                                                            ' { ' +
-                                                           '   ?uri               swc:isPartOf  <'+trackUri+'> ;  ' +  /* a poster has many keywords...*/
+                                                           '   ?uri               swc:isPartOf  <'+trackUri+'> ;  ' +  // a poster has many keywords...
                                                            '                      foaf:maker    <'+ uriAuthor +'> ;          ' +
-                                                           '                      dc:subject    ?keywordLabel .              ' +  /* Recommendation */
+                                                           '                      dc:subject    ?keywordLabel .              ' +  // Recommendation 
                                                            ' }} ORDER BY ?Organization ';
+                                                           console.log(query);
                                                            return query;
                                                     },
                                   ModelCallBack : getAuthorModelCallBack
-                                  });
+                                  }
                                   
- ,                                 
+                              /*
  //Command getOrganization                               
-getOrganization : var getOrganization  =      new Command({
+getOrganization : 			new Command({
                                   name: "getOrganization",
                                   dataType : "XML",
                                   method : "GET",
@@ -247,12 +253,11 @@ getOrganization : var getOrganization  =      new Command({
                                                            return query;
                                                      },
                                   ModelCallBack : getOrganizationModelCallBack
-                                  });
-                                  
-                                  
+                                  })
+                                                          
 ,                                  
 //Command getTopic                                 
-getTopic : var getTopic  =             new Command({
+getTopic : 				 new Command({
                                   name: "getTopic",
                                   dataType : "XML",
                                   method : "GET",
@@ -268,13 +273,13 @@ getTopic : var getTopic  =             new Command({
                                                            return query;
                                                   },
                                   ModelCallBack : getTopicModelCallBack
-                                  });
+                                  })
                                   
                                   
                                  
  ,                                 
 //Command getKeyword               
-getKeyword : var getKeyword  =             new Command({
+getKeyword : 			new Command({
                                   name: "getKeyword",
                                   dataType : "XML",
                                   method : "GET",
@@ -290,11 +295,11 @@ getKeyword : var getKeyword  =             new Command({
                                                             return query;
                                                   },
                                   ModelCallBack : getKeywordModelCallBack
-                                  });
+                                  })
                                   
  ,                                 
 //Command getPublicationKeyword                                   
-getPublicationKeyword : var getPublicationKeyword =    new Command({
+getPublicationKeyword : 	new Command({
                                   name: "getPublicationKeyword ",
                                   dataType : "XML",
                                   method : "GET",
@@ -310,11 +315,11 @@ getPublicationKeyword : var getPublicationKeyword =    new Command({
                                                             return query;
                                               },
                                   ModelCallBack : getPublicationKeywordMethodCallBack
-                                  });
+                                  })
                                   
  ,                                 
  //Command getKeywordGraphView         
-getKeywordGraphView : var getKeywordGraphView =    new Command({
+getKeywordGraphView : 		 new Command({
                                   name: "getKeywordGraphView",
                                   dataType : "XML",
                                   method : "GET",
@@ -345,12 +350,12 @@ getKeywordGraphView : var getKeywordGraphView =    new Command({
                                                              return query;
                                                     },
                                   ModelCallBack : getKeywordGraphViewMethodCallBack
-                                  });
+                                  })
                                   
                                   
  ,                                 
  //Command getTopicGraphView                                 
-getTopicGraphView : var getTopicGraphView =    new Command({
+getTopicGraphView : 		new Command({
                                   name: "getTopicGraphView ",
                                   dataType : "XML",
                                   method : "GET",
@@ -364,41 +369,41 @@ getTopicGraphView : var getTopicGraphView =    new Command({
                                                              return query;
                                                 },
                                   ModelCallBack : getTopicGraphViewMethodCallBack
-                                  });
+                                  })*/
                                   
-}//End file SWDFCommands                               
+//End file SWDFCommands    
+/*
 
-                                  
-//.......................ModelCallBack................................
+ //.......................ModelCallBack................................
 
 //CallBack for the command getPaper on SWDF     
-    var getPaperModelCallBack = function(dataXML,presenter){
+function getPaperModelCallBack(dataXML,presenter){
     	          
         var titlePaper = $(dataXML).find('sparql > results > result > binding[name="Title"]').find(":first-child").text();                  
         if(titlePaper != ''){
  
-            /*  Add root node */
+            //  Add root node 
             this.paperGraph.setRootNode(this.uriPaper,titlePaper);
-            /*   Parsing XML */
+            //   Parsing XML 
             $(dataXML).find("sparql > results > result > binding").each(function(){
                 var key          = $(this).attr("name");
                 var value        = $(this).find(":first-child").text();    // Label ressource
                 var idContent    = self.prefix + key;
                           
-                /* Add content */
+                // Add content 
                 switch(key){                                    
                     case 'Author':
                         var nameToDash = value.replace(/\s+/g, '~');
                         var uriAuthor =  $(this).next().find(":first-child").text();
                         var paramater = uriAuthor.replace(ConfigurationManager.getInstance().getConfBaseUri(),'');
                         var paramaterToDash = paramater.replace(/\/+/g, '~');
-                        /*  Add to DOM and to Graph */
+                        //  Add to DOM and to Graph 
                         $(idContent).append('<span><a href="#'+ paramaterToDash +'~~'+ nameToDash +'">' + value +'</a></span>, ');
                         self.paperGraph.setChildNode(uriAuthor, value, self.uriPoster, key);
                         break;
                     case 'Title' :
                         var pdf =  $(this).next().next().find(":first-child").text();
-                        /*  Add to DOM and to Graph */
+                        //  Add to DOM and to Graph 
                         if(pdf != '') $('#paperNumber').append('<h1><a href='+pdf+' style="text-decoration: underline;">'+self.poster.capitalizeFirstLetter()+'</a></h1>');
                         else          $('#paperNumber').append('<h1>'+self.poster.capitalizeFirstLetter()+'</h1>');                                           
                         $(idContent).append(value);
@@ -407,16 +412,16 @@ getTopicGraphView : var getTopicGraphView =    new Command({
                         if(value == 'http://dbpedia.org/resource/World_Wide_Web') var theme = 'topic~world-wide-web';
                         else                                                      var theme = Dash.getValue(value,ConfigurationManager.getInstance().getConfBaseUri());
                         var KeywordLabel =  $(this).next().find(":first-child").text();
-                        /*  Add to DOM and to Graph */
+                        //  Add to DOM and to Graph 
                         $(idContent).append('<span><a href="#'+ theme + '"> ' + KeywordLabel +'</a></span>,');
                         self.paperGraph.setChildNode(value, KeywordLabel, self.uriPaper, key);
                         break;
                     case 'KeywordLabel' :
                         var uriKeyword  =  'http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_'+value.toLowerCase().replace(/\s+/g,'_');
                         var keywordClass = '#KeywordClass_'+value.toLowerCase().replace(/\s+/g,'_');
-                        /* Storage */
+                        // Storage 
                         presenter.storeKeyword(keywordClass, value);
-                        /*  Add to DOM and to Graph */
+                        //  Add to DOM and to Graph 
                         $(self.prefix + 'Keyword').append('<span><a href="#keyword~' + value.replace(/\s+/g,'-') +'"> '+ value.capitalizeFirstLetter() +'</a></span>,');
                         self.paperGraph.setChildNode(uriKeyword, value, self.uriPaper, "hasKeyword");
                         break;
@@ -425,12 +430,12 @@ getTopicGraphView : var getTopicGraphView =    new Command({
                         break;
                 }
             });
-            /* toString Paper's Graph */
+            // toString Paper's Graph 
             var graphJSON    = JSON.stringify(self.paperGraph.getInstance());
             var keyGraphStorage = self.uriPaper.replace("http://data.semanticweb.org/","");
-            /* store Paper's Graph with jstorage */
+            // store Paper's Graph with jstorage 
             presenter.storeGraph("graph/"+keyGraphStorage,graphJSON);
-            /* Set link */
+            // Set link 
             $(self.prefix+'Graph').append('<span><a href="#' + self.hashGraph + '" id="viewAs">View As Graph</a></span>');
         }
         else{
@@ -440,12 +445,12 @@ getTopicGraphView : var getTopicGraphView =    new Command({
     }
                                  
  
- 
+ */
  //CallBack for the command getAuthor on SWDF                                  
-var getAuthorModelCallBack = function(dataXML,presenter){
-                  /*  Set root node of author's graph */
+function getAuthorModelCallBack(dataXML,presenter){
+                  //  Set root node of author's graph 
                  this.authorGraph.setRootNode(this.uriAuthorSWDF,this.authorName);
-                  /*  Parsing XML */
+                  //  Parsing XML 
                  $(dataXML).find("sparql > results > result > binding").each(function(){
 
                             var key          = $(this).attr("name");
@@ -453,7 +458,7 @@ var getAuthorModelCallBack = function(dataXML,presenter){
                             var idContent    = self.prefix + key;
                             switch(key){
                                     case 'Publication':
-                                            /*  Publication > uriPublication > uriKeyword  > urlPDF  */
+                                            //  Publication > uriPublication > uriKeyword  > urlPDF  
                                             var uriResource    = $(this).next().find(":first-child").text(); // URI Resource
                                            
                                             
@@ -478,16 +483,16 @@ var getAuthorModelCallBack = function(dataXML,presenter){
                                             
                                             var pdf            = $(this).next().next().find(":first-child").text(); // URI Resource
                                             var keyPublication = value.toLowerCase().replace(/\s+/g,'_');
-                                            /*  Publications added */
+                                            //  Publications added 
                                             self.arrPublicationsSWDF[keyPublication] = true;                                 
-                                            /* Add child node Graph JSON */                                            
+                                            // Add child node Graph JSON                                             
                                             if(pdf == '') $(idContent).append('<div><a  href="#'+ constructedUri  +'">' + value  +'</a></div>');
                                             else          $(idContent).append('<div><a  href="#'+ constructedUri  +'">' + value  +'</a> <a  href='+pdf+'> (PDF) </a> </div>');
                                             self.authorGraph.setChildNode(uriResource,value , self.uriAuthorSWDF , key);
                                             break;
                                     case 'Organization':
                                             var uriResource   = $(this).next().find(":first-child").text();
-                                            /* Add child node Graph JSON */
+                                            // Add child node Graph JSON 
                                             self.authorGraph.setChildNode(uriResource, value, self.uriAuthorSWDF, key);
                                             $(idContent).append('<div><a  href="#'+ Dash.getValue(uriResource, ConfigurationManager.getInstance().getConfBaseUri()) +'">' + value   +'</a></div>');
                                             break;
@@ -495,7 +500,7 @@ var getAuthorModelCallBack = function(dataXML,presenter){
                                             var keywordLabel   =  value;
                                             var uriKeyword     = 'http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#keyword_'+keywordLabel.toLowerCase().replace(/\s+/g,'_');
                                             var keywordClass   = '#KeywordClass_' + keywordLabel.toLowerCase().replace(/\s+/g,'_');
-                                            /* Storage */
+                                            // Storage 
                                             presenter.storeKeyword(keywordClass, value);
                             }
                  });
@@ -503,12 +508,12 @@ var getAuthorModelCallBack = function(dataXML,presenter){
                  if($('#authorOrganization').text() == '') $('#labelAuthorOrganization').hide();
                  return this;
 	}                               
-                                  
+    /*                              
 //CallBack for the command getOrganization on SWDF
-var getOrganizationModelCallBack = function(dataXML,presenter){
+function getOrganizationModelCallBack(dataXML,presenter){
                 
                 var organizationName = $(dataXML).find('sparql > results > result > binding[name="Name"]').find(":first-child").text();                  
-                /*  Add root node */                
+                //  Add root node                 
                 this.grahp.setRootNode(this.uriOrganization,organizationName);
                 
 		$(dataXML).find("sparql > results > result > binding").each(function(){                   
@@ -548,7 +553,7 @@ var getOrganizationModelCallBack = function(dataXML,presenter){
  
  
  //CallBack for the command getTopic on SWDF                                 
- var getTopicModelCallBack = function(dataXML){           
+function getTopicModelCallBack(dataXML){           
             $(dataXML).find("sparql > results > result > binding").each(function(){                               
                             var key  = $(this).attr("name");				
                             var value = $(this).find(":first-child").text();
@@ -565,10 +570,10 @@ var getOrganizationModelCallBack = function(dataXML,presenter){
    
    
  //CallBack for the command getKeyword on SWDF                                 
-var getKeywordModelCallBack = function(dataXML,presenter){
-        /* Store current Keyword */
+function getKeywordModelCallBack(dataXML,presenter){
+        // Store current Keyword 
         presenter.storeKeyword(this.keywordClass,this.paramKeyword);
-        /* Parsing */
+        // Parsing 
         $(dataXML).find("sparql > results > result > binding").each(function(){                               
             var key          = $(this).attr("name");				
             var value        = $(this).find(":first-child").text();
@@ -613,7 +618,7 @@ var getKeywordModelCallBack = function(dataXML,presenter){
 
  //CallBack for the command getKeywordGraphView on SWDF  
  
- var getKeywordGraphViewMethodCallBack = function(dataXML) {                         
+function getKeywordGraphViewMethodCallBack(dataXML) {                         
                      var  KeywordGraphView = {
                            
                         idCurrentNode:'',
@@ -654,7 +659,7 @@ var getKeywordModelCallBack = function(dataXML,presenter){
                 }               
  
  //CallBack for the command getTopicGraphView on SWDF  
- var getTopicGraphViewMethodCallBack = function(dataXml){                                 
+function getTopicGraphViewMethodCallBack(dataXml){                                 
                        var TopicGraphView = {	
                         idCurrentNode:'',
                               labelCurrentNode:'',
@@ -677,10 +682,10 @@ var getKeywordModelCallBack = function(dataXML,presenter){
 
                               }
                         }
-                                                          
+    }                                                     
          
   //CallBack for the command getPublicationKeyword on SWDF       
-var getPublicationKeywordMethodCallBack = function(dataXML){              
+function getPublicationKeywordMethodCallBack(dataXML){              
         $(dataXML).find("sparql > results > result > binding").each(function(){                               
             var key  = $(this).attr("name");				
             var value = $(this).find(":first-child").text(); // uri   
@@ -697,7 +702,7 @@ var getPublicationKeywordMethodCallBack = function(dataXML){
     
     
 //CallBack for the command getAuthorSearchByName on SWDF       
-var getAuthorSearchByName = function(dataXML){
+function getAuthorSearchByName(dataXML){
          var result = $(dataXML).find("sparql > results> result").text();
          if( result != ""){
               $(dataXML).find("sparql > results > result > binding").each(function(){                  
@@ -716,8 +721,8 @@ var getAuthorSearchByName = function(dataXML){
     }    
 
 
-  /* search poster by author, title, keyword */
-var getPosterSearchByKeywordByAuthorByTitle  = function(dataXML){
+  // search poster by author, title, keyword 
+function getPosterSearchByKeywordByAuthorByTitle(dataXML){
         
          var result = $(dataXML).find("sparql > results> result").text();
          if( result != ""){
@@ -753,9 +758,10 @@ var getPosterSearchByKeywordByAuthorByTitle  = function(dataXML){
                        
                     }
               });            
-         }else{             
+        }else{             
               $(self.prefix).append('<li>Search result not found!</li>');
-         }
-    }                                  
-                                  
+        }
+}*/
+	                           
+})();
                                   

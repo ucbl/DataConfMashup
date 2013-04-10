@@ -3,7 +3,6 @@ var SearchView = Backbone.View.extend({
   
 	initialize: function (options){
 		this.model = options.model;
-		console.log($("#header").length);
 		this.headerTpl = _.template($("#header").html());
 		this.navBarTpl = _.template($("#navBar").html());
 		this.contentTpl = _.template($("#searchPublication").html());
@@ -18,10 +17,10 @@ var SearchView = Backbone.View.extend({
 	},
 	
 	render: function(){
-		$(this.el).append(this.headerTpl(this.model.toJSON()));
-		$(this.el).append(this.navBarTpl(this.model.toJSON()));
-		$(this.el).append(this.contentTpl(this.model.toJSON()));
-		$(this.el).append(this.footerTpl(this.model.toJSON()));
+		$(this.el).append(this.headerTpl(this.model));
+		$(this.el).append(this.navBarTpl(this.model));
+		$(this.el).append(this.contentTpl(this.model));
+		$(this.el).append(this.footerTpl(this.model));
 	}
 
 });
