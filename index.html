@@ -91,31 +91,31 @@
 			<div class="content">
 				<h3 style="text-align: center">From here, you can look for any publications :</h3>
 				<a href="scan/"  data-role="button" data-icon="arrow-r" data-iconpos="right">Scan a QRcode</a>    
-				<a href="#search/proceedings" data-role="button" data-icon="arrow-r" data-iconpos="right">Search in proceedings</a>
+				<a href="#proceedings-search" data-role="button" data-icon="arrow-r" data-iconpos="right">Search in proceedings</a>
 				<a href="#search/event"  data-role="button" data-icon="arrow-r" data-iconpos="right" >Search in events</a>
 			</div>     	
 		</script>
  
 		
 		<!-- Search a publication  by Author,by Keyword,by Title... -->
-		<script type="text/template" id="event-search"> 
+		<script type="text/template" id="proceedings-search"> 
 			<div class="content">
 				<h1 class="searchTrack"></h1>
 				<ul class="list gradWhite">   
-					<li><a href="#search/author"  data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Author</a></li>
-					<li><a href="#search/keyword" data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Keyword</a></li>
-					<li><a href="#search/number"   data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Number</a></li>
-					<li><a href="#search/title"  data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Title</a></li>
+					<li><a href="#proceedings-search/by-author"  data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Author</a></li>
+					<li><a href="#proceedings-search/by-keyword" data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Keyword</a></li>
+					<li><a href="#proceedings-search/by-number"   data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Number</a></li>
+					<li><a href="#proceedings-search/by-title"  data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Title</a></li>
 				</ul>
 			</div>
 		</script>  
 			 
 			<!-- Search a publiation By Keyword  -->
-		<script type="text/template" id="searchForm"> 
+		<script type="text/template" id="searchFormAuthor"> 
 			<div class="content">
-			<h3>Search By Keyword</h3>  
+			<h3>Search By Author</h3>  
 			<form action="/index.html" id="formSearchKeyword" class="searchform"  method="post">
-					
+			
 					<input  type="search" data-validation-engine="validate[required,custom[onlyLetterSp]]" id="inputSearchByKeyword"  name="valueSearch"/>
 					<a href="index.html" data-role="button" data-inline="true">Go</a>	
 			</form>             

@@ -7,6 +7,7 @@
 			
 			"datasources" : {
 				"conferenceDatasource" : {
+
 					"uri" : "http://data.semanticweb.org/sparql",
 					"crossDomainMode" : "CORS",
 					"commands" : SWDFCommandStore,
@@ -18,22 +19,23 @@
 					"crossDomainMode" : "Cors",
 					"commands" : "conferenceDatasourceCommands",
 				},
-				
-				"webDatasource" : {
+
+				"webDatasource" : {   
 					"Uri" : "http://api.duckduckgo.com/",
 					"crossDomainMode" : "JSONP",
 					"commands" : "conferenceDatasourceCommands",
 				},
 				
 				"eventDatasource" : {
+
 					"Uri" : "http://calendar.labs.idci.fr/api/schedule_event.jsonp?",
 					"crossDomainMode" : "JSONP",
 					"commands" : "conferenceDatasourceCommands",
 				}
-			},
-			
+
+			}, 
 			"routes" : {
-				"Home" : {
+			    "Home" : { 
 					"hash" : "",
 					"view" : "#home",
 					"commands" : [
@@ -46,22 +48,22 @@
 				"Person" : {
 					"hash" : "Person/:id",
 					"view" : "PersonView",
-					"commands" : {
-						"command" : {
+					"commands" : [
+					    {
 							"datasource" : "conferenceDatasource",
 							"name" : "getPublications",
 						},
 						
-						"command" : {
+						{
 							"datasource" : "publicationDatasource",
 							"name" : "getPublications",
 						},
 						
-						"command" : {
+						{
 							"datasource" : "publicationDatasource",
 							"name" : "getPublications",
 						}
-					}
+					]
 				}
 			}
 		};

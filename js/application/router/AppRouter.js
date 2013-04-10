@@ -17,10 +17,11 @@ AppRouter = Backbone.Router.extend({
 		
 		    $.each(this.routes,function(i,routeItem){
 				
+
 				self.route(routeItem.hash, function(id) {
 				
 					self.changePage(new AbstractView({contentEl :  routeItem.view , model : self.conference}));
-					
+						
 					$.each(routeItem.commands,function(i,commandItem){
 						console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 						var currentDatasource = self.datasources[commandItem.datasource];
@@ -28,26 +29,37 @@ AppRouter = Backbone.Router.extend({
 						var currentQuery      = currentCommand.getQuery({ conferenceUri : self.conference.baseUri, id : id });
 						self.executeCommand({datasource : currentDatasource, command : currentCommand, query : currentQuery});
 					});
+					
 				});
 			});
+	
+				//Ton CODE
+				/*self.route(routeItem.hash, function(id) { 
+				 
+                    if(routeItem.commands){
+		                $.each(routeItem.commands,function(i,commandItem){    
+                            //getAuhtor n'existe pas...
+                            console.log(commandItem.datasource);
+                            console.log(self.datasources[commandItem.datasource].commands);
+                            //console.log(self.datasources[commandItem.datasource].commands[commandItem.name]); 
+				        });
+					    self.changePage(new AbstractView({contentEl :  routeItem.view , model : this.conference}));
+					}
+
+				});*/
+			
 		
 			this.firstPage = true;
 	
 		},
 		
 		/************************************************      ROUTES         **************************************/
-        routes: {
-          
-            "search/:entity": "loadView",  
+		routes: {
+           
         },
 		
 		/************************************************      ACTIONS        **************************************/
-		loadView: function (entity){
-			
-			//this.SWDFManager.getAuthor();
-		},
-	
-		
+		 
 		
 		/************************************************      PAGE CHANGE HANDLERS            **************************************/
 		
@@ -80,7 +92,7 @@ AppRouter = Backbone.Router.extend({
 			}else{
 				jQuery.support.cors = false;
 			}
-			alert(query);
+			
 		
 			console.log(command);
 			$.ajax({
