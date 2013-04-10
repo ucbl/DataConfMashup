@@ -2,7 +2,7 @@
 			"conference" : {
 				"name": "example glossary",
 				"logoUri": "http://data.semanticweb.org/images/logo_www2012.jpg",
-				"baseUri": "http://data.semanticweb.org/www/2012",
+				"baseUri": "http://data.semanticweb.org/conference/www/2012",
 			},
 			
 			"datasources" : {
@@ -40,7 +40,7 @@
 					"commands" : [
 						{
 							"datasource" : "conferenceDatasource",
-							"name" : "getAuthor",
+							"name" : "getConferenceMainEvent",
 						}
 					]
 				},
