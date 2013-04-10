@@ -8,15 +8,15 @@
 			"datasources" : {
 				"conferenceDatasource" : {
 
-					"uri" : "http://data.semanticweb.org/sparql",
+					"Uri" : "http://data.semanticweb.org/sparql",
 					"crossDomainMode" : "CORS",
 					"commands" : SWDFCommandStore, 
 				},
 				
 				"publicationDatasource" : {
 					"Uri" : "http://dblp.l3s.de/d2r/sparql",
-					"crossDomainMode" : "Cors",
-					"commands" : "conferenceDatasourceCommands",
+					"crossDomainMode" : "JSONP",
+					"commands" : DBLPCommandStore,
 				},
 
 				"webDatasource" : {   
@@ -63,7 +63,17 @@
 							"name" : "getPublications",
 						}
 					]
+				},
+				"Author" : {
+					"hash" : "lol/:id",
+					"view" : "#Author",
+					"commands" : [
+					    {
+							"datasource" : "publicationDatasource",
+							"name" : "getAuthor",
+						}
+					]
 				}
-				"
+				
 			}
 		};

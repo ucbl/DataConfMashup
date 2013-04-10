@@ -8,14 +8,16 @@
  //DBLP commands file 
  
 //First Part SWDF commands file, Second Part : ModelCallBack function definition 
- var DBLPCommandStore = {}:
+ var DBLPCommandStore = {};
+ 
  //Command getAuthor 
 DBLPCommandStore.getAuthor = {
                             name: "getAuthor",
                             dataType : "JSONP",
                             method : "GET",
                             getQuery : function(parameters){ //JSON file parameters 
-                                                var authorName = parameters.authorName; 
+                                                alert('toto');
+                                                var authorName = parameters.id; 
                                                 var query =  ' SELECT DISTINCT ?uriAuthor  ?Site  ?CoAuthors  ?OtherPublication ?UriOtherPublication ?Years  WHERE {      ' +
                                                              ' { ?uriAuthor foaf:name "'+ authorName +'" . ' +
                                                              '   OPTIONAL {?uriAuthor foaf:homepage ?Site . }    '  +
@@ -27,16 +29,16 @@ DBLPCommandStore.getAuthor = {
                                                              ' } UNION ' 							  +
                                                              ' { ?author foaf:name  "'+ authorName +'" . '+
                                                              '   ?UriOtherPublication foaf:maker ?author  .  '+
-                                                                                           '   ?UriOtherPublication foaf:maker ?publication_coauthor .' +										
+                                                             '   ?UriOtherPublication foaf:maker ?publication_coauthor .' +										
                                                              '   ?UriOtherPublication dc:title ?OtherPublication  .    '+
-                                                                                           '   ?UriOtherPublication dcterms:issued ?Years .      '+
+                                                             '   ?UriOtherPublication dcterms:issued ?Years .      '+
                                                              ' }} ORDER BY (?uriAuthor )  DESC  (?Years)';
                                                              return query;
                                                   },
                                       ModelCallBack : getAuthorMethodCallBack
                                          
                                   }
-,
+
                                   
  //Command getConfPublication                                  
 DBLPCommandStore.getConfPublication = {
@@ -44,7 +46,7 @@ DBLPCommandStore.getConfPublication = {
                               dataType : "JSONP",
                               method : "GET",
                               getQuery : function(parameters){ //JSON file parameters 
-                                                var uriPublication = parameters.uriPublication; 
+                                                var uriPublication = parameters.id; 
                                                 var query =  ' SELECT DISTINCT ?Title ?Author ?Url ?Year ?Conference ?Publisher WHERE {      '+
                                                              ' {   																 '+
                                                              '   <'+uriPublication+'>  dc:title ?Title;			      			 '+
@@ -66,9 +68,9 @@ DBLPCommandStore.getConfPublication = {
                                                  },
                                         ModelCallBack : getConfPublicationMethodCallBack
                                            
-                                  })
+                                  }
 
-,
+
  //Command getJournalPublication  
  //.............TODO Method CallBack....................                                 
 DBLPCommandStore.getJournalPublication ={
@@ -76,7 +78,7 @@ DBLPCommandStore.getJournalPublication ={
                                 dataType : "JSONP",
                                 method : "GET",
                                 getQuery : function(parameters){ //JSON file parameters 
-                                                var uriPublication = parameters.uriPublication; 
+                                                var uriPublication = parameters.id; 
                                                 var query =  ' SELECT DISTINCT ?Title ?Author ?Url ?Year ?Journal  WHERE {       '+
                                                              ' {   																 '+
                                                              '   <'+uriPublication+'>  dc:title ?Title;			             '+
@@ -99,14 +101,14 @@ DBLPCommandStore.getJournalPublication ={
                                      
                                   }
                                   
- ,                                 
+                                
  //Command getAuthorGraphView                                                          
 DBLPCommandStore.getAuthorGraphView = {
                                 name: "getAuthorGraphView",
                                 dataType : "JSONP",
                                 method : "GET",
                                 getQuery : function(parameters){ //JSON file parameters 
-                                                var authorName = parameters.authorName; 
+                                                var authorName = parameters.id; 
                                                 var query =  '  SELECT DISTINCT ?OtherPublication ?UriOtherPublication   WHERE {       ' +
                                                              ' { ?author foaf:name  "'+ authorName +'" . '+
                                                              '   ?UriOtherPublication foaf:maker ?author  .  '+                                
@@ -195,7 +197,8 @@ function getAuthorMethodCallBack(dataJSON,presenter){
                                             site = true;
                                             $(idContent).append('<a href="'+ valueArr.value +'" >' + valueArr.value +'</a>');
                                             break;
-                                }                               
+                                }  
+                                $("[data-role = page]").find(".content").append(newButton).trigger("create");                             
                         });
                 });
                 // If homepage is not found => find it with DuckDuckGo!
