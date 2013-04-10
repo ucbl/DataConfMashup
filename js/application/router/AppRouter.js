@@ -10,7 +10,7 @@ AppRouter = Backbone.Router.extend({
 			this.routes = this.configuration.routes;
 
 			$.each(this.datasources,function(i,datasourceItem){
-		    console.log(datasourceItem);
+
 				/*self.on(this.hash, function(this.parameters) {
 					
 				});*/  
@@ -23,9 +23,12 @@ AppRouter = Backbone.Router.extend({
 		    $.each(this.routes,function(i,routeItem){
 				
 				self.route(routeItem.hash, function() {
+					
+
 					self.changePage(new routeItem.view({ model : this.conference}));
 				});
 			});
+		
 			this.firstPage = true;
 	
 		},

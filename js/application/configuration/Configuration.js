@@ -39,7 +39,7 @@
 			"routes" : [
 				{
 					"route" : "Home",
-					"hash" : " ",
+					"hash" : "",
 					"view" : "HomeView",
 					"commands" : [
 						{
