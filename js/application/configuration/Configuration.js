@@ -5,36 +5,32 @@
 				"baseUri": "http://data.semanticweb.org/www/2012",
 			},
 			
-			"datasources" : {
-				"datasource" : {
-					"id"  : "conferenceDatasource",
+			"datasources" : [{
+				"conferenceDatasource" : {
 					"uri" : "http://data.semanticweb.org/sparql",
 					"crossDomainMode" : "Cors",
 					"commands" : SWDFCommandStore,
 					
 				},
 				
-				"datasource" : {
-					"id"  : "publicationDatasource",
+				"publicationDatasource" : {
 					"Uri" : "http://data.semanticweb.org/sparql",
 					"crossDomainMode" : "Cors",
 					"commands" : "conferenceDatasourceCommands",
 				},
 				
-				"datasource" : {
-					"id"  : "webDatasource",
+				"webDatasource" : {
 					"Uri" : "http://api.duckduckgo.com/",
 					"crossDomainMode" : "JSONP",
 					"commands" : "conferenceDatasourceCommands",
 				},
 				
-				"datasource" : {
-					"id"  : "eventDatasource",
+				"eventDatasource" : {
 					"Uri" : "http://calendar.labs.idci.fr/api/schedule_event.jsonp?",
 					"crossDomainMode" : "JSONP",
 					"commands" : "conferenceDatasourceCommands",
 				}
-			},
+			}],
 			
 			"routes" : [
 				{
@@ -44,7 +40,7 @@
 					"commands" : [
 						{
 							"datasource" : "conferenceDatasource",
-							"name" : "getEvent",
+							"name" : "getAuthor",
 						}
 					]
 				},

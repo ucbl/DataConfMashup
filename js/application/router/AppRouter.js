@@ -10,7 +10,8 @@ AppRouter = Backbone.Router.extend({
 			this.routes = this.configuration.routes;
 
 			$.each(this.datasources,function(i,datasourceItem){
-
+				console.log("******* DATASOURCES ********");
+				console.log(datasourceItem);
 				/*self.on(this.hash, function(this.parameters) {
 					
 				});*/  
@@ -22,11 +23,17 @@ AppRouter = Backbone.Router.extend({
 		
 		    $.each(this.routes,function(i,routeItem){
 				
-				self.route(routeItem.hash, function(id) {
-
-					self.changePage(new AbstractView({contentEl :  routeItem.view , model : this.conference}));
+				/*self.route(routeItem.hash, function(id) {
+					//console.log(Route : routeItem.name);
+					self.changePage(new AbstractView({contentEl :  routeItem.view , model : self.conference}));
 					
-				});
+					$.each(routeItem.commands,function(i,commandItem){
+					console.log(commandItem.name);
+					var getQuery = self.datasources[commandItem.datasource].commands[commandItem.name].getQuery);
+					getQuery({trackUri:"pop"});
+						//this.executeCommand(.commands.[commandItem.name];
+					});
+				});*/
 			});
 		
 			this.firstPage = true;
