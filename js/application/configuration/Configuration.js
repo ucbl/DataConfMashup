@@ -6,39 +6,32 @@
 			},
 			
 			"datasources" : {
-				"datasource" : {
-					"id"  : "conferenceDatasource",
+			    "conferenceDatasource" : {
 					"uri" : "http://data.semanticweb.org/sparql",
 					"crossDomainMode" : "Cors",
 					"commands" : SWDFCommandStore,
 					
 				},
 				
-				"datasource" : {
-					"id"  : "publicationDatasource",
+				"publicationDatasource" : {
 					"Uri" : "http://data.semanticweb.org/sparql",
 					"crossDomainMode" : "Cors",
 					"commands" : "conferenceDatasourceCommands",
 				},
-				
-				"datasource" : {
-					"id"  : "webDatasource",
+				"webDatasource" : {   
 					"Uri" : "http://api.duckduckgo.com/",
 					"crossDomainMode" : "JSONP",
 					"commands" : "conferenceDatasourceCommands",
 				},
 				
-				"datasource" : {
-					"id"  : "eventDatasource",
+				 "eventDatasource": {   
 					"Uri" : "http://calendar.labs.idci.fr/api/schedule_event.jsonp?",
 					"crossDomainMode" : "JSONP",
 					"commands" : "conferenceDatasourceCommands",
 				}
-			},
-			
-			"routes" : [
-				{
-					"route" : "Home",
+			}, 
+			"routes" : {
+			    "Home" : { 
 					"hash" : "",
 					"view" : "#home",
 					"commands" : [
@@ -48,25 +41,39 @@
 						}
 					]
 				},
-				{
+				"Proceedings-search" : { 
+					"hash" : "proceedings-search",
+					"view" : "#proceedings-search", 
+				},
+				"Proceedings-search-By-author" : { 
+					"hash" : "proceedings-search/by-author",
+					"view" : "#searchFormAuthor",
+					"commands" : [
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getEvent",
+						}
+					]
+				},
+				"Person" : {
 					"hash" : "Person/:id",
 					"view" : "PersonView",
-					"commands" : {
-						"command" : {
+					"commands" : [
+					    {
 							"datasource" : "conferenceDatasource",
 							"name" : "getPublications",
 						},
 						
-						"command" : {
+						{
 							"datasource" : "publicationDatasource",
 							"name" : "getPublications",
 						},
 						
-						"command" : {
+						{
 							"datasource" : "publicationDatasource",
 							"name" : "getPublications",
 						}
-					}
+					]
 				}
-			]
+			}
 		};

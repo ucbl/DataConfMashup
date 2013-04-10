@@ -22,10 +22,17 @@ AppRouter = Backbone.Router.extend({
 		
 		    $.each(this.routes,function(i,routeItem){
 				
-				self.route(routeItem.hash, function(id) {
-
-					self.changePage(new AbstractView({contentEl :  routeItem.view , model : this.conference}));
-					
+				self.route(routeItem.hash, function(id) { 
+				 
+                    if(routeItem.commands){
+		                $.each(routeItem.commands,function(i,commandItem){    
+                            //getAuhtor n'existe pas...
+                            console.log(commandItem.datasource);
+                            console.log(self.datasources[commandItem.datasource].commands);
+                            //console.log(self.datasources[commandItem.datasource].commands[commandItem.name]); 
+				        });
+					    self.changePage(new AbstractView({contentEl :  routeItem.view , model : this.conference}));
+					}
 				});
 			});
 		
@@ -35,17 +42,11 @@ AppRouter = Backbone.Router.extend({
 		
 		/************************************************      ROUTES         **************************************/
         routes: {
-          
-            "search/:entity": "loadView",  
+           
         },
 		
 		/************************************************      ACTIONS        **************************************/
-		loadView: function (entity){
-			
-			//this.SWDFManager.getAuthor();
-		},
-	
-		
+		 
 		
 		/************************************************      PAGE CHANGE HANDLERS            **************************************/
 		
