@@ -24,8 +24,8 @@ AppRouter = Backbone.Router.extend({
 				
 				self.route(routeItem.hash, function() {
 					
-
-					self.changePage(new routeItem.view({ model : this.conference}));
+					alert("pop");
+					self.changePage(new HomeView({ model : this.conference}));
 				});
 			});
 		

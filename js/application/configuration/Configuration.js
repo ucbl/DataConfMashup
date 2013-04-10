@@ -38,7 +38,7 @@
 			
 			"routes" : [
 				{
-					"route" : "Home",
+					"route" : "Home/:id",
 					"hash" : "",
 					"view" : "HomeView",
 					"commands" : [
