@@ -15,7 +15,7 @@ var SWDFCommandStore = {};
   SWDFCommandStore.getAuthorSuggestion = {
                                   name: "getAuthorSuggestion",
                                   dataType : "XML",
-                                  method : "GET",
+                                  method : "GET", 
                                   getQuery : function(parameters){ //JSON file parameters 
                                                 var trackUri = parameters.trackUri;
 												alert("pop");
@@ -204,7 +204,7 @@ SWDFCommandStore.getAuthor = {
 												//alert(parameters.trackUri); 
                                                 var conferenceUri = parameters.conferenceUri;
                                                 var authorName = parameters.id;  
-                                                var query =' SELECT DISTINCT ?Publication ?uriPublication ?keywordLabel ?PDF ?Organization ?uriOrganization WHERE {     ' +
+                                                var query ='PREFIX iswm: <http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#> PREFIX dc: <http://purl.org/dc/elements/1.1/> PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT DISTINCT ?Publication ?uriPublication ?keywordLabel ?PDF ?Organization ?uriOrganization WHERE {     ' +
                                                            ' { ' +
                                                            '   ?uriOrganization       foaf:member <'+ authorName +'>  . '  +
                                                            '   ?uriOrganization       foaf:name   ?Organization .      '  +

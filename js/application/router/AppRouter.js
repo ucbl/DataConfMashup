@@ -15,6 +15,7 @@ AppRouter = Backbone.Router.extend({
 
 			});
 		
+		/************************************************      ROUTES         **************************************/ 
 		    $.each(this.routes,function(i,routeItem){
 				
 
@@ -25,7 +26,7 @@ AppRouter = Backbone.Router.extend({
 					$.each(routeItem.commands,function(i,commandItem){
 						console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 						var currentDatasource = self.datasources[commandItem.datasource];
-						var currentCommand    = self.datasources[commandItem.datasource].commands[commandItem.name];
+						var currentCommand    = currentDatasource.commands[commandItem.name];
 						var currentQuery      = currentCommand.getQuery({ conferenceUri : self.conference.baseUri, id : id });
 						self.executeCommand({datasource : currentDatasource, command : currentCommand, query : currentQuery});
 					});
@@ -53,10 +54,6 @@ AppRouter = Backbone.Router.extend({
 	
 		},
 		
-		/************************************************      ROUTES         **************************************/
-		routes: {
-           
-        },
 		
 		/************************************************      ACTIONS        **************************************/
 		 
@@ -74,8 +71,7 @@ AppRouter = Backbone.Router.extend({
 				this.firstPage = false;
 			}
 			$.mobile.changePage($(page.el), {changeHash:false, transition: transition});
-			
-   
+			 
 		
 		},
 		

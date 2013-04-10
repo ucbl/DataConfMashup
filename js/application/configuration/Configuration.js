@@ -10,8 +10,7 @@
 
 					"uri" : "http://data.semanticweb.org/sparql",
 					"crossDomainMode" : "CORS",
-					"commands" : SWDFCommandStore,
-					
+					"commands" : SWDFCommandStore, 
 				},
 				
 				"publicationDatasource" : {
