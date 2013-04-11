@@ -13,7 +13,6 @@ var SWDFCommandStore = {};
  
  //Command getAuthorSuggestion 
   SWDFCommandStore.getAuthorSuggestion = {
-                                  name: "getAuthorSuggestion",
                                   dataType : "XML",
                                   method : "GET", 
                                   getQuery : function(parameters){ //JSON file parameters 
@@ -33,17 +32,16 @@ var SWDFCommandStore = {};
                                   };
  //Command getAllAuthors
   SWDFCommandStore.getAllAuthors = {
-    name: "getAuthorSuggestion",
     dataType : "XML",
     method : "GET", 
     getQuery : function(parameters){ //JSON file parameters 
         var conferenceUri = parameters.conferenceUri; 
         return 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
-                    ' SELECT DISTINCT ?name ?author WHERE  { '+
+                    ' SELECT DISTINCT ?name  ?uriPaper  WHERE  { '+
                     '   ?author foaf:name ?name.         '+
                     '   ?author foaf:made ?uriPaper.     '+
                     '   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
-                    ' }  '; 
+                    ' } ORDER BY ASC(?name) '; 
     },
     ModelCallBack : getAllAuthorsCallback,
 
@@ -51,7 +49,6 @@ var SWDFCommandStore = {};
                                             
  //Command getAllTitle       
 SWDFCommandStore.getAllTitle= {
-    name: "getTitleSuggestion",
     dataType : "XML",
     method : "GET",
     getQuery : function(parameters){ //JSON file parameters 
@@ -69,7 +66,6 @@ SWDFCommandStore.getAllTitle= {
     
  //Command getAllKeyword       
 SWDFCommandStore.getAllKeyword= {
-    name: "getAllKeyword",
     dataType : "XML",
     method : "GET",
     getQuery : function(parameters){ //JSON file parameters 
@@ -89,13 +85,32 @@ SWDFCommandStore.getAllKeyword= {
                  ' }}   '; 
          },
     ModelCallBack : getAllTitleCallback
+    }
+    
+ //Command getAllKeyword       
+SWDFCommandStore.getAuthorsProceedings= {
+    dataType : "XML",
+    method : "GET",
+    getQuery : function(parameters){ //JSON file parameters 
+        var conferenceUri = parameters.conferenceUri;  
+        var authorName = parameters.id.split('_').join(' ');
+        return 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+                 ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
+                    ' SELECT DISTINCT ?title WHERE  { '+
+                    '   ?author foaf:name "'+ authorName +'".         '+
+                    '   ?author foaf:made ?uriPaper.     '+
+                    '  	 ?uriPaper dc:title     ?title.         ' + 
+                    '   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
+                    ' }  '; 
+         },
+    ModelCallBack : getAuthorsProceedingsCallback
     }            
                                   
+
 SWDFCommandStore.getPublicationInfo= {
     dataType : "XML",
     method : "GET",
-    getQuery : function(parameters){
-	
+    getQuery : function(parameters){	
         var publiTitle = parameters.id; 
 		var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
 						' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
@@ -599,24 +614,50 @@ getTopicGraphView : 		new Command({
 
 //Callback for  author search by  
 function getAllAuthorsCallback(dataXML){ 
-    appendFilterList(dataXML,'#proceedings-search/author-','name');  
-}
+    appendFilterList(dataXML,'#proceedings-search/author-','name',{bubbles:true,autodividers:true});  
+} 
 
 //Callback for  title search by  
 function getAllTitleCallback(dataXML){ 
-    appendFilterList(dataXML,'#proceedings-search/author-','title'); 
+    appendFilterList(dataXML,'#publication/','title'); 
 }
+function getAuthorsProceedingsCallback(dataXML){ 
+    appendFilterList(dataXML,'#publication/','title');  
+} 
 
 //Callback for  title search by  
 function getAllKeywordCallback(dataXML){ 
-    appendFilterList(dataXML,'#proceedings-search/author-','keyword'); 
+    appendFilterList(dataXML,'#proceedings-search/keyword-','keyword'); 
 }
 
-function appendFilterList(dataXML,baseLink,bindingName){ 
-    var Uldiv=$('<ul data-role="listview" id="SearchByAuthorUl"  data-role="listview" data-filter="true" data-filter-placeholder="filter author name" class="ui-listview ui-corner-all ui-shadow"> ');
-    $(dataXML).find('sparql results > result > binding[name="'+bindingName+'"]').each(function(i,currentBinding){
-        var text=$(currentBinding).find(":first-child").text();
-        Uldiv.append($('<li><a href='+baseLink+text+'">'+text+'</a></li>')) ;
+
+/** append filter list to current view using '$("[data-role = page]").find(".content")' selector (backbone)
+  * @param dataXML : SWDF sparql result
+  * @param baselink : string url pattern for dynamic link generation (i.e. "#publication/")
+  * @param bindingName : string pattern to match with sparql result 'binding[name="'+bindingName+'"]'
+  * @param option : {
+  *         autodividers : boolean add jquerymobileui autodividers
+  *         bubbles : boolean add count bubble support for sparql endpoint 1.0 : require "ORDER BY ASC(?bindingName)" in the sparql query. 
+  */ 
+function appendFilterList(dataXML,baseLink,bindingName,option){
+    if(!option)option={};
+    var Uldiv=$('<ul  id="SearchByAuthorUl" '+(option.autodividers?'data-autodividers="true"':'')+' data-role="listview" data-filter="true" data-filter-placeholder="filter author name" class="ui-listview ui-corner-all ui-shadow"> ');
+    var bubble=option.bubbles  ?   '<span class="ui-li-count">1</span>'    :   ''  ; 
+    var text, counter, previousText; 
+    $(dataXML).find('sparql results > result').each(function(i,currentResult){
+        text =$(currentResult).find('binding[name="'+bindingName+'"] :first-child').text(); 
+        if(option.bubbles && i!=0 ){ 
+            previousText=$(currentResult.previousElementSibling).find('binding[name="'+bindingName+'"] :first-child').text();
+            if(previousText==text){
+                counter=parseInt(Uldiv.find(' li:last-child span').html());  
+                Uldiv.find(' li:last-child span').html(counter+1); 
+                text=false;
+            }  
+        } 
+        if(text)Uldiv.append(
+                    $('<li></li>').append(
+                        $('<a href='+baseLink+text.split(' ').join('_')+'>'+text+'</a>')
+                                   .append($(bubble)))) ;
     }); 
     $("[data-role = page]").find(".content").append(Uldiv).trigger("create");
 } 
