@@ -23,15 +23,74 @@ var SWDFCommandStore = {};
                                                 var query = 'SELECT DISTINCT ?name WHERE  { '+
                                                             '   ?author foaf:name ?name.         '+
                                                             '   ?author foaf:made ?uriPaper.     '+
-                                                            '   ?uriPaper swc:isPartOf  <'+trackUri+'>.'+
-                                                            '   FILTER REGEX( ?name , "'+ author +'","i").'+
-                                                            ' } LIMIT 5 ';
+                                                            '   ?uriPaper swc:isPartOf  <'+trackUri+'>.'+ 
+                                                            ' }  ';
                                                    return query ; 
                                            },
                                   ModelCallBack : "TODO",
                                      
-                                  }
+                                  };
+ //Command getAllAuthors
+  SWDFCommandStore.getAllAuthors = {
+    name: "getAuthorSuggestion",
+    dataType : "XML",
+    method : "GET", 
+    getQuery : function(parameters){ //JSON file parameters 
+        var conferenceUri = parameters.conferenceUri; 
+        return 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+                    ' SELECT DISTINCT ?name ?author WHERE  { '+
+                    '   ?author foaf:name ?name.         '+
+                    '   ?author foaf:made ?uriPaper.     '+
+                    '   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
+                    ' }  '; 
+    },
+    ModelCallBack : getAllAuthorsCallback,
 
+    };
+                                            
+ //Command getAllTitle       
+SWDFCommandStore.getAllTitle= {
+    name: "getTitleSuggestion",
+    dataType : "XML",
+    method : "GET",
+    getQuery : function(parameters){ //JSON file parameters 
+        var conferenceUri = parameters.conferenceUri; 
+        var title = parameters.title;  
+        return '  PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
+                    '  PREFIX dc: <http://purl.org/dc/elements/1.1/>   ' +
+                    '  SELECT DISTINCT ?title WHERE {   ' +
+                    '  	 ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings> .' +
+                    '  	 ?uriPaper dc:title     ?title.         ' + 
+                    ' }  '; 
+         },
+    ModelCallBack : getAllTitleCallback
+    }           
+    
+ //Command getAllKeyword       
+SWDFCommandStore.getAllKeyword= {
+    name: "getAllKeyword",
+    dataType : "XML",
+    method : "GET",
+    getQuery : function(parameters){ //JSON file parameters 
+        var conferenceUri = parameters.conferenceUri; 
+        var title = parameters.title;  
+        return '  PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
+                 ' PREFIX key:<http://www.w3.org/2004/02/skos/core#> ' +
+                 ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
+                 '  SELECT DISTINCT ?keyword WHERE {{ ' +
+                 '  	 ?uriPaper       swc:isPartOf  <'+ conferenceUri+'/proceedings> .' +
+                 '  	 ?uriPaper       foaf:topic    ?uriKeywork.         ' +
+                 '  	 ?uriKeywork     key:prefLabel ?keywork. 	         ' + 
+                 ' } UNION '+
+                 ' {       '+
+                 '  	 ?uriPaper       swc:isPartOf  <'+conferenceUri+'/proceedings> .' +
+                 '       ?uriPaper       dc:subject    ?keywork.      '+ 
+                 ' }}   '; 
+         },
+    ModelCallBack : getAllTitleCallback
+    }            
+                                  
+  /*   
  //Command getKeywordSuggestion      
  SWDFCommandStore.getKeywordSuggestion = {
                                   name: "getAuthorSuggestion",
@@ -120,7 +179,7 @@ SWDFCommandStore.getPosterSearchByTitle = {
                                               },
                                   ModelCallBack : getPosterSearchByKeywordByAuthorByTitle
                                   }
-           /*                       
+                             
                                   
 //Command getPosterSearchByAuthor                                 
 var getPosterSearchByAuthor = SWDFCommandStore.getPosterSearchByAuthor = {
@@ -226,7 +285,7 @@ SWDFCommandStore.getAuthor = {
                                                         
                                                            return query;
                                                     },
-                                  ModelCallBack : getAuthorModelCallBack
+                                  ModelCallBack : "pop"
                                   }
                                   
                               /*
@@ -367,11 +426,35 @@ getTopicGraphView : 		new Command({
                                   ModelCallBack : getTopicGraphViewMethodCallBack
                                   })*/
                                   
-//End file SWDFCommands    
-/*
+//End file SWDFCommands   
 
  //.......................ModelCallBack................................
 
+//Callback for  author search by  
+function getAllAuthorsCallback(dataXML){ 
+    appendFilterList(dataXML,'#proceedings-search/author-','name');  
+}
+
+//Callback for  title search by  
+function getAllTitleCallback(dataXML){ 
+    appendFilterList(dataXML,'#proceedings-search/author-','title'); 
+}
+
+//Callback for  title search by  
+function getAllKeywordCallback(dataXML){ 
+    appendFilterList(dataXML,'#proceedings-search/author-','keyword'); 
+}
+
+function appendFilterList(dataXML,baseLink,bindingName){ 
+    var Uldiv=$('<ul data-role="listview" id="SearchByAuthorUl"  data-role="listview" data-filter="true" data-filter-placeholder="filter author name" class="ui-listview ui-corner-all ui-shadow"> ');
+    $(dataXML).find('sparql results > result > binding[name="'+bindingName+'"]').each(function(i,currentBinding){
+        var text=$(currentBinding).find(":first-child").text();
+        Uldiv.append($('<li><a href='+baseLink+text+'">'+text+'</a></li>')) ;
+    }); 
+    $("[data-role = page]").find(".content").append(Uldiv).trigger("create");
+} 
+ 
+/*
 //CallBack for the command getPaper on SWDF     
 function getPaperModelCallBack(dataXML,presenter){
     	          
@@ -441,9 +524,8 @@ function getPaperModelCallBack(dataXML,presenter){
     }
                                  
  
- */
  //CallBack for the command getAuthor on SWDF                                  
-function getAuthorModelCallBack(dataXML,presenter){alert("prout");
+function getAuthorModelCallBack(dataXML,presenter){ 
                   //  Set root node of author's graph 
                  this.authorGraph.setRootNode(this.uriAuthorSWDF,this.authorName);
                   //  Parsing XML 
@@ -758,6 +840,6 @@ function getPosterSearchByKeywordByAuthorByTitle(dataXML){
               $(self.prefix).append('<li>Search result not found!</li>');
         }
 }*/
-	                           
+           
 
                                   

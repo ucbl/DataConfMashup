@@ -2,7 +2,7 @@
 			"conference" : {
 				"name": "example glossary",
 				"logoUri": "http://data.semanticweb.org/images/logo_www2012.jpg",
-				"baseUri": "http://data.semanticweb.org/www/2012",
+				"baseUri": "http://data.semanticweb.org/conference/www/2012",
 			},
 			
 			"datasources" : {
@@ -39,7 +39,7 @@
 					"view" : "#home",
 					"commands" : [ 
 					]
-				},
+				}, 
 			    "Proceedings-search" : { 
 					"hash" : "proceedings-search",
 					"view" : "#proceedingsSearch",
@@ -52,7 +52,27 @@
 					"commands" : [
 					    {
 							"datasource" : "conferenceDatasource",
-							"name" : "getAuthorSuggestion",
+							"name" : "getAllAuthors",
+						} 
+					]
+				},
+			    "Proceedings-search-by-keyword" : { 
+					"hash" : "proceedings-search/by-keyword",
+					"view" : "#searchFormKeyword",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getAllKeyword",
+						} 
+					]
+				},
+			    "Proceedings-search-by-title" : { 
+					"hash" : "proceedings-search/by-title",
+					"view" : "#searchFormTitle",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getAllTitle",
 						} 
 					]
 				},
