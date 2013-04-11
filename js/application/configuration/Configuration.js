@@ -1,8 +1,8 @@
  var Configuration = {
 			"conference" : {
-				"name": "example glossary",
-				"logoUri": "http://data.semanticweb.org/images/logo_www2012.jpg",
-				"baseUri": "http://data.semanticweb.org/conference/www/2012",
+				"name": "ISWC 2012",
+				"logoUri": "http://iswc2012.semanticweb.org/sites/default/files/iswc_logo.jpg",
+				"baseUri": "http://data.semanticweb.org/conference/iswc/2012",
 			},
 			
 			"datasources" : {
@@ -41,6 +41,16 @@
 						{
 							"datasource" : "conferenceDatasource",
 							"name" : "getConferenceMainEvent",
+						}
+					]
+				},
+				"Event" : { 
+					"hash" : "event/*id",
+					"view" : "#event",
+					"commands" : [
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getSubEvent",
 						}
 					]
 				},

@@ -18,7 +18,7 @@ var SWDFCommandStore = {};
                                   method : "GET", 
                                   getQuery : function(parameters){ //JSON file parameters 
                                                 var trackUri = parameters.trackUri;
-												alert("pop");
+												
                                                 var author = parameters.author;
                                                 var query = 'SELECT DISTINCT ?name WHERE  { '+
                                                             '   ?author foaf:name ?name.         '+
@@ -36,18 +36,19 @@ var SWDFCommandStore = {};
                                   dataType : "XML",
                                   method : "GET", 
                                   getQuery : function(parameters){ //JSON file parameters 
+											
+												var eventId = parameters.id;  
 												var conferenceUri = parameters.conferenceUri;
-												var eventUri = parameters.id;  
 												
 												var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
 																' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' ;
 																
-                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {      '+
-																'<'+ eventUri+'> swc:isSuperEventOf  ?eventUri. '+
-																'?eventUri rdfs:label ?eventLabel}';
+                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {'+
+																'<'+conferenceUri+eventId+'> swc:isSuperEventOf  ?eventUri. }';
 												return prefix + query ; 
+												
                                            },
-                                  ModelCallBack : "TODO",
+                                  ModelCallBack : getSubEventCallBack,
                                      
                                   }
 		//Command getAuthorSuggestion 
@@ -56,12 +57,13 @@ var SWDFCommandStore = {};
                                   method : "GET", 
                                   getQuery : function(parameters){ //JSON file parameters 
 											
-												var eventUri = parameters.conferenceUri;
+												var conferenceUri = parameters.conferenceUri;
 												var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
 																' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' ;
 															 
-                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {'+
-																'<'+ eventUri+'> swc:isSuperEventOf  ?eventUri.'+
+                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {     '+
+																'<'+conferenceUri+'> swc:isSuperEventOf  ?eventUri. '+
+																'?eventUri rdf:type swc:TrackEvent.            '+
 																'?eventUri rdfs:label ?eventLabel}';
 												return prefix + query ; 
                                            },
@@ -263,7 +265,7 @@ SWDFCommandStore.getAuthor = {
                                                         
                                                            return query;
                                                     },
-                                  ModelCallBack : getAuthorModelCallBack
+                                  ModelCallBack : getAuthorModelCallBack,
                                   }
                                   
                               /*
@@ -797,24 +799,40 @@ function getPosterSearchByKeywordByAuthorByTitle(dataXML){
 }*/
 
 // search poster by author, title, keyword 
-function getConferenceMainEventCallback(dataXML){
-        
+function getConferenceMainEventCallback(dataXML,conferenceUri){
+      
          var result = $(dataXML).find("sparql > results> result").text();
          if( result != ""){
               $(dataXML).find("sparql > results > result").each(function(){                  
                     var eventLabel  = $(this).find("[name = eventLabel]").text();				
-                    var eventUri  = $(this).find("[name = eventUri]").text();
+                    var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,"");
 				
 					//console.log(eventUri);
 					var title = $(this).next().find(":first-child").text();
-					var newButton = $('<a href="#search/event"  data-role="button" data-icon="arrow-r" data-iconpos="right" >'+"pop"+'</a>');
-						
-					$("[data-role = page]").find(".content").append(newButton); 
+					var newButton = $('<a href="#event/'+eventUri+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+eventLabel+'</a>');;	
+					$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
                 
 
                     
               });            
         }
+};
+
+function getSubEventCallBack(dataXML, conferenceUri){
+	
+	var result = $(dataXML).find("sparql > results> result").text();
+	if( result != ""){
+		$(dataXML).find("sparql > results > result").each(function(){                  
+			var eventLabel  = $(this).find("[name = eventLabel]").text();				
+			var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,"");
+
+			
+			var title = $(this).next().find(":first-child").text();
+			var newButton = $('<a href="#event/'+eventUri+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+eventUri+'</a>');;	
+			$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
+			
+		});            
+	}
 };
 	                           
 

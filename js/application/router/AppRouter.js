@@ -9,26 +9,27 @@ AppRouter = Backbone.Router.extend({
 			this.datasources = this.configuration.datasources;
 			this.routes = this.configuration.routes;
 
-			$.each(this.datasources,function(i,itemDatasource){
+			$.each(this.datasources,function(i,datasourceItem){
 				console.log("******* DATASOURCE ********");
-				console.log(itemDatasource);
+				console.log(datasourceItem);
 
 			});
 		
 		/************************************************      ROUTES         **************************************/ 
 		    $.each(this.routes,function(i,routeItem){
 				
-
-				self.route(routeItem.hash, function(id) {
+				console.log("******* ROUTE ********");
+				console.log(routeItem);
 				
+				self.route(routeItem.hash, function(id) {
+					
 					self.changePage(new AbstractView({contentEl :  routeItem.view , model : self.conference}));
 						
 					$.each(routeItem.commands,function(i,commandItem){
 						console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
-						
-						var currentQuery      = currentCommand.getQuery({ conferenceUri : self.conference.baseUri, id : id });
+						var currentQuery      = currentCommand.getQuery({conferenceUri : self.conference.baseUri, id : id });
 					
 						self.executeCommand({datasource : currentDatasource, command : currentCommand, query : currentQuery});
 					});
@@ -79,7 +80,7 @@ AppRouter = Backbone.Router.extend({
 		
 		executeCommand: function (parameters) {
 			
-			
+			var self = this;
 			var datasource = parameters.datasource;
 			var command    = parameters.command;
 			var query      = parameters.query;
@@ -91,7 +92,7 @@ AppRouter = Backbone.Router.extend({
 				jQuery.support.cors = false;
 			}
 			
-		
+			
 			console.log(command);
 			$.ajax({
 				url: datasource.uri,
@@ -99,7 +100,7 @@ AppRouter = Backbone.Router.extend({
 				cache: false,
 				dataType: command.dataType,
 				data: {query : query },							
-				success: command.ModelCallBack,
+				success: function(data){command.ModelCallBack(data,self.conference.baseUri)},
 				error: function(jqXHR, textStatus, errorThrown) { 
 					alert(errorThrown);
 				}
