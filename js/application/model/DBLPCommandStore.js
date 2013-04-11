@@ -8,9 +8,9 @@
  //DBLP commands file 
  
 //First Part SWDF commands file, Second Part : ModelCallBack function definition 
- var DBLPCommandStore = { 
+ var DBLPCommandStore = {}:
  //Command getAuthor 
-getAuthor : new Command({
+DBLPCommandStore.getAuthor = {
                             name: "getAuthor",
                             dataType : "JSONP",
                             method : "GET",
@@ -35,11 +35,11 @@ getAuthor : new Command({
                                                   },
                                       ModelCallBack : getAuthorMethodCallBack
                                          
-                                  })
+                                  }
 ,
                                   
  //Command getConfPublication                                  
-getConfPublication : new Command({
+DBLPCommandStore.getConfPublication = {
                               name: "getConfPublication ",
                               dataType : "JSONP",
                               method : "GET",
@@ -71,7 +71,7 @@ getConfPublication : new Command({
 ,
  //Command getJournalPublication  
  //.............TODO Method CallBack....................                                 
-getJournalPublication : new Command({
+DBLPCommandStore.getJournalPublication ={
                                 name: "getJournalPublication  ",
                                 dataType : "JSONP",
                                 method : "GET",
@@ -97,11 +97,11 @@ getJournalPublication : new Command({
                                                     },
                                           ModelCallBack : "TODO"
                                      
-                                  })
+                                  }
                                   
  ,                                 
  //Command getAuthorGraphView                                                          
-getAuthorGraphView : new Command({
+DBLPCommandStore.getAuthorGraphView = {
                                 name: "getAuthorGraphView",
                                 dataType : "JSONP",
                                 method : "GET",
@@ -116,10 +116,10 @@ getAuthorGraphView : new Command({
                                                   },
                                 ModelCallBack : getAuthorGraphViewMethodCallBack
                                      
-                           })
+                           }
                                   
 
- }//End DBLPCommands JSON File   
+ 
    
    
 //.......................ModelCallBack................................   

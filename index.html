@@ -8,7 +8,10 @@
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 		<link rel="stylesheet" href="css/appStyle.css" />
 		<!--<link rel="stylesheet" href="css/themes/A.min.css" />-->
+
 		<!--<link rel="stylesheet" href="css/themes/E.min.css" />-->
+		<link rel="stylesheet" href="css/themes/D.min.css" />
+
 		<!--<link rel="stylesheet" href="css/themes/C.min.css" />-->
 		<!--<link rel="stylesheet" href="css/themes/D.min.css" />-->
 		<link rel="stylesheet" href="css/themes/C.min.css" />
@@ -108,34 +111,42 @@
  
 		
 		<!-- Search a publication  by Author,by Keyword,by Title... -->
-		<script type="text/template" id="proceedings-search"> 
+		<script type="text/template" id="proceedingsSearch"> 
 			<div class="content">
 				<h1 class="searchTrack"></h1>
 				<ul class="list gradWhite">   
 					<li><a href="#proceedings-search/by-author"  data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Author</a></li>
 					<li><a href="#proceedings-search/by-keyword" data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Keyword</a></li>
-					<li><a href="#proceedings-search/by-number"   data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Number</a></li>
 					<li><a href="#proceedings-search/by-title"  data-role="button" data-icon="arrow-r" data-iconpos="right">Search By Title</a></li>
 				</ul>
 			</div>
 		</script>  
-			 
-			
-		<script type="text/template" id="searchFormAuthor"> 
-			<div class="content">
-			<h3>Search By Author</h3>  
-			<form action="/index.html" id="formSearchKeyword" class="searchform"  method="post">
-			
-					<input  type="search" data-validation-engine="validate[required,custom[onlyLetterSp]]" id="inputSearchByKeyword"  name="valueSearch"/>
-					<a href="index.html" data-role="button" data-inline="true">Go</a>	
-			</form>             
-		</script> 
-		
+
+		<!-- View an event  -->
 		<script type="text/template" id="event"> 
 			<div class="content">
 				<h3>Search in event</h3>  
 				
 			</div>      
+		</script> 
+		
+			<!-- Search a publiation By Author  -->
+		<script type="text/template" id="searchFormAuthor"> 
+			<div class="content">
+			    <h3>Search By Author</h3>
+			</div>
+		</script>  
+			<!-- Search a publiation By searchFormTitle  -->
+		<script type="text/template" id="searchFormTitle"> 
+			<div class="content">
+			    <h3>Search By Title</h3>  
+			</div> 
+		</script>  
+			<!-- Search a publiation By searchFormTitle  -->
+		<script type="text/template" id="searchFormKeyword"> 
+			<div class="content">
+			    <h3>Search By Keyword</h3>
+			</div>   
 		</script>  
 	</head>
 <body>

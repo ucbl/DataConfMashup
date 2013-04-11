@@ -30,29 +30,14 @@ AppRouter = Backbone.Router.extend({
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
 						var currentQuery      = currentCommand.getQuery({conferenceUri : self.conference.baseUri, id : id });
-					
+
 						self.executeCommand({datasource : currentDatasource, command : currentCommand, query : currentQuery});
+						
 					});
 					
 				});
 			});
-	
-				//Ton CODE
-				/*self.route(routeItem.hash, function(id) { 
-				 
-                    if(routeItem.commands){
-		                $.each(routeItem.commands,function(i,commandItem){    
-                            //getAuhtor n'existe pas...
-                            console.log(commandItem.datasource);
-                            console.log(self.datasources[commandItem.datasource].commands);
-                            //console.log(self.datasources[commandItem.datasource].commands[commandItem.name]); 
-				        });
-					    self.changePage(new AbstractView({contentEl :  routeItem.view , model : this.conference}));
-					}
-
-				});*/
-			
-		
+	  
 			this.firstPage = true;
 	
 		},

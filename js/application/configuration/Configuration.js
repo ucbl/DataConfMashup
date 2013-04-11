@@ -14,7 +14,7 @@
 				},
 				
 				"publicationDatasource" : {
-					"Uri" : "http://data.semanticweb.org/sparql",
+					"Uri" : "http://dblp.l3s.de/d2r/sparql",
 					"crossDomainMode" : "Cors",
 					"commands" : "conferenceDatasourceCommands",
 				},
@@ -37,11 +37,47 @@
 			    "Home" : { 
 					"hash" : "",
 					"view" : "#home",
-					"commands" : [
+					"commands" : [ 
 						{
-							"datasource" : "conferenceDatasource",
-							"name" : "getConferenceMainEvent",
+						"datasource" : "conferenceDatasource",
+						"name" : "getConferenceMainEvent",
 						}
+					]
+				}, 
+			    "Proceedings-search" : { 
+					"hash" : "proceedings-search",
+					"view" : "#proceedingsSearch",
+					"commands" : [
+					]
+				},
+			    "Proceedings-search-by-author" : { 
+					"hash" : "proceedings-search/by-author",
+					"view" : "#searchFormAuthor",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getAllAuthors",
+						} 
+					]
+				},
+			    "Proceedings-search-by-keyword" : { 
+					"hash" : "proceedings-search/by-keyword",
+					"view" : "#searchFormKeyword",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getAllKeyword",
+						} 
+					]
+				},
+			    "Proceedings-search-by-title" : { 
+					"hash" : "proceedings-search/by-title",
+					"view" : "#searchFormTitle",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getAllTitle",
+						} 
 					]
 				},
 				"Event" : { 
@@ -74,5 +110,6 @@
 						}
 					]
 				}
+			
 			}
 		};
