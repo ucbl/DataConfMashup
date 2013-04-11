@@ -28,8 +28,7 @@ var SWDFCommandStore = {};
                                                    return query ; 
                                            },
                                   ModelCallBack : "TODO",
-                                     
-<<<<<<< HEAD
+                      
                                   };
  //Command getAllAuthors
   SWDFCommandStore.getAllAuthors = {
@@ -90,10 +89,7 @@ SWDFCommandStore.getAllKeyword= {
          },
     ModelCallBack : getAllTitleCallback
     }            
-                                  
-  /*   
-=======
-                                  }	  
+                     
 	//Command getAuthorSuggestion 
   SWDFCommandStore.getSubEvent = {
                                   dataType : "XML",
@@ -131,8 +127,7 @@ SWDFCommandStore.getAllKeyword= {
                                   ModelCallBack : getConferenceMainEventCallback,
                                      
                                   }
- /*
->>>>>>> 23943653ef9c97079725e461d6e57368526c11aa
+ /* 
  //Command getKeywordSuggestion      
  SWDFCommandStore.getKeywordSuggestion = {
                                   name: "getAuthorSuggestion",
@@ -479,19 +474,19 @@ function getAllAuthorsCallback(dataXML){
 
 //Callback for  title search by  
 function getAllTitleCallback(dataXML){ 
-    appendFilterList(dataXML,'#proceedings-search/author-','title'); 
+    appendFilterList(dataXML,'#proceeding/','title'); 
 }
 
 //Callback for  title search by  
 function getAllKeywordCallback(dataXML){ 
-    appendFilterList(dataXML,'#proceedings-search/author-','keyword'); 
+    appendFilterList(dataXML,'#proceedings-search/keyword-','keyword'); 
 }
 
 function appendFilterList(dataXML,baseLink,bindingName){ 
     var Uldiv=$('<ul data-role="listview" id="SearchByAuthorUl"  data-role="listview" data-filter="true" data-filter-placeholder="filter author name" class="ui-listview ui-corner-all ui-shadow"> ');
     $(dataXML).find('sparql results > result > binding[name="'+bindingName+'"]').each(function(i,currentBinding){
         var text=$(currentBinding).find(":first-child").text();
-        Uldiv.append($('<li><a href='+baseLink+text+'">'+text+'</a></li>')) ;
+        Uldiv.append($('<li><a href='+baseLink+text.split(' ').join('-')+'>'+text+'</a></li>')) ;
     }); 
     $("[data-role = page]").find(".content").append(Uldiv).trigger("create");
 } 
@@ -882,9 +877,6 @@ function getPosterSearchByKeywordByAuthorByTitle(dataXML){
               $(self.prefix).append('<li>Search result not found!</li>');
         }
 }*/
-<<<<<<< HEAD
-           
-=======
 
 // search poster by author, title, keyword 
 function getConferenceMainEventCallback(dataXML){
@@ -907,6 +899,5 @@ function getConferenceMainEventCallback(dataXML){
         }
 };
 	                           
->>>>>>> 23943653ef9c97079725e461d6e57368526c11aa
 
                                   
