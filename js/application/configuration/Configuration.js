@@ -14,7 +14,7 @@
 				},
 				
 				"publicationDatasource" : {
-					"Uri" : "http://data.semanticweb.org/sparql",
+					"Uri" : "http://dblp.l3s.de/d2r/sparql",
 					"crossDomainMode" : "Cors",
 					"commands" : "conferenceDatasourceCommands",
 				},
@@ -52,6 +52,7 @@
 					"commands" : [
 					    {
 							"datasource" : "conferenceDatasource",
+<<<<<<< HEAD
 							"name" : "getAllAuthors",
 						} 
 					]
@@ -74,6 +75,10 @@
 							"datasource" : "conferenceDatasource",
 							"name" : "getAllTitle",
 						} 
+=======
+							"name" : "getConferenceMainEvent",
+						}
+>>>>>>> 23943653ef9c97079725e461d6e57368526c11aa
 					]
 				},
 				"Person" : {
@@ -96,5 +101,6 @@
 						}
 					]
 				}
+				"
 			}
 		};

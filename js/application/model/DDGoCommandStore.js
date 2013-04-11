@@ -8,10 +8,10 @@
  
 //First Part SWDF commands file, Second Part : ModelCallBack function definition 
 //Web Service REST
- var DDGoCommandStore = { 
+ var DDGoCommandStore = {};
  
  //Command getAuthorSuggestion 
-getResult : getResult = new Command({
+DDGoCommandStore.getResult= {
                                   name: "getResult",
                                   dataType : "JSON",
                                   method : "GET",
@@ -24,7 +24,7 @@ getResult : getResult = new Command({
                                   ModelCallBack : getResultMethodCallBack 
                                   })
                                
-}//End DDGoCommandStore
+
 
 //.......................ModelCallBack................................
 

@@ -29,6 +29,7 @@ var SWDFCommandStore = {};
                                            },
                                   ModelCallBack : "TODO",
                                      
+<<<<<<< HEAD
                                   };
  //Command getAllAuthors
   SWDFCommandStore.getAllAuthors = {
@@ -91,6 +92,47 @@ SWDFCommandStore.getAllKeyword= {
     }            
                                   
   /*   
+=======
+                                  }	  
+	//Command getAuthorSuggestion 
+  SWDFCommandStore.getSubEvent = {
+                                  dataType : "XML",
+                                  method : "GET", 
+                                  getQuery : function(parameters){ //JSON file parameters 
+												var conferenceUri = parameters.conferenceUri;
+												var eventUri = parameters.id;  
+												
+												var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+																' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' ;
+																
+                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {      '+
+																'<'+ eventUri+'> swc:isSuperEventOf  ?eventUri. '+
+																'?eventUri rdfs:label ?eventLabel}';
+												return prefix + query ; 
+                                           },
+                                  ModelCallBack : "TODO",
+                                     
+                                  }
+		//Command getAuthorSuggestion 
+  SWDFCommandStore.getConferenceMainEvent = {
+                                  dataType : "XML",
+                                  method : "GET", 
+                                  getQuery : function(parameters){ //JSON file parameters 
+											
+												var eventUri = parameters.conferenceUri;
+												var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+																' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' ;
+															 
+                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {'+
+																'<'+ eventUri+'> swc:isSuperEventOf  ?eventUri.'+
+																'?eventUri rdfs:label ?eventLabel}';
+												return prefix + query ; 
+                                           },
+                                  ModelCallBack : getConferenceMainEventCallback,
+                                     
+                                  }
+ /*
+>>>>>>> 23943653ef9c97079725e461d6e57368526c11aa
  //Command getKeywordSuggestion      
  SWDFCommandStore.getKeywordSuggestion = {
                                   name: "getAuthorSuggestion",
@@ -260,7 +302,7 @@ SWDFCommandStore.getAuthor = {
                                   dataType : "XML",
                                   method : "GET",
                                   getQuery : function(parameters){ //JSON file parameters 
-												//alert(parameters.trackUri); 
+												 
                                                 var conferenceUri = parameters.conferenceUri;
                                                 var authorName = parameters.id;   
                                                 var query ='PREFIX iswm: <http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#> PREFIX dc: <http://purl.org/dc/elements/1.1/> PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT DISTINCT ?Publication ?uriPublication ?keywordLabel ?PDF ?Organization ?uriOrganization WHERE {     ' +
@@ -840,6 +882,31 @@ function getPosterSearchByKeywordByAuthorByTitle(dataXML){
               $(self.prefix).append('<li>Search result not found!</li>');
         }
 }*/
+<<<<<<< HEAD
            
+=======
+
+// search poster by author, title, keyword 
+function getConferenceMainEventCallback(dataXML){
+        
+         var result = $(dataXML).find("sparql > results> result").text();
+         if( result != ""){
+              $(dataXML).find("sparql > results > result").each(function(){                  
+                    var eventLabel  = $(this).find("[name = eventLabel]").text();				
+                    var eventUri  = $(this).find("[name = eventUri]").text();
+				
+					//console.log(eventUri);
+					var title = $(this).next().find(":first-child").text();
+					var newButton = $('<a href="#search/event"  data-role="button" data-icon="arrow-r" data-iconpos="right" >'+"pop"+'</a>');
+						
+					$("[data-role = page]").find(".content").append(newButton); 
+                
+
+                    
+              });            
+        }
+};
+	                           
+>>>>>>> 23943653ef9c97079725e461d6e57368526c11aa
 
                                   
