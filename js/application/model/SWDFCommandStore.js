@@ -64,7 +64,7 @@ SWDFCommandStore.getAllTitle= {
     ModelCallBack : getAllTitleCallback
     }           
     
- //Command getAllKeyword       
+ //Command getAllKeyword
 SWDFCommandStore.getAllKeyword= {
     dataType : "XML",
     method : "GET",
@@ -614,12 +614,12 @@ getTopicGraphView : 		new Command({
 
 //Callback for  author search by  
 function getAllAuthorsCallback(dataXML){ 
-    appendFilterList(dataXML,'#proceedings-search/author-','name',{bubbles:true,autodividers:true});  
+    appendFilterList(dataXML,'#proceedings-search/author-','name',{count:true,autodividers:true});  
 } 
 
 //Callback for  title search by  
 function getAllTitleCallback(dataXML){ 
-    appendFilterList(dataXML,'#publication/','title'); 
+    appendFilterList(dataXML,'#publication/','title');
 }
 function getAuthorsProceedingsCallback(dataXML){ 
     appendFilterList(dataXML,'#publication/','title');  
@@ -637,18 +637,21 @@ function getAllKeywordCallback(dataXML){
   * @param bindingName : string pattern to match with sparql result 'binding[name="'+bindingName+'"]'
   * @param option : {
   *         autodividers : boolean add jquerymobileui autodividers
-  *         bubbles : boolean add count bubble support for sparql endpoint 1.0 : require "ORDER BY ASC(?bindingName)" in the sparql query. 
+  *         count : boolean add count support for sparql endpoint 1.0 : require "ORDER BY ASC(?bindingName)" in the sparql query. 
   */ 
 function appendFilterList(dataXML,baseLink,bindingName,option){
     if(!option)option={};
     var Uldiv=$('<ul  id="SearchByAuthorUl" '+(option.autodividers?'data-autodividers="true"':'')+' data-role="listview" data-filter="true" data-filter-placeholder="filter author name" class="ui-listview ui-corner-all ui-shadow"> ');
-    var bubble=option.bubbles  ?   '<span class="ui-li-count">1</span>'    :   ''  ; 
-    var text, counter, previousText; 
+    var bubble=option.count  ?   '<span class="ui-li-count">1</span>'    :   ''  ; 
+    var text, counter, previousText, current; 
     $(dataXML).find('sparql results > result').each(function(i,currentResult){
         text =$(currentResult).find('binding[name="'+bindingName+'"] :first-child').text(); 
-        if(option.bubbles && i!=0 ){ 
-            previousText=$(currentResult.previousElementSibling).find('binding[name="'+bindingName+'"] :first-child').text();
+        current =$(currentResult).find('binding[name="'+bindingName+'"] :first-child'); 
+        if(option.count && i!=0 ){ 
+            previousText=$(currentResult.previousElementSibling).find('binding[name="'+bindingName+'"] :first-child').text(); 
             if(previousText==text){
+                console.log(text);
+                //increment bubble
                 counter=parseInt(Uldiv.find(' li:last-child span').html());  
                 Uldiv.find(' li:last-child span').html(counter+1); 
                 text=false;
@@ -1103,25 +1106,24 @@ function getEventCallBack(dataXML, conferenceUri){
 			var eventLabel  = $(this).find("[name = eventLabel]").text();				
 			var eventLocation  = $(this).find("[name = eventLocation]").text();
 			var locationName  = $(this).find("[name = locationName]").text();
-			var eventStart  = $(this).find("[name = eventStart]").text();
-			var eventEnd  = $(this).find("[name = eventStart]").text();
-			
+			var eventStart  = $(this).find("[name = eventStart] :first-child").text();
+			var eventEnd  = $(this).find("[name = eventEnd] :first-child").text();  
 			if(eventLabel != ""){
 				$("[data-role = page]").find(".content").append($('<h2>'+eventLabel+'</h2>')).trigger("create");
 				if(eventLocation != ""){
 					if(locationName != ""){
-						$("[data-role = page]").find(".content").append($('<h3>"Location : '+locationName+'</h3>')).trigger("create");
+						$("[data-role = page]").find(".content").append($('<h3>Location : '+locationName+'</h3>')).trigger("create");
 					}else{
-						$("[data-role = page]").find(".content").append($('<h3>"Location : '+eventLocation+'</h3>')).trigger("create");
+						$("[data-role = page]").find(".content").append($('<h3>Location : '+eventLocation+'</h3>')).trigger("create");
 					}
 				}
 				
 				if(eventStart != ""){
-					$("[data-role = page]").find(".content").append($('<h3>"Starts at : '+eventStart+'</h3>')).trigger("create");
+					$("[data-role = page]").find(".content").append($('<h3>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</h3>')).trigger("create");
 				}
 				
 				if(eventEnd != ""){
-					$("[data-role = page]").find(".content").append($('<h3>"Ends at : '+eventEnd+'</h3>')).trigger("create");
+					$("[data-role = page]").find(".content").append($('<h3>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</h3>')).trigger("create");
 				}
 			
 			}
