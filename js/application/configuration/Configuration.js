@@ -1,8 +1,8 @@
  var Configuration = {
 			"conference" : {
-				"name": "example glossary",
-				"logoUri": "http://data.semanticweb.org/images/logo_www2012.jpg",
-				"baseUri": "http://data.semanticweb.org/conference/www/2012",
+				"name": "ISWC 2012",
+				"logoUri": "http://iswc2012.semanticweb.org/sites/default/files/iswc_logo.jpg",
+				"baseUri": "http://data.semanticweb.org/conference/iswc/2012",
 			},
 			
 			"datasources" : {
@@ -38,6 +38,10 @@
 					"hash" : "",
 					"view" : "#home",
 					"commands" : [ 
+						{
+						"datasource" : "conferenceDatasource",
+						"name" : "getConferenceMainEvent",
+						}
 					]
 				}, 
 			    "Proceedings-search" : { 
@@ -51,8 +55,18 @@
 					"view" : "#searchFormAuthor",
 					"commands" : [
 					    {
-							"datasource" : "conferenceDatasource", 
+							"datasource" : "conferenceDatasource",
 							"name" : "getAllAuthors",
+						} 
+					]
+				},
+			    "Proceedings-search-author" : { 
+					"hash" : "proceedings-search/author-:author",
+					"view" : "#searchFormAuthorProceedings",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getAuthorsProceedings",
 						} 
 					]
 				},
@@ -76,6 +90,16 @@
 						} 
 					]
 				},
+				"Event" : { 
+					"hash" : "event/*id",
+					"view" : "#event",
+					"commands" : [
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getSubEvent",
+						}
+					]
+				},
 				"Person" : {
 					"hash" : "Person/:id",
 					"view" : "PersonView",
@@ -95,6 +119,7 @@
 							"name" : "getPublications",
 						}
 					]
-				} 
+				}
+			
 			}
 		};

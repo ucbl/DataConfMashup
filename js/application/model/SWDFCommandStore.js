@@ -13,12 +13,11 @@ var SWDFCommandStore = {};
  
  //Command getAuthorSuggestion 
   SWDFCommandStore.getAuthorSuggestion = {
-                                  name: "getAuthorSuggestion",
                                   dataType : "XML",
                                   method : "GET", 
                                   getQuery : function(parameters){ //JSON file parameters 
                                                 var trackUri = parameters.trackUri;
-												alert("pop");
+												
                                                 var author = parameters.author;
                                                 var query = 'SELECT DISTINCT ?name WHERE  { '+
                                                             '   ?author foaf:name ?name.         '+
@@ -28,21 +27,21 @@ var SWDFCommandStore = {};
                                                    return query ; 
                                            },
                                   ModelCallBack : "TODO",
-                      
+                                     
+
                                   };
  //Command getAllAuthors
   SWDFCommandStore.getAllAuthors = {
-    name: "getAuthorSuggestion",
     dataType : "XML",
     method : "GET", 
     getQuery : function(parameters){ //JSON file parameters 
         var conferenceUri = parameters.conferenceUri; 
         return 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
-                    ' SELECT DISTINCT ?name ?author WHERE  { '+
+                    ' SELECT DISTINCT ?name  ?uriPaper  WHERE  { '+
                     '   ?author foaf:name ?name.         '+
                     '   ?author foaf:made ?uriPaper.     '+
                     '   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
-                    ' }  '; 
+                    ' } ORDER BY ASC(?name) '; 
     },
     ModelCallBack : getAllAuthorsCallback,
 
@@ -50,7 +49,6 @@ var SWDFCommandStore = {};
                                             
  //Command getAllTitle       
 SWDFCommandStore.getAllTitle= {
-    name: "getTitleSuggestion",
     dataType : "XML",
     method : "GET",
     getQuery : function(parameters){ //JSON file parameters 
@@ -68,7 +66,6 @@ SWDFCommandStore.getAllTitle= {
     
  //Command getAllKeyword       
 SWDFCommandStore.getAllKeyword= {
-    name: "getAllKeyword",
     dataType : "XML",
     method : "GET",
     getQuery : function(parameters){ //JSON file parameters 
@@ -88,46 +85,68 @@ SWDFCommandStore.getAllKeyword= {
                  ' }}   '; 
          },
     ModelCallBack : getAllTitleCallback
+    }
+    
+ //Command getAllKeyword       
+SWDFCommandStore.getAuthorsProceedings= {
+    dataType : "XML",
+    method : "GET",
+    getQuery : function(parameters){ //JSON file parameters 
+        var conferenceUri = parameters.conferenceUri;  
+        var authorName = parameters.id.split('_').join(' ');
+        return 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+                 ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
+                    ' SELECT DISTINCT ?title WHERE  { '+
+                    '   ?author foaf:name "'+ authorName +'".         '+
+                    '   ?author foaf:made ?uriPaper.     '+
+                    '  	 ?uriPaper dc:title     ?title.         ' + 
+                    '   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
+                    ' }  '; 
+         },
+    ModelCallBack : getAuthorsProceedingsCallback
     }            
-                     
-	//Command getAuthorSuggestion 
+                                  
+	
   SWDFCommandStore.getSubEvent = {
                                   dataType : "XML",
                                   method : "GET", 
                                   getQuery : function(parameters){ //JSON file parameters 
+											
+												var eventId = parameters.id;  
 												var conferenceUri = parameters.conferenceUri;
-												var eventUri = parameters.id;  
 												
 												var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
 																' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' ;
 																
-                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {      '+
-																'<'+ eventUri+'> swc:isSuperEventOf  ?eventUri. '+
-																'?eventUri rdfs:label ?eventLabel}';
+                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {'+
+																'<'+conferenceUri+eventId+'> swc:isSuperEventOf  ?eventUri. }';
 												return prefix + query ; 
+												
                                            },
-                                  ModelCallBack : "TODO",
+                                  ModelCallBack : getSubEventCallBack,
                                      
                                   }
-		//Command getAuthorSuggestion 
+	
   SWDFCommandStore.getConferenceMainEvent = {
                                   dataType : "XML",
                                   method : "GET", 
                                   getQuery : function(parameters){ //JSON file parameters 
 											
-												var eventUri = parameters.conferenceUri;
+												var conferenceUri = parameters.conferenceUri;
 												var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
 																' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' ;
 															 
-                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {'+
-																'<'+ eventUri+'> swc:isSuperEventOf  ?eventUri.'+
+                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {     '+
+																'<'+conferenceUri+'> swc:isSuperEventOf  ?eventUri. '+
+																'?eventUri rdf:type swc:TrackEvent.            '+
 																'?eventUri rdfs:label ?eventLabel}';
 												return prefix + query ; 
                                            },
                                   ModelCallBack : getConferenceMainEventCallback,
                                      
                                   }
- /* 
+ /*
+
  //Command getKeywordSuggestion      
  SWDFCommandStore.getKeywordSuggestion = {
                                   name: "getAuthorSuggestion",
@@ -322,7 +341,9 @@ SWDFCommandStore.getAuthor = {
                                                         
                                                            return query;
                                                     },
-                                  ModelCallBack : "pop"
+
+                                  ModelCallBack : "TODO",
+
                                   }
                                   
                               /*
@@ -469,24 +490,50 @@ getTopicGraphView : 		new Command({
 
 //Callback for  author search by  
 function getAllAuthorsCallback(dataXML){ 
-    appendFilterList(dataXML,'#proceedings-search/author-','name');  
-}
+    appendFilterList(dataXML,'#proceedings-search/author-','name',{bubbles:true,autodividers:true});  
+} 
 
 //Callback for  title search by  
 function getAllTitleCallback(dataXML){ 
-    appendFilterList(dataXML,'#proceeding/','title'); 
+    appendFilterList(dataXML,'#publication/','title'); 
 }
+function getAuthorsProceedingsCallback(dataXML){ 
+    appendFilterList(dataXML,'#publication/','title');  
+} 
 
 //Callback for  title search by  
 function getAllKeywordCallback(dataXML){ 
     appendFilterList(dataXML,'#proceedings-search/keyword-','keyword'); 
 }
 
-function appendFilterList(dataXML,baseLink,bindingName){ 
-    var Uldiv=$('<ul data-role="listview" id="SearchByAuthorUl"  data-role="listview" data-filter="true" data-filter-placeholder="filter author name" class="ui-listview ui-corner-all ui-shadow"> ');
-    $(dataXML).find('sparql results > result > binding[name="'+bindingName+'"]').each(function(i,currentBinding){
-        var text=$(currentBinding).find(":first-child").text();
-        Uldiv.append($('<li><a href='+baseLink+text.split(' ').join('-')+'>'+text+'</a></li>')) ;
+
+/** append filter list to current view using '$("[data-role = page]").find(".content")' selector (backbone)
+  * @param dataXML : SWDF sparql result
+  * @param baselink : string url pattern for dynamic link generation (i.e. "#publication/")
+  * @param bindingName : string pattern to match with sparql result 'binding[name="'+bindingName+'"]'
+  * @param option : {
+  *         autodividers : boolean add jquerymobileui autodividers
+  *         bubbles : boolean add count bubble support for sparql endpoint 1.0 : require "ORDER BY ASC(?bindingName)" in the sparql query. 
+  */ 
+function appendFilterList(dataXML,baseLink,bindingName,option){
+    if(!option)option={};
+    var Uldiv=$('<ul  id="SearchByAuthorUl" '+(option.autodividers?'data-autodividers="true"':'')+' data-role="listview" data-filter="true" data-filter-placeholder="filter author name" class="ui-listview ui-corner-all ui-shadow"> ');
+    var bubble=option.bubbles  ?   '<span class="ui-li-count">1</span>'    :   ''  ; 
+    var text, counter, previousText; 
+    $(dataXML).find('sparql results > result').each(function(i,currentResult){
+        text =$(currentResult).find('binding[name="'+bindingName+'"] :first-child').text(); 
+        if(option.bubbles && i!=0 ){ 
+            previousText=$(currentResult.previousElementSibling).find('binding[name="'+bindingName+'"] :first-child').text();
+            if(previousText==text){
+                counter=parseInt(Uldiv.find(' li:last-child span').html());  
+                Uldiv.find(' li:last-child span').html(counter+1); 
+                text=false;
+            }  
+        } 
+        if(text)Uldiv.append(
+                    $('<li></li>').append(
+                        $('<a href='+baseLink+text.split(' ').join('_')+'>'+text+'</a>')
+                                   .append($(bubble)))) ;
     }); 
     $("[data-role = page]").find(".content").append(Uldiv).trigger("create");
 } 
@@ -879,25 +926,42 @@ function getPosterSearchByKeywordByAuthorByTitle(dataXML){
 }*/
 
 // search poster by author, title, keyword 
-function getConferenceMainEventCallback(dataXML){
-        
+function getConferenceMainEventCallback(dataXML,conferenceUri){
+      
          var result = $(dataXML).find("sparql > results> result").text();
          if( result != ""){
               $(dataXML).find("sparql > results > result").each(function(){                  
                     var eventLabel  = $(this).find("[name = eventLabel]").text();				
-                    var eventUri  = $(this).find("[name = eventUri]").text();
+                    var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,"");
 				
 					//console.log(eventUri);
 					var title = $(this).next().find(":first-child").text();
-					var newButton = $('<a href="#search/event"  data-role="button" data-icon="arrow-r" data-iconpos="right" >'+"pop"+'</a>');
-						
-					$("[data-role = page]").find(".content").append(newButton); 
+					var newButton = $('<a href="#event/'+eventUri+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+eventLabel+'</a>');;	
+					$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
                 
 
                     
               });            
         }
 };
+
+function getSubEventCallBack(dataXML, conferenceUri){
+	
+	var result = $(dataXML).find("sparql > results> result").text();
+	if( result != ""){
+		$(dataXML).find("sparql > results > result").each(function(){                  
+			var eventLabel  = $(this).find("[name = eventLabel]").text();				
+			var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,"");
+
+			
+			var title = $(this).next().find(":first-child").text();
+			var newButton = $('<a href="#event/'+eventUri+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+eventUri+'</a>');;	
+			$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
+			
+		});            
+	}
+};
 	                           
+
 
                                   
