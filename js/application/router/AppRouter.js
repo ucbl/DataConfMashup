@@ -28,16 +28,9 @@ AppRouter = Backbone.Router.extend({
 					$.each(routeItem.commands,function(i,commandItem){
 						console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 						var currentDatasource = self.datasources[commandItem.datasource];
-						var currentCommand    = currentDatasource.commands[commandItem.name];
-<<<<<<< HEAD
-					
-           
-						var currentQuery      = currentCommand.getQuery({ conferenceUri : self.conference.baseUri, id : id });
-					
-=======
+						var currentCommand    = currentDatasource.commands[commandItem.name]; 
 						var currentQuery      = currentCommand.getQuery({conferenceUri : self.conference.baseUri, id : id });
 
->>>>>>> 624abd45fd348f399f7f54e83a7364932304bab2
 						self.executeCommand({datasource : currentDatasource, command : currentCommand, query : currentQuery});
 						
 					});
@@ -82,18 +75,7 @@ AppRouter = Backbone.Router.extend({
 				jQuery.support.cors = true;
 			}else{
 				jQuery.support.cors = false;
-			}
-			
-<<<<<<< HEAD
-			 
-=======
-<<<<<<< HEAD
-		
-=======
-			
-			console.log(command);
->>>>>>> 624abd45fd348f399f7f54e83a7364932304bab2
->>>>>>> d1eb75479b429e07c8eed4eca415b2312777631d
+			} 
 			$.ajax({
 				url: datasource.uri,
 				type: command.method,

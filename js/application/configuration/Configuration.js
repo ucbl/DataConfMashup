@@ -8,26 +8,26 @@
 			"datasources" : {
 				"conferenceDatasource" : {
 
-					"Uri" : "http://data.semanticweb.org/sparql",
+					"uri" : "http://data.semanticweb.org/sparql",
 					"crossDomainMode" : "CORS",
 					"commands" : SWDFCommandStore, 
 				},
 				
 				"publicationDatasource" : {
-					"Uri" : "http://dblp.l3s.de/d2r/sparql",
+					"uri" : "http://dblp.l3s.de/d2r/sparql",
 					"crossDomainMode" : "JSONP",
-					"commands" : DBLPCommandStore,
+					"commands" : "DBLPCommandStore",
 				},
 
 				"webDatasource" : {   
-					"Uri" : "http://api.duckduckgo.com/",
+					"uri" : "http://api.duckduckgo.com/",
 					"crossDomainMode" : "JSONP",
 					"commands" : "conferenceDatasourceCommands",
 				},
 				
 				"eventDatasource" : {
 
-					"Uri" : "http://calendar.labs.idci.fr/api/schedule_event.jsonp?",
+					"uri" : "http://calendar.labs.idci.fr/api/schedule_event.jsonp?",
 					"crossDomainMode" : "JSONP",
 					"commands" : "conferenceDatasourceCommands",
 				}
@@ -39,8 +39,8 @@
 					"view" : "#home",
 					"commands" : [ 
 						{
-						"datasource" : "conferenceDatasource",
-						"name" : "getConferenceMainEvent",
+						    "datasource" : "conferenceDatasource",
+						    "name" : "getConferenceMainEvent",
 						}
 					]
 				}, 
@@ -130,10 +130,5 @@
 						}
 					]
 				}
-<<<<<<< HEAD
-				
-=======
-			
->>>>>>> 624abd45fd348f399f7f54e83a7364932304bab2
 			}
 		};
