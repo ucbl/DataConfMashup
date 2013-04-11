@@ -91,47 +91,169 @@ SWDFCommandStore.getAllKeyword= {
     ModelCallBack : getAllTitleCallback
     }            
                                   
+SWDFCommandStore.getPublicationInfo= {
+    dataType : "XML",
+    method : "GET",
+    getQuery : function(parameters){
+	
+        var publiTitle = parameters.id; 
+		var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+						' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
+						' PREFIX dc: <http://purl.org/dc/elements/1.1/>             ' +
+						' PREFIX swrc: <http://swrc.ontoware.org/ontology#>         ' +
+						' PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		' ;
+						
+		var query =		'SELECT DISTINCT ?publiUri  ?publiTitle ?publiAbstract WHERE  '  +
+						'{ ?publiUri dc:title  "'+ publiTitle.split('_').join(' ') +'".' +
+						'OPTIONAL {?publiUri dc:title ?publiTitle .                    }'+ 
+						'OPTIONAL {?publiUri  swrc:abstract ?publiAbstract.            ' +
+						' }} ' ;
+				   
+		   return prefix + query;	
+        },
+    ModelCallBack : getPublicationInfoCallback
+    }
+ 
+SWDFCommandStore.getPublicationAuthor = {
+    dataType : "XML",
+    method : "GET",
+    getQuery : function(parameters){
+		 
+        var publiTitle = parameters.id; 
+		var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+						' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
+						' PREFIX dc: <http://purl.org/dc/elements/1.1/>             ' +
+						' PREFIX swrc: <http://swrc.ontoware.org/ontology#>         ' +
+						' PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		' ;
+						
+		var query =		'SELECT DISTINCT ?publiUri  ?publiAbstract ?authorUri   ?authorName  WHERE  ' +
+						'{ ?publiUri dc:title  "'+ publiTitle.split('_').join(' ') +'".' +
+						' ?publiUri dc:creator    ?authorUri.                      	 ' +
+						' ?authorUri   foaf:name     ?authorName   .                 ' +
+						' } ' ;
+				   
+		   return prefix + query;	
+        },
+    ModelCallBack : getPublicationAuthorCallback
+} 
+/*
+SWDFCommandStore.getPublicationKeyword= {
+    dataType : "XML",
+    method : "GET",
+    getQuery : function(parameters){
+	
+        var conferenceUri = parameters.conferenceUri; 
+        var publiTitle = parameters.id; 
+		/*var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+						' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
+						' PREFIX dc: <http://purl.org/dc/elements/1.1/>             ' +
+						' PREFIX swrc: <http://swrc.ontoware.org/ontology#>         ' +
+						' PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		' ;
+						
+		var query =		'SELECT DISTINCT ?publiUri  ?publiAbstract ?authorUri   ?authorName  WHERE  ' +
+						'{ ?publiUri dc:title  "'+ publiTitle.split('_').join(' ') +'".' +
+						'OPTIONAL {  ?publiUri  swrc:abstract ?publiAbstract.      }' +
+						'OPTIONAL{ ?publiUri dc:creator    ?authorUri.           ' +
+						'			?authorUri   foaf:name     ?authorName   .   ' +
+						' }} ' ;
+				   
+		   return prefix + query;	
+        },
+    ModelCallBack : getPublicationKeywordCallback,
+}*/
+	
+SWDFCommandStore.getSubEvent = {
+	dataType : "XML",
+	method : "GET", 
+	getQuery : function(parameters){ //JSON file parameters 
 
-                                  	  
-	
-  SWDFCommandStore.getSubEvent = {
-                                  dataType : "XML",
-                                  method : "GET", 
-                                  getQuery : function(parameters){ //JSON file parameters 
-											
-												var eventId = parameters.id;  
-												var conferenceUri = parameters.conferenceUri;
-												
-												var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
-																' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' ;
-																
-                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {'+
-																'<'+conferenceUri+eventId+'> swc:isSuperEventOf  ?eventUri. }';
-												return prefix + query ; 
-												
-                                           },
-                                  ModelCallBack : getSubEventCallBack,
+		var eventId = parameters.id;  
+		var conferenceUri = parameters.conferenceUri;
+		
+		var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+						' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' ;
+						
+						
+		var query = 	'SELECT DISTINCT ?eventUri ?eventLabel  WHERE {'+
+						'<'+conferenceUri+eventId+'> swc:isSuperEventOf  ?eventUri. '+
+						'OPTIONAL {'+
+						'?eventUri rdfs:label ?eventLabel.}}';
+		return prefix + query ; 
+		
+	},
+	ModelCallBack : getSubEventCallBack,
                                      
-                                  }
-	
-  SWDFCommandStore.getConferenceMainEvent = {
-                                  dataType : "XML",
-                                  method : "GET", 
-                                  getQuery : function(parameters){ //JSON file parameters 
-											
-												var conferenceUri = parameters.conferenceUri;
-												var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
-																' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' ;
-															 
-                                                var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {     '+
-																'<'+conferenceUri+'> swc:isSuperEventOf  ?eventUri. '+
-																'?eventUri rdf:type swc:TrackEvent.            '+
-																'?eventUri rdfs:label ?eventLabel}';
-												return prefix + query ; 
-                                           },
-                                  ModelCallBack : getConferenceMainEventCallback,
+}
+   
+   
+SWDFCommandStore.getEvent = {
+	dataType : "XML",
+	method : "GET", 
+	getQuery : function(parameters){ //JSON file parameters 
+
+		var eventId = parameters.id;  
+		var conferenceUri = parameters.conferenceUri;
+		
+		var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+						' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
+						' PREFIX ical: <http://www.w3.org/2002/12/cal/ical#>        ' ;
+						
+		var query = 	'SELECT DISTINCT ?eventLabel ?eventLocation ?locationName ?eventStart ?eventEnd  WHERE {'+
+						'OPTIONAL { <'+conferenceUri+eventId+'> rdfs:label ?eventLabel.'+'}'+
+						'OPTIONAL { <'+conferenceUri+eventId+'> swc:hasLocation ?eventLocation.'+
+						'?eventLocation  rdfs:label ?locationName.'+'}'+
+						'OPTIONAL { <'+conferenceUri+eventId+'> ical:dtStart ?eventStart.'+'}'+
+						'OPTIONAL { <'+conferenceUri+eventId+'> ical:dtEnd ?eventEnd.'+'}'+
+						
+						'}';
+		return prefix + query ; 
+		
+	},
+	ModelCallBack : getEventCallBack,
                                      
-                                  }
+}
+
+
+SWDFCommandStore.getEventPublications = {
+	dataType : "XML",
+	method : "GET", 
+	getQuery : function(parameters){ //JSON file parameters 
+
+		var eventId = parameters.id;  
+		var conferenceUri = parameters.conferenceUri;
+		
+		var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+						' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
+						' PREFIX dc: <http://purl.org/dc/elements/1.1/>             ' ;
+						
+		var query = 	'SELECT DISTINCT ?publiUri ?publiTitle WHERE {'+
+						' <'+conferenceUri+eventId+'> swc:hasRelatedDocument ?publiUri.'+
+						'?publiUri dc:title ?publiTitle.'+
+						'}';
+		return prefix + query ; 
+		
+	},
+	ModelCallBack : getEventPublicationsCallBack,
+                                     
+}
+	
+SWDFCommandStore.getConferenceMainEvent = {
+	dataType : "XML",
+	method : "GET", 
+	getQuery : function(parameters){	
+		var conferenceUri = parameters.conferenceUri;
+		var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+						' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' ;
+					 
+		var query = 'SELECT DISTINCT ?eventUri ?eventLabel WHERE {     '+
+						'<'+conferenceUri+'> swc:isSuperEventOf  ?eventUri. '+
+						'?eventUri rdf:type swc:TrackEvent.            '+
+						'?eventUri rdfs:label ?eventLabel}';
+		return prefix + query ; 
+	},
+	ModelCallBack : getConferenceMainEventCallback,
+		 
+}
  /*
 
  //Command getKeywordSuggestion      
@@ -888,26 +1010,7 @@ function getPosterSearchByKeywordByAuthorByTitle(dataXML){
 
 // search poster by author, title, keyword 
 function getConferenceMainEventCallback(dataXML,conferenceUri){
-      
-         var result = $(dataXML).find("sparql > results> result").text();
-         if( result != ""){
-              $(dataXML).find("sparql > results > result").each(function(){                  
-                    var eventLabel  = $(this).find("[name = eventLabel]").text();				
-                    var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,"");
-				
-					//console.log(eventUri);
-					var title = $(this).next().find(":first-child").text();
-					var newButton = $('<a href="#event/'+eventUri+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+eventLabel+'</a>');;	
-					$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
-                
-
-                    
-              });            
-        }
-};
-
-function getSubEventCallBack(dataXML, conferenceUri){
-	
+		
 	var result = $(dataXML).find("sparql > results> result").text();
 	if( result != ""){
 		$(dataXML).find("sparql > results > result").each(function(){                  
@@ -916,9 +1019,123 @@ function getSubEventCallBack(dataXML, conferenceUri){
 
 			
 			var title = $(this).next().find(":first-child").text();
-			var newButton = $('<a href="#event/'+eventUri+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+eventUri+'</a>');;	
+			var newButton = $('<a href="#event/'+eventUri+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+eventLabel+'</a>');;	
 			$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
+
+		});            
+	}
+};
+
+function getSubEventCallBack(dataXML, conferenceUri){
+	
+	var result = $(dataXML).find("sparql > results> result").text();
+	
+	if( result != ""){
+		$("[data-role = page]").find(".content").append($('<h2 style="text-align : center">Sub events :</h2>')).trigger("create"); 
+		$(dataXML).find("sparql > results > result").each(function(){                  
+			var eventLabel  = $(this).find("[name = eventLabel]").text();				
+			var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,"");
 			
+			if(eventUri != ""){
+				
+				if(eventLabel != ""){
+				
+					var newButton = $('<a href="#event/'+eventUri+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+eventLabel+'</a>');
+					$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
+				
+				}else{
+					var newButton = $('<a href="#event/'+eventUri+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+eventUri+'</a>');
+					$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
+				
+				}
+			}	
+		});            
+	}
+};
+
+function getEventCallBack(dataXML, conferenceUri){
+
+	var result = $(dataXML).find("sparql > results> result").text();
+	if( result != ""){
+		$("[data-role = page]").find(".content").append($('<h2 style="text-align : center">Event :</h2>')).trigger("create"); 
+		$(dataXML).find("sparql > results > result").each(function(){                  
+			var eventLabel  = $(this).find("[name = eventLabel]").text();				
+			var eventLocation  = $(this).find("[name = eventLocation]").text();
+			var locationName  = $(this).find("[name = locationName]").text();
+			var eventStart  = $(this).find("[name = eventStart]").text();
+			var eventEnd  = $(this).find("[name = eventStart]").text();
+			
+			if(eventLabel != ""){
+				$("[data-role = page]").find(".content").append($('<h2>'+eventLabel+'</h2>')).trigger("create");
+				if(eventLocation != ""){
+					if(locationName != ""){
+						$("[data-role = page]").find(".content").append($('<h3>"Location : '+locationName+'</h3>')).trigger("create");
+					}else{
+						$("[data-role = page]").find(".content").append($('<h3>"Location : '+eventLocation+'</h3>')).trigger("create");
+					}
+				}
+				
+				if(eventStart != ""){
+					$("[data-role = page]").find(".content").append($('<h3>"Starts at : '+eventStart+'</h3>')).trigger("create");
+				}
+				
+				if(eventEnd != ""){
+					$("[data-role = page]").find(".content").append($('<h3>"Ends at : '+eventEnd+'</h3>')).trigger("create");
+				}
+			
+			}
+		});            
+	}
+};
+	// search poster by author, title, keyword 
+function getEventPublicationsCallBack(dataXML,conferenceUri){
+		
+	var result = $(dataXML).find("sparql > results> result").text();
+	if( result != ""){
+		$("[data-role = page]").find(".content").append($('<h2 style="text-align : center">Publications :</h2>')).trigger("create"); 
+		$(dataXML).find("sparql > results > result").each(function(){                  
+			var publiUri  = $(this).find("[name = publiUri]").text().replace(conferenceUri,"");			
+			var publiTitle  = $(this).find("[name = publiTitle]").text();
+			var newButton = $('<a href="#publication/'+publiTitle.split(' ').join('_')+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+publiTitle+'</a>');	
+			$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
+
+		});            
+	}
+};
+
+
+	
+function getPublicationInfoCallback(dataXML,conferenceUri){
+
+	var result = $(dataXML).find("sparql > results> result").text();
+	if( result != ""){
+		
+		$(dataXML).find("sparql > results > result").each(function(){                  
+			var publiUri  = $(this).find("[name = publiUri]").text().replace(conferenceUri,"");	
+			var publiTitle  = $(this).find("[name = publiTitle]").text();
+			var publiAbstract  = $(this).find("[name = publiAbstract]").text();
+		
+			$("[data-role = page]").find(".content").append($('<h2>Title</h2>')).trigger("create"); 
+			$("[data-role = page]").find(".content").append($('<h3>'+publiTitle+'</h3>')).trigger("create"); 
+			$("[data-role = page]").find(".content").append($('<h2>Abstract</h2>')).trigger("create"); 
+			$("[data-role = page]").find(".content").append($('<h3>'+publiAbstract+'</h3>')).trigger("create"); 
+
+		});            
+	}
+};
+
+
+function getPublicationAuthorCallback(dataXML,conferenceUri){
+
+	var result = $(dataXML).find("sparql > results> result").text();
+	if( result != ""){
+		$("[data-role = page]").find(".content").append($('<h2>Authors </h2>')).trigger("create"); 
+		$(dataXML).find("sparql > results > result").each(function(){                  
+			var authorUri  = $(this).find("[name = publiAbstract]").text().replace(conferenceUri,"");	
+			var authorName  = $(this).find("[name = authorName]").text();
+			
+			var newButton = $('<a href="#publication/'+authorName.split(' ').join('_')+'" data-role="button" data-inline="true" >'+authorName+'</a>');
+			$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
 		});            
 	}
 };

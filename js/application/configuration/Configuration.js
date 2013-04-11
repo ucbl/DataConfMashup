@@ -86,8 +86,32 @@
 					"commands" : [
 						{
 							"datasource" : "conferenceDatasource",
+							"name" : "getEvent",
+						},
+						{
+							"datasource" : "conferenceDatasource",
 							"name" : "getSubEvent",
+						
+						},
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getEventPublications",
+						
 						}
+					]
+				},
+				"Publication" : { 
+					"hash" : "publication/:id",
+					"view" : "#publication",
+					"commands" : [
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getPublicationInfo",
+						},
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getPublicationAuthor",
+						},	
 					]
 				},
 				"Person" : {
