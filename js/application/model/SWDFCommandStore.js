@@ -74,20 +74,16 @@ SWDFCommandStore.getAllKeyword= {
         return '  PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
                  ' PREFIX key:<http://www.w3.org/2004/02/skos/core#> ' +
                  ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
-                 '  SELECT DISTINCT ?keyword WHERE {{ ' +
+                 '  SELECT DISTINCT ?uriPaper ?keyword  WHERE { ' +
                  '  	 ?uriPaper       swc:isPartOf  <'+ conferenceUri+'/proceedings> .' +
-                 '  	 ?uriPaper       foaf:topic    ?uriKeywork.         ' +
-                 '  	 ?uriKeywork     key:prefLabel ?keywork. 	         ' + 
-                 ' } UNION '+
-                 ' {       '+
-                 '  	 ?uriPaper       swc:isPartOf  <'+conferenceUri+'/proceedings> .' +
-                 '       ?uriPaper       dc:subject    ?keywork.      '+ 
-                 ' }}   '; 
+                 '  	 ?uriPaper       dc:subject    ?keyword.         ' +
+                 ' }ORDER BY ASC(?keyword) ';  
+				 
          },
-    ModelCallBack : getAllTitleCallback
+    ModelCallBack : getAllKeywordCallback
     }
     
- //Command getAllKeyword       
+     
 SWDFCommandStore.getAuthorsProceedings= {
     dataType : "XML",
     method : "GET",
@@ -436,39 +432,39 @@ getPaper :                  new Command({
  ,     */                            
 //Command getAuthor                                
 SWDFCommandStore.getAuthor = {
-                                  name: "getAuthor",
-                                  dataType : "XML",
-                                  method : "GET",
-                                  getQuery : function(parameters){ //JSON file parameters 
-												 
-                                                var conferenceUri = parameters.conferenceUri;
-                                                var authorName = parameters.id;   
-                                                var query ='PREFIX iswm: <http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#> PREFIX dc: <http://purl.org/dc/elements/1.1/> PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT DISTINCT ?Publication ?uriPublication ?keywordLabel ?PDF ?Organization ?uriOrganization WHERE {     ' +
-                                                           ' { ' +
-                                                           '   ?uriOrganization       foaf:member <'+ authorName +'>  . '  +
-                                                           '   ?uriOrganization       foaf:name   ?Organization .      '  +
-                                                           ' } UNION ' 							+       // Auhtor's publication 
-                                                           ' { ' +
-                                                           '   ?uriPublication    swc:isPartOf  <'+conferenceUri+'> ;  ' +
-                                                           '                      foaf:maker    <'+ authorName +'> ;          ' +
-                                                           ' 			dc:title      ?Publication .               ' + // Auhtor's publication 
-                                                           '   OPTIONAL {  '+
-                                                           '              ?uriPublication       owl:sameAs    ?uirPosterWWW2012 .  '+
-                                                           '              ?uirPosterWWW2012     iswm:hasPDF     ?PDF   .  '+
-                                                           '             }  '+
-                                                           ' } UNION ' +
-                                                           ' { ' +
-                                                           '   ?uri               swc:isPartOf  <'+conferenceUri+'> ;  ' +  // a poster has many keywords...
-                                                           '                      foaf:maker    <'+ authorName +'> ;          ' +
-                                                           '                      dc:subject    ?keywordLabel .              ' +  // Recommendation 
-                                                           ' }} ORDER BY ?Organization ';
-                                                        
-                                                           return query;
-                                                    },
+	  name: "getAuthor",
+	  dataType : "XML",
+	  method : "GET",
+	  getQuery : function(parameters){ //JSON file parameters 
+					 
+					var conferenceUri = parameters.conferenceUri;
+					var authorName = parameters.id;   
+					var query ='PREFIX iswm: <http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#> PREFIX dc: <http://purl.org/dc/elements/1.1/> PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT DISTINCT ?Publication ?uriPublication ?keywordLabel ?PDF ?Organization ?uriOrganization WHERE {     ' +
+							   ' { ' +
+							   '   ?uriOrganization       foaf:member <'+ authorName +'>  . '  +
+							   '   ?uriOrganization       foaf:name   ?Organization .      '  +
+							   ' } UNION ' 							+       // Auhtor's publication 
+							   ' { ' +
+							   '   ?uriPublication    swc:isPartOf  <'+conferenceUri+'> ;  ' +
+							   '                      foaf:maker    <'+ authorName +'> ;          ' +
+							   ' 			dc:title      ?Publication .               ' + // Auhtor's publication 
+							   '   OPTIONAL {  '+
+							   '              ?uriPublication       owl:sameAs    ?uirPosterWWW2012 .  '+
+							   '              ?uirPosterWWW2012     iswm:hasPDF     ?PDF   .  '+
+							   '             }  '+
+							   ' } UNION ' +
+							   ' { ' +
+							   '   ?uri               swc:isPartOf  <'+conferenceUri+'> ;  ' +  // a poster has many keywords...
+							   '                      foaf:maker    <'+ authorName +'> ;          ' +
+							   '                      dc:subject    ?keywordLabel .              ' +  // Recommendation 
+							   ' }} ORDER BY ?Organization ';
+							
+							   return query;
+						},
 
-                                  ModelCallBack : "TODO",
+	  ModelCallBack : "TODO",
 
-                                  }
+}
                                   
                               /*
  //Command getOrganization                               
@@ -627,7 +623,7 @@ function getAuthorsProceedingsCallback(dataXML){
 
 //Callback for  title search by  
 function getAllKeywordCallback(dataXML){ 
-    appendFilterList(dataXML,'#proceedings-search/keyword-','keyword'); 
+    appendFilterList(dataXML,'#proceedings-search/keyword-','keyword',{bubbles:true,autodividers:true}); 
 }
 
 
@@ -1177,7 +1173,7 @@ function getPublicationAuthorCallback(dataXML,conferenceUri){
 			var authorUri  = $(this).find("[name = publiAbstract]").text().replace(conferenceUri,"");	
 			var authorName  = $(this).find("[name = authorName]").text();
 			
-			var newButton = $('<a href="#publication/'+authorName.split(' ').join('_')+'" data-role="button" data-inline="true" >'+authorName+'</a>');
+			var newButton = $('<a href="#author/'+authorName.split(' ').join('_')+'" data-role="button" data-inline="true" >'+authorName+'</a>');
 			$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
 		});            
 	}
