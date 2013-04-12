@@ -66,7 +66,7 @@
 					"commands" : [
 					    {
 							"datasource" : "conferenceDatasource",
-							"name" : "getAuthorsProceedings",
+							"name" : "conferencePublication",
 						} 
 					]
 				},
@@ -106,7 +106,6 @@
 						{
 							"datasource" : "conferenceDatasource",
 							"name" : "getEventPublications",
-						
 						}
 					]
 				},
@@ -121,7 +120,7 @@
 						{
 							"datasource" : "conferenceDatasource",
 							"name" : "getPublicationAuthor",
-						},	
+						},	 
 					]
 				},
 				"Person" : {

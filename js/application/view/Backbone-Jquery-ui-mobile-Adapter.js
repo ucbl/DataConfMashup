@@ -1,32 +1,60 @@
-(function(){
+/**   
+ *   Copyright <c> Claude Bernard - University Lyon 1 -  2013
+ *   Author: Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, Lionnel MEDINI(supervisor)
+ *   Description: Interface between backbone and jqueryUI-mobile to show up view
+ *   Version: 1
+ *   Tags:  
+**/
+ (function(){
 
 var ViewAdapter
 var root = this;
 ViewAdapter = root.ViewAdapter = {};
 
+var showAsGraph = ViewAdapter.showAsGraph=function(uri,conferenceUri,command){
+    console.log(uri);
+    console.log(conferenceUri);
+    console.log(command);
+    var button = appendButton('javascript:void(0)','view as graph',{tiny:true,theme:"b",prepend:true});
+    button.click(function(){ 
+        $.ajax({
+			url: conferenceUri,
+			type: command.method,
+			cache: false,
+			dataType: command.dataType,
+			data: {query : command.getQuery({entity:uri}) },							
+			success: function(data){command.ModelCallBack(data,conferenceUri)},
+			error: function(jqXHR, textStatus, errorThrown) {
+				alert(errorThrown);
+			}
+		});
+    });
+};
+
 var appendButton = ViewAdapter.appendButton = function(href,label,option){
     if(!href)return;
     if(!option)var option={}
-    var newButton = $('<a href="'+href+'" data-role="button" '+(option.tiny?'data-inline="true"':'data-icon="arrow-r" data-iconpos="right"')+'  >'+(label==""?href:label)+'</a>');
-    $("[data-role = page]").find(".content").append(newButton).trigger("create"); 
-    appendToBackboneView(newButton);
+    var newButton = 
+        $(  '<a href="'+href+'" data-role="button" ' +
+            (option.tiny?'data-inline="true"':'data-icon="arrow-r" data-iconpos="right"') +
+            (option.theme?'data-theme="'+option.theme+'"':'') +
+            '>'+(label==""?href:label) +'</a>'); 
+    if(option.prepend)prependToBackboneView(newButton);
+    else appendToBackboneView(newButton);
+    return newButton;
 };
-
-var appendToBackboneView = ViewAdapter.appendToBackboneView=function(div){
-    if(!div)return;
-    $("[data-role = page]").find(".content").append($(div)).trigger("create"); 
-};
+ 
 
 //TODO make it free from swdf
 /** append filter list to current view using '$("[data-role = page]").find(".content")' selector (backbone)
   * @param dataXML : SWDF sparql result
   * @param baselink : string url pattern for dynamic link generation (i.e. "#publication/")
   * @param bindingName : string pattern to match with sparql result 'binding[name="'+bindingName+'"]'
-  * @param optional option : {
+  * @param optional option : object {
   *         autodividers : boolean add jquerymobileui autodividers
   *         count : boolean add count support for sparql endpoint 1.0 : require "ORDER BY ASC(?bindingName)" in the sparql query.
   *         parseUrl : parsing lat function => " parseUrl:function(url){return url.replace('foo',"")}
-  *         show : array of object : key=bindingName => Shown 'binding[name="'+bindingName+'"]'
+  *         show : array of object {  key=bindingName => Shown 'binding[name="'+bindingName+'"]'
   *             alt : binding name if label is empty
   *             parseAlt : parsing alt function (see parseUrl param)
   *          
@@ -45,7 +73,7 @@ var appendFilterList = ViewAdapter.appendFilterList = function(dataXML,baseLink,
             label ="";
             for (var key in option.show) {
                 currentlabel="";
-                console.log(option.show[key]);
+                //console.log(option.show[key]);
                 currentlabel =  $(currentResult).find('binding[name="'+key+'"] :first-child').text();
                 if(currentlabel=="" && option.show[key].alt){  
                     currentlabel =  $(currentResult).find('binding[name="'+option.show[key].alt+'"] :first-child').text();
@@ -60,7 +88,7 @@ var appendFilterList = ViewAdapter.appendFilterList = function(dataXML,baseLink,
             if(text==$(currentResult.previousElementSibling).find('binding[name="'+bindingName+'"] :first-child').text()){
                 console.log(text);
                 //increment bubble
-                counter=parseInt(Uldiv.find(' li:last-child span').html());  
+                //counter=parseInt(Uldiv.find(' li:last-child span').html());  
                 Uldiv.find(' li:last-child span').html(counter+1); 
                 text=false;
             }  
@@ -74,5 +102,15 @@ var appendFilterList = ViewAdapter.appendFilterList = function(dataXML,baseLink,
         }
     });  
     ViewAdapter.appendToBackboneView(Uldiv)
+};
+
+var appendToBackboneView = ViewAdapter.appendToBackboneView=function(div){
+    if(!div)return;
+    $("[data-role = page]").find(".content").append(div).trigger("create"); 
+};
+
+var prependToBackboneView = ViewAdapter.prependToBackboneView=function(div){
+    if(!div)return;
+    $("[data-role = page]").find(".content").prepend($(div)).trigger("create"); 
 };
 }).call(this);

@@ -69,7 +69,7 @@ var SWDFCommandStore = {
         },
         
          
-    getAuthorsProceedings : {
+    conferencePublication : {
         dataType : "XML",
         method : "GET",
         getQuery : function(parameters){ //JSON file parameters 
@@ -85,8 +85,22 @@ var SWDFCommandStore = {
                         ' }  '; 
              },
         ModelCallBack : function(dataXML){ 
-                            ViewAdapter.appendFilterList(dataXML,'#publication/','title');  
-                        }
+                var result = $(dataXML).find("sparql > results> result");
+                var textResult= result.text();
+                if( textResult == "")return;
+                var nBresult= result.length;
+                
+			    ViewAdapter.appendToBackboneView('<h3>View Authors proceedings</h3>');
+                ViewAdapter.appendToBackboneView('<h2 style="text-align : center">Publications :</h2>'); 
+			    
+                if(nBresult>5)ViewAdapter.appendFilterList(dataXML,'#publication/','title'); 
+                else{
+                    result.each(function(){                  
+                        var eventLabel  = $(this).find("[name = title]").text();
+                        ViewAdapter.appendButton('#publication/'+eventLabel.split(' ').join('_'),eventLabel);  
+                    });            
+                } 
+            }
         }  ,          
                                       
 
@@ -109,13 +123,13 @@ var SWDFCommandStore = {
 				       
 		       return prefix + query;	
             },
-        ModelCallBack : function(dataXML,conferenceUri){
+        ModelCallBack : function(dataXML,option){
 
 	                        var result = $(dataXML).find("sparql > results> result").text();
 	                        if( result != ""){
 		
-		                        $(dataXML).find("sparql > results > result").each(function(){                  
-			                        var publiUri  = $(this).find("[name = publiUri]").text().replace(conferenceUri,"");	
+		                        $(dataXML).find("sparql > results > result").each(function(){                
+			                        var publiUri  = $(this).find("[name = publiUri]").text().replace(option.conferenceUri,"");	
 			                        var publiTitle  = $(this).find("[name = publiTitle]").text();
 			                        var publiAbstract  = $(this).find("[name = publiAbstract]").text();
 		                            
@@ -128,7 +142,7 @@ var SWDFCommandStore = {
 			                            ViewAdapter.appendToBackboneView('<h3>'+publiAbstract+'</h3>'); 
 			                        }
 
-		                        });            
+		                        });      
 	                        }
                         }
         },
@@ -153,12 +167,12 @@ var SWDFCommandStore = {
 				       
 		       return prefix + query;	
             },
-        ModelCallBack : function(dataXML,conferenceUri){
+        ModelCallBack : function(dataXML,option){
 	                        var result = $(dataXML).find("sparql > results> result").text();
 	                        if( result != ""){
-		                        $("[data-role = page]").find(".content").append($('<h2>Authors </h2>')).trigger("create");
+		                        ViewAdapter.appendToBackboneView('<h2>Authors </h2>'); 
 		                        $(dataXML).find("sparql > results > result").each(function(){                  
-			                        var authorUri  = $(this).find("[name = publiAbstract]").text().replace(conferenceUri,"");	
+			                        var authorUri  = $(this).find("[name = publiAbstract]").text().replace(option.conferenceUri,"");	
 			                        var authorName  = $(this).find("[name = authorName]").text();
 			                        ViewAdapter.appendButton('#author/'+authorName.split(' ').join('_'),authorName,{tiny:true}); 
 		                        });            
@@ -166,6 +180,67 @@ var SWDFCommandStore = {
                         }
     } , 
     
+    ///////////////// BUILD GRAPH VIEW QUERY 
+    ///////////////// BUILD GRAPH VIEW QUERY 
+    ///////////////// BUILD GRAPH VIEW QUERY 
+    ///////////////// BUILD GRAPH VIEW QUERY 
+    getRdfGraphFromPublicationTitle : {
+        dataType : "XML",
+        method : "GET",
+        getQuery : function(parameters){
+		     
+            var publiTitle = parameters.id; 
+		    var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+						    ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
+						    ' PREFIX dc: <http://purl.org/dc/elements/1.1/>             ' +
+						    ' PREFIX swrc: <http://swrc.ontoware.org/ontology#>         ' +
+						    ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		' ;
+						
+		    var query =		'SELECT DISTINCT ?publiUri  WHERE   ' +
+						    '{ ?publiUri dc:title  "'+ publiTitle.split('_').join(' ') +'".' + 
+						    ' } ' ;
+				       
+		       return prefix + query;	
+            },
+        ModelCallBack : function(dataXML,option){
+	                        var result = $(dataXML).find("sparql > results> result");
+	                        if( result.text() != ""){
+	                            console.log(option);
+	                            ViewAdapter.showAsGraph( result.find("[name = publiUri]").text(), option.conferenceUri,SWDFCommandStore.getRdfLink ); 
+	                        }
+                        }
+		                        
+    },
+    getRdfLink : {
+        dataType : "XML",
+        method : "GET",
+        getQuery : function(parameters){
+		     
+            var entity = parameters.entity; 
+		    var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+						    ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
+						    ' PREFIX dc: <http://purl.org/dc/elements/1.1/>             ' +
+						    ' PREFIX swrc: <http://swrc.ontoware.org/ontology#>         ' +
+						    ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		' ;
+						
+		    var query =		'SELECT DISTINCT ?link ?to  WHERE  { ' +
+						    '<'+entity.replace('\n','').replace('\t','')+'> ?link  ?to.' +  
+						    ' } ' ;
+				       
+		       return prefix + query;	
+            },
+        ModelCallBack : function(dataXML,option){
+	                        var result = $(dataXML).find("sparql > results> result");
+	                        if( result.text() != ""){
+	                            console.log(result);
+	                            console.log(option);
+	                        }
+                        }
+		                        
+    },
+    
+    ///////////////// END BUILD GRAPH VIEW QUERY 
+    ///////////////// END BUILD GRAPH VIEW QUERY 
     
     getSubEvent : {
 	    dataType : "XML",
@@ -186,27 +261,26 @@ var SWDFCommandStore = {
 		    return prefix + query ; 
 		
 	    },
-	    ModelCallBack : function(dataXML, conferenceUri){
+	    ModelCallBack : function(dataXML, option){
 	                         
                             
 	                        var result = $(dataXML).find("sparql > results> result");
 	                        var textResult= result.text();
-	                        if( textResult == "")return;
                             var nBresult= result.length;
-                            
-	                        $("[data-role = page]").find(".content").append($('<h2 style="text-align : center">Publications :</h2>'));
+                            if(nBresult<1)return;
+                            ViewAdapter.appendToBackboneView('<h2 style="text-align : center">Sub Event :</h2>');
 	                        if(nBresult>5)ViewAdapter.appendFilterList(dataXML,'#event/','eventUri',
 	                                    {
                                             show:{"eventLabel":{
                                                     alt:"eventUri",
-                                                    parseAlt:function(url){return url.replace(conferenceUri,"")}
+                                                    parseAlt:function(url){return url.replace(option.conferenceUri,"")}
                                             }},
-                                            parseUrl:function(url){return url.replace(conferenceUri,"")}
+                                            parseUrl:function(url){return url.replace(option.conferenceUri,"")}
                                         });
 	                        else{
 	                            result.each(function(){                  
 			                        var eventLabel  = $(this).find("[name = eventLabel]").text();				
-			                        var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,"");
+			                        var eventUri  = $(this).find("[name = eventUri]").text().replace(option.conferenceUri,"");
 			                        ViewAdapter.appendButton('#event/'+eventUri,eventLabel); 
 			                         
 		                        });            
@@ -239,7 +313,7 @@ var SWDFCommandStore = {
 		    return prefix + query ; 
 		
 	    },
-	    ModelCallBack : function(dataXML, conferenceUri){
+	    ModelCallBack : function(dataXML, option){
 
 	                        var result = $(dataXML).find("sparql > results> result").text();
 	                        if( result != ""){
@@ -250,18 +324,18 @@ var SWDFCommandStore = {
 			                        var locationName  = $(this).find("[name = locationName]").text();
 			                        var eventStart  = $(this).find("[name = eventStart] :first-child").text();
 			                        var eventEnd  = $(this).find("[name = eventEnd] :first-child").text();  
-			                        if(eventLabel != ""){ 
-				                        ViewAdapter.appendToBackboneView('<h2>'+eventLabel+'</h2>');
+			                        if(eventEnd != ""){  
+				                        ViewAdapter.prependToBackboneView('<h3>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</h3>');  
+			                        } 
+			                        if(eventStart != ""){ 
+				                        ViewAdapter.prependToBackboneView('<h3>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</h3>');
 			                        }
 			                        if(eventLocation != ""){ 
-				                        ViewAdapter.appendToBackboneView('<h3>Location : '+(locationName!=""?locationName:eventLocation)+'</h3>');   
+				                        ViewAdapter.prependToBackboneView('<h3>Location : '+(locationName!=""?locationName:eventLocation)+'</h3>');   
 			                        }
-			                        if(eventStart != ""){ 
-				                        ViewAdapter.appendToBackboneView('<h3>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</h3>');
+			                        if(eventLabel != ""){ 
+				                        ViewAdapter.prependToBackboneView('<h2>'+eventLabel+'</h2>');
 			                        }
-			                        if(eventEnd != ""){  
-				                        ViewAdapter.appendToBackboneView('<h3>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</h3>');  
-			                        } 
 		                        });            
 	                        }
                         },
@@ -288,18 +362,18 @@ var SWDFCommandStore = {
 		    return prefix + query ; 
 		
 	    },
-	    ModelCallBack : function(dataXML,conferenceUri){
+	    ModelCallBack : function(dataXML,option){
 		
 	                        var result = $(dataXML).find("sparql > results> result");
 	                        var textResult= result.text();
 	                        if( textResult == "")return;
                             var nBresult= result.length;
                             
-	                        $("[data-role = page]").find(".content").append($('<h2 style="text-align : center">Publications :</h2>'));
+                            ViewAdapter.appendToBackboneView('<h2 style="text-align : center">Publications :</h2>'); 
 	                        if(nBresult>5)ViewAdapter.appendFilterList(dataXML,'#publication/','publiTitle');
 	                        else{
 	                            $(dataXML).find("sparql > results > result").each(function(){                  
-		                            var publiUri  = $(this).find("[name = publiUri]").text().replace(conferenceUri,"");			
+		                            var publiUri  = $(this).find("[name = publiUri]").text().replace(option.conferenceUri,"");			
 		                            var publiTitle  = $(this).find("[name = publiTitle]").text();
 			                        ViewAdapter.appendButton('#publication/'+publiTitle.split(' ').join('_'),publiTitle);
 	                            });  
@@ -322,13 +396,13 @@ var SWDFCommandStore = {
 						    '?eventUri rdfs:label ?eventLabel}';
 		    return prefix + query ; 
 	    },
-	    ModelCallBack : function(dataXML,conferenceUri){
+	    ModelCallBack : function(dataXML,option){
 		
 	                        var result = $(dataXML).find("sparql > results> result").text();
 	                        if( result != ""){
 		                        $(dataXML).find("sparql > results > result").each(function(){                  
 			                        var eventLabel  = $(this).find("[name = eventLabel]").text();				
-			                        var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,"");
+			                        var eventUri  = $(this).find("[name = eventUri]").text().replace(option.conferenceUri,"");
 
 			
 			                        var title = $(this).next().find(":first-child").text();
