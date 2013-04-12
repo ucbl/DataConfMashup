@@ -413,7 +413,7 @@ var SWDFCommandStore = {
 	      ModelCallBack :  function(dataXML,conferenceUri){
 											var result = $(dataXML).find("sparql > results> result").text();
 											if( result != ""){
-												$("[data-role = page]").find(".content").append($('<h2>Organization </h2>')).trigger("create");
+												$("[data-role = page]").find(".content").append($('<h2>Organizations </h2>')).trigger("create");
 												$(dataXML).find("sparql > results > result").each(function(){                  
 													var OrganizationUri  = $(this).find("[name = OrganizationUri]").text().replace(conferenceUri,"");	
 													var OrganizationName  = $(this).find("[name = OrganizationName]").text();
@@ -443,7 +443,7 @@ getOrganization : {
 					  ModelCallBack : function(dataXML,conferenceUri){
 							var result = $(dataXML).find("sparql > results> result").text();
 							if( result != ""){
-								$("[data-role = page]").find(".content").append($('<h2>Member</h2>')).trigger("create");
+								$("[data-role = page]").find(".content").append($('<h2>Members</h2>')).trigger("create");
 								$(dataXML).find("sparql > results > result").each(function(){                  
 									var OrganizationUri  = $(this).find("[name = OrganizationUri]").text().replace(conferenceUri,"");	
 									var memberName  = $(this).find("[name = MemberName]").text();
