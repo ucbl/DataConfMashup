@@ -159,16 +159,20 @@
 						{
 							"datasource" : "conferenceDatasource",
 							"name" : "getAuthorsProceedings",
+						},
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getAuthorOrganization",
 						}
 					]
 				},
-				"PublicationInfo" : {
-					"hash" : "publicationInfo/:id",
-					"view" : "#publicationInfo",
+				"ExternPublication" : {
+					"hash" : "externPublication/:id",
+					"view" : "#externPublication",
 					"commands" : [
 					    {
 							"datasource" : "publicationDatasource",
-							"name" : "getConfPublication",
+							"name" : "getExternPublicationInfo",
 						}
 					]
 				},
@@ -179,6 +183,16 @@
 					    {
 							"datasource" : "conferenceDatasource",
 							"name" : "getPublicationsByKeyword",
+						}
+					]
+				},
+				"Organization" : {
+					"hash" : "organization/:id",
+					"view" : "#organization",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getOrganization",
 						}
 					]
 				}

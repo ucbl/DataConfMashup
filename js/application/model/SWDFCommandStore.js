@@ -6,14 +6,14 @@
  *   Tags:  
  **/
 //SWDF commands file
-//First Part SWDF commands file, Second Part : ModelCallBack function definition 
+
 
 var SWDFCommandStore = { 
 
   getAllAuthors : {
             dataType : "XML",
             method : "GET", 
-            getQuery : function(parameters){ //JSON file parameters 
+            getQuery : function(parameters) { 
                 var conferenceUri = parameters.conferenceUri;  
                 return 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
                             ' SELECT DISTINCT ?name  ?uriPaper  WHERE  { '+
@@ -390,7 +390,68 @@ var SWDFCommandStore = {
                         },
 		     
     },
-       
+	
+ getAuthorOrganization : {
+	      dataType : "XML",
+	      method : "GET",
+	      getQuery : function(parameters){ //JSON file parameters 
+				var conferenceUri = parameters.conferenceUri;
+				var authorName = parameters.id.split('_').join(' ');   
+				
+				var prefix =	' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' ;
+
+				var query =    ' SELECT DISTINCT ?OrganizationName ?OrganizationUri WHERE     ' +
+									' { ' +
+									'   ?AuthorUri      foaf:name  "'+ authorName +'"  . '  +
+									'   ?OrganizationUri       foaf:member ?AuthorUri  . '  +
+									'   ?OrganizationUri       foaf:name   ?OrganizationName.     '  +
+									' } '
+													
+							   return prefix+query;
+						},
+
+	      ModelCallBack :  function(dataXML,conferenceUri){
+											var result = $(dataXML).find("sparql > results> result").text();
+											if( result != ""){
+												$("[data-role = page]").find(".content").append($('<h2>Organization </h2>')).trigger("create");
+												$(dataXML).find("sparql > results > result").each(function(){                  
+													var OrganizationUri  = $(this).find("[name = OrganizationUri]").text().replace(conferenceUri,"");	
+													var OrganizationName  = $(this).find("[name = OrganizationName]").text();
+													ViewAdapter.appendButton('#organization/'+OrganizationName.split(' ').join('_'),OrganizationName,{tiny:true}); 
+												});            
+											}
+										}
+
+    },
+	
+	
+	  //Command getOrganization                               
+getOrganization : {
+					  dataType : "XML",
+					  method : "GET",
+					  getQuery : function(parameters){ //JSON file parameters 
+									var prefix =	' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' ;
+									var OrganizationName = parameters.id.split('_').join(' ');
+									var query =  ' SELECT DISTINCT ?MemberName ?MemberUri ?OrganizationUri  WHERE     '+
+													   ' {   ' +
+													   '   ?OrganizationUri   foaf:name   "'+OrganizationName +'".  '+															   
+													   '    ?OrganizationUri  foaf:member ?MemberUri.      		     '+
+													   '    ?MemberUri         foaf:name   ?MemberName.     	     '+
+													   ' }  ';   															 
+											   return prefix+query;
+										 },
+					  ModelCallBack : function(dataXML,conferenceUri){
+							var result = $(dataXML).find("sparql > results> result").text();
+							if( result != ""){
+								$("[data-role = page]").find(".content").append($('<h2>Member</h2>')).trigger("create");
+								$(dataXML).find("sparql > results > result").each(function(){                  
+									var OrganizationUri  = $(this).find("[name = OrganizationUri]").text().replace(conferenceUri,"");	
+									var memberName  = $(this).find("[name = MemberName]").text();
+									ViewAdapter.appendButton('#author/'+memberName.split(' ').join('_'),memberName,{tiny:true}); 
+								});            
+							}
+						}
+}
    
 };  
 
@@ -403,40 +464,7 @@ var SWDFCommandStore = {
 
                 
     //Command getAuthor                                
-    getAuthor : {
-	      name: "getAuthor",
-	      dataType : "XML",
-	      method : "GET",
-	      getQuery : function(parameters){ //JSON file parameters 
-					     
-					    var conferenceUri = parameters.conferenceUri;
-					    var authorName = parameters.id;   
-					    var query ='PREFIX iswm: <http://poster.www2012.org/ontologies/2012/3/KeywordsOntologyWithoutInstance.owl#> PREFIX dc: <http://purl.org/dc/elements/1.1/> PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT DISTINCT ?Publication ?uriPublication ?keywordLabel ?PDF ?Organization ?uriOrganization WHERE {     ' +
-							       ' { ' +
-							       '   ?uriOrganization       foaf:member <'+ authorName +'>  . '  +
-							       '   ?uriOrganization       foaf:name   ?Organization .      '  +
-							       ' } UNION ' 							+       // Auhtor's publication 
-							       ' { ' +
-							       '   ?uriPublication    swc:isPartOf  <'+conferenceUri+'> ;  ' +
-							       '                      foaf:maker    <'+ authorName +'> ;          ' +
-							       ' 			dc:title      ?Publication .               ' + // Auhtor's publication 
-							       '   OPTIONAL {  '+
-							       '              ?uriPublication       owl:sameAs    ?uirPosterWWW2012 .  '+
-							       '              ?uirPosterWWW2012     iswm:hasPDF     ?PDF   .  '+
-							       '             }  '+
-							       ' } UNION ' +
-							       ' { ' +
-							       '   ?uri               swc:isPartOf  <'+conferenceUri+'> ;  ' +  // a poster has many keywords...
-							       '                      foaf:maker    <'+ authorName +'> ;          ' +
-							       '                      dc:subject    ?keywordLabel .              ' +  // Recommendation 
-							       ' }} ORDER BY ?Organization ';
-							
-							       return query;
-						    },
-
-	      ModelCallBack : "TODO",
-
-    },
+   
 
  //Command getAuthorSuggestion 
   getAuthorSuggestion : {
@@ -645,26 +673,7 @@ var SWDFCommandStore = {
                                       ModelCallBack : getPaperModelCallBack
                                       })
                                       
-     //Command getOrganization                               
-    getOrganization : 			new Command({
-                                      name: "getOrganization",
-                                      dataType : "XML",
-                                      method : "GET",
-                                      getQuery : function(parameters){ //JSON file parameters 
-                                                    var uriOrganization = parameters.uriOrganization;
-                                                    var query =' SELECT DISTINCT ?Member ?UriPerson ?Name WHERE {      '+
-                                                               ' {   																 '+
-                                                               '   <'+uriOrganization+'> foaf:member ?UriPerson.      			 '+
-                                                               '    ?UriPerson           foaf:name   ?Member.     				 '+
-                                                               ' }     															 '+
-                                                               ' UNION 															 '+
-                                                               ' {     															 '+
-                                                               '   <'+uriOrganization+'> foaf:name   ?Name.                        '+
-                                                               ' }} ';
-                                                               return query;
-                                                         },
-                                      ModelCallBack : getOrganizationModelCallBack
-                                      })
+  
                                                               
     ,                                  
     //Command getTopic                                 
