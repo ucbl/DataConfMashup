@@ -43,7 +43,7 @@ var SWDFCommandStore = {
                         ' }  '; 
              },
         ModelCallBack : function(dataXML){ 
-                            ViewAdapter.appendFilterList(dataXML,'#publication/','title');
+			ViewAdapter.appendFilterList(dataXML,'#publication/','title');
 		}
 	},
         
@@ -85,6 +85,7 @@ var SWDFCommandStore = {
                         ' }  '; 
              },
         ModelCallBack : function(dataXML){ 
+			$("[data-role = page]").find(".content").append($('<h2>Conference publications</h2>')).trigger("create");
 			ViewAdapter.appendFilterList(dataXML,'#publication/','title');  
 		}
 	},  
@@ -301,7 +302,7 @@ var SWDFCommandStore = {
 					var eventStart  = $(this).find("[name = eventStart] :first-child").text();
 					var eventEnd  = $(this).find("[name = eventEnd] :first-child").text();  
 					if(eventLabel != ""){ 
-						ViewAdapter.appendToBackboneView('<h4>'+eventLabel+'</h4>');
+						ViewAdapter.appendToBackboneView('<h2>'+eventLabel+'</h4>');
 					}
 					if(eventLocation != ""){ 
 						ViewAdapter.appendToBackboneView('<h4>Location : '+(locationName!=""?locationName:eventLocation)+'</h4>');   
