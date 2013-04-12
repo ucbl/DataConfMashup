@@ -140,11 +140,11 @@ var SWDFCommandStore = {
 					
 					if(publiTitle!=""){
 						ViewAdapter.appendToBackboneView('<h2>Title</h2>');
-						ViewAdapter.appendToBackboneView('<h3>'+publiTitle+'</h3>');
+						ViewAdapter.appendToBackboneView('<h4>'+publiTitle+'</h4>');
 					}
 					if(publiAbstract!=""){
 						ViewAdapter.appendToBackboneView('<h2>Abstract</h2>');
-						ViewAdapter.appendToBackboneView('<h3>'+publiAbstract+'</h3>'); 
+						ViewAdapter.appendToBackboneView('<h4>'+publiAbstract+'</h4>'); 
 					}
 
 				});            
@@ -199,7 +199,7 @@ var SWDFCommandStore = {
 						
 		    var query =		'SELECT DISTINCT ?keyword  WHERE  ' +
 						    '{ ?publiUri dc:title  "'+ publiTitle.split('_').join(' ') +'".' +
-						   	'  	 ?publiUri       dc:subject     ?keyword .            ' +
+						   	'  ?publiUri       dc:subject     ?keyword .                   ' +
 						    ' } ' ;
 				       
 		       return prefix + query;	
@@ -245,7 +245,7 @@ var SWDFCommandStore = {
 			if( textResult == "")return;
 			var nBresult= result.length;
 			
-			$("[data-role = page]").find(".content").append($('<h2 style="text-align : center">SubEvent :</h2>'));
+			$("[data-role = page]").find(".content").append($('<h2>SubEvent</h2>'));
 			if(nBresult>5)ViewAdapter.appendFilterList(dataXML,'#event/','eventUri',
 				{
 					show:{"eventLabel":{
@@ -301,16 +301,16 @@ var SWDFCommandStore = {
 					var eventStart  = $(this).find("[name = eventStart] :first-child").text();
 					var eventEnd  = $(this).find("[name = eventEnd] :first-child").text();  
 					if(eventLabel != ""){ 
-						ViewAdapter.appendToBackboneView('<h2>'+eventLabel+'</h2>');
+						ViewAdapter.appendToBackboneView('<h4>'+eventLabel+'</h4>');
 					}
 					if(eventLocation != ""){ 
-						ViewAdapter.appendToBackboneView('<h3>Location : '+(locationName!=""?locationName:eventLocation)+'</h3>');   
+						ViewAdapter.appendToBackboneView('<h4>Location : '+(locationName!=""?locationName:eventLocation)+'</h4>');   
 					}
 					if(eventStart != ""){ 
-						ViewAdapter.appendToBackboneView('<h3>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</h3>');
+						ViewAdapter.appendToBackboneView('<h4>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</h4>');
 					}
 					if(eventEnd != ""){  
-						ViewAdapter.appendToBackboneView('<h3>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</h3>');  
+						ViewAdapter.appendToBackboneView('<h4>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</h4>');  
 					} 
 				});            
 			}
@@ -346,7 +346,7 @@ var SWDFCommandStore = {
 	                        if( textResult == "")return;
                             var nBresult= result.length;
                             
-	                        $("[data-role = page]").find(".content").append($('<h2 style="text-align : center">Publications :</h2>'));
+	                        $("[data-role = page]").find(".content").append($('<h2>Publications</h2>'));
 	                        if(nBresult>5)ViewAdapter.appendFilterList(dataXML,'#publication/','publiTitle');
 	                        else{
 	                            $(dataXML).find("sparql > results > result").each(function(){                  
