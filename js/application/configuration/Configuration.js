@@ -153,6 +153,16 @@
 							"name" : "getAuthor",
 						}
 					]
+				},
+				"Keyword" : {
+					"hash" : "keyword/:id",
+					"view" : "#keyword",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getPublicationsByKeyword",
+						}
+					]
 				}
 			}
 		};

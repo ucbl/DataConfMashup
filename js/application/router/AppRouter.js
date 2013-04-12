@@ -74,6 +74,7 @@ AppRouter = Backbone.Router.extend({
 				
 				jQuery.support.cors = true;
 			}else{
+			
 				jQuery.support.cors = false;
 			} 
 			$.ajax({

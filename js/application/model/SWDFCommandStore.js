@@ -82,6 +82,30 @@ SWDFCommandStore.getAllKeyword= {
          },
     ModelCallBack : getAllKeywordCallback
     }
+	
+//Command getAllKeyword       
+SWDFCommandStore.getPublicationsByKeyword = {
+    dataType : "XML",
+    method : "GET",
+    getQuery : function(parameters){ //JSON file parameters 
+        var conferenceUri = parameters.conferenceUri; 
+        var keyword = parameters.id;  
+		var prefix =  	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+						' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
+						' PREFIX dc: <http://purl.org/dc/elements/1.1/>             ' +
+						' PREFIX swrc: <http://swrc.ontoware.org/ontology#>         ' +
+						' PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		' ;
+						
+		var query =	'  SELECT DISTINCT ?publiUri ?publiTitle  WHERE { ' +	
+					'   ?publiUri   swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 		
+					'   ?publiUri       dc:subject  "'+ keyword.split('_').join(' ') +'".' +
+					'  	?publiUri dc:title     ?publiTitle.         ' + 
+					' }';  
+		return prefix + query;	 
+               
+         },
+    ModelCallBack : getPublicationsByKeywordCallback
+    }
     
      
 SWDFCommandStore.getAuthorsProceedings= {
@@ -91,13 +115,13 @@ SWDFCommandStore.getAuthorsProceedings= {
         var conferenceUri = parameters.conferenceUri;  
         var authorName = parameters.id.split('_').join(' ');
         return 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
-                 ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
-                    ' SELECT DISTINCT ?title WHERE  { '+
-                    '   ?author foaf:name "'+ authorName +'".         '+
-                    '   ?author foaf:made ?uriPaper.     '+
-                    '  	 ?uriPaper dc:title     ?title.         ' + 
-                    '   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
-                    ' }  '; 
+				' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
+				' SELECT DISTINCT ?title WHERE  { '+
+				'   ?author foaf:name "'+ authorName +'".         '+
+				'   ?author foaf:made ?uriPaper.     '+
+				'  	 ?uriPaper dc:title     ?title.         ' + 
+				'   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
+				' }  '; 
          },
     ModelCallBack : getAuthorsProceedingsCallback
     }            
@@ -623,7 +647,7 @@ function getAuthorsProceedingsCallback(dataXML){
 
 //Callback for  title search by  
 function getAllKeywordCallback(dataXML){ 
-    appendFilterList(dataXML,'#proceedings-search/keyword-','keyword',{bubbles:true,autodividers:true}); 
+    appendFilterList(dataXML,'#keyword/','keyword',{bubbles:true,autodividers:true}); 
 }
 
 
@@ -1176,7 +1200,21 @@ function getPublicationAuthorCallback(dataXML,conferenceUri){
 		});            
 	}
 };
-	                           
+     
+function getPublicationsByKeywordCallback(dataXML,conferenceUri){
+
+	var result = $(dataXML).find("sparql > results> result").text();
+	if( result != ""){
+		//$("[data-role = page]").find(".content").append($('<h2>Authors </h2>')).trigger("create"); 
+		$(dataXML).find("sparql > results > result").each(function(){                  
+			var publiUri  = $(this).find("[name = publiUri]").text().replace(conferenceUri,"");	
+			var publiTitle  = $(this).find("[name = publiTitle]").text();
+			
+			var newButton = $('<a href="#publication/'+publiTitle.split(' ').join('_')+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+publiTitle+'</a>');
+			$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
+		});            
+	}
+};
 
 
                                   
