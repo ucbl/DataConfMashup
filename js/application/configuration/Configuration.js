@@ -122,6 +122,10 @@
 							"datasource" : "conferenceDatasource",
 							"name" : "getPublicationAuthor",
 						},	
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getPublicationKeywords",
+						}	
 					]
 				},
 				"Person" : {
