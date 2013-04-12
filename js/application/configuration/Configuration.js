@@ -16,7 +16,7 @@
 				"publicationDatasource" : {
 					"uri" : "http://dblp.l3s.de/d2r/sparql",
 					"crossDomainMode" : "JSONP",
-					"commands" : "DBLPCommandStore",
+					"commands" : DBLPCommandStore,
 				},
 
 				"webDatasource" : {   
@@ -145,12 +145,26 @@
 					]
 				},
 				"Author" : {
-					"hash" : "lol/:id",
-					"view" : "#Author",
+					"hash" : "author/:id",
+					"view" : "#author",
 					"commands" : [
 					    {
 							"datasource" : "publicationDatasource",
 							"name" : "getAuthor",
+						},
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getAuthorsProceedings",
+						}
+					]
+				},
+				"PublicationInfo" : {
+					"hash" : "publicationInfo/:id",
+					"view" : "#publicationInfo",
+					"commands" : [
+					    {
+							"datasource" : "publicationDatasource",
+							"name" : "getConfPublication",
 						}
 					]
 				}

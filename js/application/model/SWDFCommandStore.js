@@ -1175,7 +1175,7 @@ function getPublicationAuthorCallback(dataXML,conferenceUri){
 			var authorUri  = $(this).find("[name = publiAbstract]").text().replace(conferenceUri,"");	
 			var authorName  = $(this).find("[name = authorName]").text();
 			
-			var newButton = $('<a href="#publication/'+authorName.split(' ').join('_')+'" data-role="button" data-inline="true" >'+authorName+'</a>');
+			var newButton = $('<a href="#author/'+authorName.split(' ').join('_')+'" data-role="button" data-inline="true" >'+authorName+'</a>');
 			$("[data-role = page]").find(".content").append(newButton).trigger("create"); 
 		});            
 	}
