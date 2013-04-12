@@ -61,7 +61,7 @@ var appendButton = ViewAdapter.appendButton = function(href,label,option){
   */ 
 var appendFilterList = ViewAdapter.appendFilterList = function(dataXML,baseLink,bindingName,option){
     if(!option)option={};
-    var Uldiv= $('<ul  id="SearchByAuthorUl" '+(option.autodividers?'data-autodividers="true"':'')+' data-role="listview" data-filter="true" data-filter-placeholder="filter author name" class="ui-listview ui-corner-all ui-shadow"> ');
+    var Uldiv= $('<ul  id="SearchByAuthorUl" '+(option.autodividers?'data-autodividers="true"':'')+' data-role="listview" data-filter="true" data-filter-placeholder="filter ..." class="ui-listview ui-corner-all ui-shadow"> ');
     var bubble= option.count  ?   '<span class="ui-li-count">1</span>'    :   ''  ; 
     var parseUrl= option.parseUrl ? option.parseUrl:function(text){return text.split(' ').join('_') };
     var text, counter, previousText, current, label, currentlabel;
@@ -88,7 +88,7 @@ var appendFilterList = ViewAdapter.appendFilterList = function(dataXML,baseLink,
             if(text==$(currentResult.previousElementSibling).find('binding[name="'+bindingName+'"] :first-child').text()){
                 console.log(text);
                 //increment bubble
-                //counter=parseInt(Uldiv.find(' li:last-child span').html());  
+                counter=parseInt(Uldiv.find(' li:last-child span').html());  
                 Uldiv.find(' li:last-child span').html(counter+1); 
                 text=false;
             }  

@@ -69,19 +69,24 @@ AppRouter = Backbone.Router.extend({
 			var command    = parameters.command;
 			var query      = parameters.query;
 			
+			
 			if(datasource.crossDomainMode == "CORS"){
 				
 				jQuery.support.cors = true;
+			
+			
 			}else{
+			
 				jQuery.support.cors = false;
+				
 			} 
 			$.ajax({
 				url: datasource.uri,
 				type: command.method,
 				cache: false,
 				dataType: command.dataType,
-				data: {query : query },							
-				success: function(data){command.ModelCallBack(data,{conferenceUri:self.conference.baseUri})},
+				data: {query : query,output : "json"},	
+				success: function(data){command.ModelCallBack(data,self.conference.baseUri)},
 				error: function(jqXHR, textStatus, errorThrown) { 
 					alert(errorThrown);
 				}

@@ -16,7 +16,7 @@
 				"publicationDatasource" : {
 					"uri" : "http://dblp.l3s.de/d2r/sparql",
 					"crossDomainMode" : "JSONP",
-					"commands" : "DBLPCommandStore",
+					"commands" : DBLPCommandStore,
 				},
 
 				"webDatasource" : {   
@@ -66,7 +66,7 @@
 					"commands" : [
 					    {
 							"datasource" : "conferenceDatasource",
-							"name" : "conferencePublication",
+							"name" : "getAuthorsProceedings",
 						} 
 					]
 				},
@@ -120,7 +120,11 @@
 						{
 							"datasource" : "conferenceDatasource",
 							"name" : "getPublicationAuthor",
-						},	 
+						},	
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getPublicationKeywords",
+						}	
 					]
 				},
 				"Person" : {
@@ -144,12 +148,50 @@
 					]
 				},
 				"Author" : {
-					"hash" : "lol/:id",
-					"view" : "#Author",
+					"hash" : "author/:id",
+					"view" : "#author",
 					"commands" : [
 					    {
 							"datasource" : "publicationDatasource",
 							"name" : "getAuthor",
+						},
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getAuthorsProceedings",
+						},
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getAuthorOrganization",
+						}
+					]
+				},
+				"ExternPublication" : {
+					"hash" : "externPublication/:id",
+					"view" : "#externPublication",
+					"commands" : [
+					    {
+							"datasource" : "publicationDatasource",
+							"name" : "getExternPublicationInfo",
+						}
+					]
+				},
+				"Keyword" : {
+					"hash" : "keyword/:id",
+					"view" : "#keyword",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getPublicationsByKeyword",
+						}
+					]
+				},
+				"Organization" : {
+					"hash" : "organization/:id",
+					"view" : "#organization",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getOrganization",
 						}
 					]
 				}
