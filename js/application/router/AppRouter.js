@@ -77,6 +77,7 @@ AppRouter = Backbone.Router.extend({
 				jsonCall = false;
 			
 			}else{
+			
 				jQuery.support.cors = false;
 					console.log(jsonCall);
 			} 

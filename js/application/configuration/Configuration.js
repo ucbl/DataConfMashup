@@ -122,6 +122,10 @@
 							"datasource" : "conferenceDatasource",
 							"name" : "getPublicationAuthor",
 						},	
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getPublicationKeywords",
+						}	
 					]
 				},
 				"Person" : {
@@ -165,6 +169,16 @@
 					    {
 							"datasource" : "publicationDatasource",
 							"name" : "getConfPublication",
+						}
+					]
+				},
+				"Keyword" : {
+					"hash" : "keyword/:id",
+					"view" : "#keyword",
+					"commands" : [
+					    {
+							"datasource" : "conferenceDatasource",
+							"name" : "getPublicationsByKeyword",
 						}
 					]
 				}
