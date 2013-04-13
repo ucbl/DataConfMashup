@@ -25,8 +25,7 @@ AppRouter = Backbone.Router.extend({
 					
 					self.changePage(new AbstractView({contentEl :  routeItem.view , model : self.conference}));
 						
-
-					$.each(routeItem.commands,function(i,commandItem){
+					$.each(routeItem.commands,function(i,commandItem){ 
 						console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name]; 
@@ -87,10 +86,10 @@ AppRouter = Backbone.Router.extend({
 				type: command.method,
 				cache: false,
 				dataType: command.dataType,
-				data: data,	
-				success: function(data){command.ModelCallBack(data,self.conference.baseUri)},
+				data: {query : data.query,output : "json"},	
+				success: function(data){command.ModelCallBack(data,self.conference.baseUri,datasource.uri)},
 				error: function(jqXHR, textStatus, errorThrown) { 
-					alert(errorThrown);
+					console.log(errorThrown);
 				}
 			});
 		}

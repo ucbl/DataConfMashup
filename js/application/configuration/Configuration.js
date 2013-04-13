@@ -130,7 +130,11 @@
 						{
 							"datasource" : "conferenceDatasource",
 							"name" : "getPublicationKeywords",
-						}	
+						},
+						{
+							"datasource" : "conferenceDatasource",
+							"name" : "getRdfGraphFromPublicationTitle",
+						} 
 					]
 				},
 				"Person" : {
@@ -150,7 +154,7 @@
 						{
 							"datasource" : "publicationDatasource",
 							"name" : "getPublications",
-						}
+						},
 					]
 				},
 				"Author" : {
