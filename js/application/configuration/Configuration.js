@@ -25,6 +25,12 @@
 					"commands" : DDGoCommandStore,
 				},
 				
+				"GoogleDataSource" : {   
+					"uri" : "https://ajax.googleapis.com/ajax/services/search/web",
+					"crossDomainMode" : "JSONP",
+					"commands" : GoogleCommandStore,
+				},
+				
 				"eventDatasource" : {
 
 					"uri" : "http://calendar.labs.idci.fr/api/schedule_event.jsonp?",
@@ -162,6 +168,14 @@
 						{
 							"datasource" : "conferenceDatasource",
 							"name" : "getAuthorOrganization",
+						},
+						{
+							"datasource" : "webDatasource",
+							"name" : "getResultAuthor",
+						},
+						{
+							"datasource" : "GoogleDataSource",
+							"name" : "getAuthorPersonalPage",
 						}
 					]
 				},
