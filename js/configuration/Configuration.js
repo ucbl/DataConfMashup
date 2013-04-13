@@ -24,6 +24,12 @@
 					"commands" : DDGoCommandStore,
 				},
 				
+				"GoogleDataSource" : {   
+					"uri" : "https://ajax.googleapis.com/ajax/services/search/web",
+					"crossDomainMode" : "JSONP",
+					"commands" : GoogleCommandStore,
+				},
+				
 				"eventDatasource" : {
 					"uri" : "http://calendar.labs.idci.fr/api/schedule_event.jsonp?",
 					"crossDomainMode" : "JSONP",
@@ -130,7 +136,11 @@
 						{
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getPublicationKeywords",
-						}	
+						},
+						{
+							"datasource" : "SemanticWebDogFoodDatasource",
+							"name" : "getRdfGraphFromPublicationTitle",
+						} 
 					]
 				},
 				"Person" : {
@@ -151,7 +161,7 @@
 						{
 							"datasource" : "DblpDatasource",
 							"name" : "getPublications",
-						}
+						},
 					]
 				},
 				"Author" : {
@@ -170,6 +180,14 @@
 						{
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getAuthorOrganization",
+						},
+						{
+							"datasource" : "DuckDuckGoDatasource",
+							"name" : "getResultAuthor",
+						},
+						{
+							"datasource" : "GoogleDataSource",
+							"name" : "getAuthorPersonalPage",
 						}
 					]
 				},

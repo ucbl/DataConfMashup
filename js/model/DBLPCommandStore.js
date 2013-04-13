@@ -14,7 +14,6 @@ getAuthor : {
 		method : "GET",
 		getQuery : function(parameters){ //JSON file parameters 
 						var authorName = parameters.id.split("_").join(" ");
-
 						var prefix =   ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' + 
 											' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
 											' PREFIX owl: <http://www.w3.org/2002/07/owl#>              ' +
@@ -31,7 +30,7 @@ getAuthor : {
 											 '   ?OtherPublicationUri dcterms:issued ?Years .      '+
 											 ' } ORDER BY (?OtherPublicationTitle )  DESC  (?Year)';
 						var  ajaxData = { query : prefix+query , output : "json"};
-												return ajaxData;
+						return ajaxData;
 						  },
 	 ModelCallBack : function(dataJSON){ 
 								   $("[data-role = page]").find(".content").append("<div id='otherPublication'><h2>Other Publications</h2></div>");
