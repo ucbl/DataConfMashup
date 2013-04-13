@@ -26,13 +26,13 @@ AppRouter = Backbone.Router.extend({
 					self.changePage(new AbstractView({contentEl :  routeItem.view , model : self.conference}));
 						
 					$.each(routeItem.commands,function(i,commandItem){ 
-					    console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
-					    var currentDatasource = self.datasources[commandItem.datasource];
-					    var currentCommand    = currentDatasource.commands[commandItem.name];
-					    console.log(currentDatasource.commands);
-					    var currentQuery      = currentCommand.getQuery({conferenceUri : self.conference.baseUri, id : id });
+						console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
+						var currentDatasource = self.datasources[commandItem.datasource];
+						var currentCommand    = currentDatasource.commands[commandItem.name]; 
+						var ajaxData      = currentCommand.getQuery({conferenceUri : self.conference.baseUri, id : id });
 
-					    self.executeCommand({datasource : currentDatasource, command : currentCommand, query : currentQuery}); 
+						self.executeCommand({datasource : currentDatasource, command : currentCommand},ajaxData);
+					
 					});
 					
 				});
@@ -63,12 +63,12 @@ AppRouter = Backbone.Router.extend({
 		
 		},
 		
-		executeCommand: function (parameters) {
+		executeCommand: function (parameters,data) {
 			
 			var self = this;
 			var datasource = parameters.datasource;
 			var command    = parameters.command;
-			var query      = parameters.query;
+			
 			
 			
 			if(datasource.crossDomainMode == "CORS"){
@@ -86,7 +86,7 @@ AppRouter = Backbone.Router.extend({
 				type: command.method,
 				cache: false,
 				dataType: command.dataType,
-				data: {query : query,output : "json"},	
+				data: {query : data.query,output : "json"},	
 				success: function(data){command.ModelCallBack(data,self.conference.baseUri,datasource.uri)},
 				error: function(jqXHR, textStatus, errorThrown) { 
 					console.log(errorThrown);

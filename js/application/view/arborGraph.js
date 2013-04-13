@@ -167,6 +167,9 @@
             nearest = dragged = sys.nearest(_mouseP);
             
             if (nearest && selected && nearest.node===selected.node){
+                var link = selected.node.data.link
+                
+                
               /*var link = selected.node.data.link
               if (link.match(/^#/)){
                  $(that).trigger({type:"navigate", path:link.substr(1)})

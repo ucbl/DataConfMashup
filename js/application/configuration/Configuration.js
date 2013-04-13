@@ -22,7 +22,7 @@
 				"webDatasource" : {   
 					"uri" : "http://api.duckduckgo.com/",
 					"crossDomainMode" : "JSONP",
-					"commands" : "conferenceDatasourceCommands",
+					"commands" : DDGoCommandStore,
 				},
 				
 				"eventDatasource" : {
@@ -196,6 +196,10 @@
 					    {
 							"datasource" : "conferenceDatasource",
 							"name" : "getOrganization",
+						},
+						{
+							"datasource" : "webDatasource",
+							"name" : "getResultOrganization",
 						}
 					]
 				}

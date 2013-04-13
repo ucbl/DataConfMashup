@@ -30,7 +30,7 @@ var showAsGraph = ViewAdapter.showAsGraph=function(uri,queryUrl,command,conferen
 			type: command.method,
 			cache: false,
 			dataType: command.dataType,
-			data: {query : command.getQuery({entity:uri}) },							
+			data: {query : command.getQuery({entity:uri}).query },							
 			success: function(dataXML){ 
                         var result = $(dataXML).find("sparql > results> result");
                         if( result.text() != ""){
