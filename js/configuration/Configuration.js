@@ -21,7 +21,7 @@
 				"DuckDuckGoDatasource" : {   
 					"uri" : "http://api.duckduckgo.com/",
 					"crossDomainMode" : "JSONP",
-					"commands" : "conferenceDatasourceCommands",
+					"commands" : DDGoCommandStore,
 				},
 				
 				"eventDatasource" : {
@@ -203,6 +203,10 @@
 					    {
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getOrganization",
+						},
+						{
+							"datasource" : "DuckDuckGoDatasource",
+							"name" : "getResultOrganization",
 						}
 					]
 				}

@@ -6,8 +6,8 @@
 
 #logoContainer{
 	float:left;
-	max-height : 10%;
-	max-width: 10%;
+	height : 60px;
+	width: 100px;
 }
 
 #logoContainer a {
