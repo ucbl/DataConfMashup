@@ -23,7 +23,7 @@ AppRouter = Backbone.Router.extend({
 				
 				self.route(routeItem.hash, function(id) {
 					
-					self.changePage(new AbstractView({contentEl :  routeItem.view , model : self.conference}));
+					self.changePage(new AbstractView({contentEl :  routeItem.view ,title : routeItem.title, model : self.conference }));
 						
 					$.each(routeItem.commands,function(i,commandItem){ 
 					    console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
@@ -40,10 +40,7 @@ AppRouter = Backbone.Router.extend({
 			this.firstPage = true;
 	
 		},
-		
-		
-		/************************************************      ACTIONS        **************************************/
-		 
+
 		
 		/************************************************      PAGE CHANGE HANDLERS            **************************************/
 		
@@ -58,10 +55,9 @@ AppRouter = Backbone.Router.extend({
 				this.firstPage = false;
 			}
 			$.mobile.changePage($(page.el), {changeHash:false, transition: transition});
-			 
-		
 		},
 		
+		/************************************************      COMMANDS EXECUTION            **************************************/
 		executeCommand: function (parameters) {
 			
 			var self = this;
@@ -71,14 +67,10 @@ AppRouter = Backbone.Router.extend({
 			
 			
 			if(datasource.crossDomainMode == "CORS"){
-				
 				jQuery.support.cors = true;
-			
-			
+
 			}else{
-			
-				jQuery.support.cors = false;
-				
+				jQuery.support.cors = false;	
 			} 
 			$.ajax({
 				url: datasource.uri,
@@ -92,8 +84,5 @@ AppRouter = Backbone.Router.extend({
 				}
 			});
 		}
-	
-		
-		
-		
+
 });

@@ -329,13 +329,13 @@ var SWDFCommandStore = {
 			                        var eventStart  = $(this).find("[name = eventStart] :first-child").text();
 			                        var eventEnd  = $(this).find("[name = eventEnd] :first-child").text();  
 			                        if(eventEnd != ""){  
-				                        ViewAdapter.prependToBackboneView('<h3>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</h3>');  
+				                        ViewAdapter.prependToBackboneView('<p>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</p>');  
 			                        } 
 			                        if(eventStart != ""){ 
-				                        ViewAdapter.prependToBackboneView('<h3>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</h3>');
+				                        ViewAdapter.prependToBackboneView('<p>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</p>');
 			                        }
 			                        if(eventLocation != ""){ 
-				                        ViewAdapter.prependToBackboneView('<h3>Location : '+(locationName!=""?locationName:eventLocation)+'</h3>');   
+				                        ViewAdapter.prependToBackboneView('<p>Location : '+(locationName!=""?locationName:eventLocation)+'</p>');   
 			                        }
 			                        if(eventLabel != ""){ 
 				                        ViewAdapter.prependToBackboneView('<h2>'+eventLabel+'</h2>');

@@ -6,8 +6,8 @@
 
 #logoContainer{
 	float:left;
-	height : 100px;
-	width : 200px;
+	max-height : 10%;
+	max-width: 10%;
 }
 
 #logoContainer a {
@@ -25,6 +25,7 @@
 }
 
 #textHeader H1{
+
   text-align: center;
   font-size: 30px;
 }
