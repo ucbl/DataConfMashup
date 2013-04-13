@@ -28,7 +28,8 @@ AppRouter = Backbone.Router.extend({
 					$.each(routeItem.commands,function(i,commandItem){ 
 					    console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 					    var currentDatasource = self.datasources[commandItem.datasource];
-					    var currentCommand    = currentDatasource.commands[commandItem.name]; 
+					    var currentCommand    = currentDatasource.commands[commandItem.name];
+					    console.log(currentDatasource.commands);
 					    var currentQuery      = currentCommand.getQuery({conferenceUri : self.conference.baseUri, id : id });
 
 					    self.executeCommand({datasource : currentDatasource, command : currentCommand, query : currentQuery}); 
@@ -86,9 +87,9 @@ AppRouter = Backbone.Router.extend({
 				cache: false,
 				dataType: command.dataType,
 				data: {query : query,output : "json"},	
-				success: function(data){command.ModelCallBack(data,self.conference.baseUri)},
+				success: function(data){command.ModelCallBack(data,self.conference.baseUri,datasource.uri)},
 				error: function(jqXHR, textStatus, errorThrown) { 
-					alert(errorThrown);
+					console.log(errorThrown);
 				}
 			});
 		}

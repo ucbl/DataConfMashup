@@ -204,11 +204,10 @@ var SWDFCommandStore = {
 				       
 		       return prefix + query;	
             },
-        ModelCallBack : function(dataXML,option){
+        ModelCallBack : function(dataXML,conferenceUri,queryUrl){
 	                        var result = $(dataXML).find("sparql > results> result");
-	                        if( result.text() != ""){
-	                            console.log(option);
-	                            ViewAdapter.showAsGraph( result.find("[name = publiUri]").text(), option.conferenceUri,SWDFCommandStore.getRdfLink ); 
+	                        if( result.text() != ""){ 
+	                            ViewAdapter.showAsGraph( result.find("[name = publiUri]").text(), queryUrl,SWDFCommandStore.getRdfLink,conferenceUri ); 
 	                        }
                         }
 		                        
@@ -226,18 +225,11 @@ var SWDFCommandStore = {
 						    ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		' ;
 						
 		    var query =		'SELECT DISTINCT ?link ?to  WHERE  { ' +
-						    '<'+entity.replace('\n','').replace('\t','')+'> ?link  ?to.' +  
+						    '<'+entity+'> ?link  ?to.' +  
 						    ' } ' ;
 				       
 		       return prefix + query;	
-            },
-        ModelCallBack : function(dataXML,option){
-	                        var result = $(dataXML).find("sparql > results> result");
-	                        if( result.text() != ""){
-	                            console.log(result);
-	                            console.log(option);
-	                        }
-                        }
+            }, 
 		                        
     },
     
