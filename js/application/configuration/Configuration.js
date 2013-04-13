@@ -106,7 +106,6 @@
 						{
 							"datasource" : "conferenceDatasource",
 							"name" : "getEventPublications",
-						
 						}
 					]
 				},
