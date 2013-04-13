@@ -15,12 +15,14 @@ var SWDFCommandStore = {
             method : "GET", 
             getQuery : function(parameters) { 
                 var conferenceUri = parameters.conferenceUri;  
-                return 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
-                            ' SELECT DISTINCT ?name  ?uriPaper  WHERE  { '+
-                            '   ?author foaf:name ?name.         '+
-                            '   ?author foaf:made ?uriPaper.     '+
-                            '   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
-                            ' } ORDER BY ASC(?name) '; 
+                var query =   'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+									' SELECT DISTINCT ?name  ?uriPaper  WHERE  { '+
+									'   ?author foaf:name ?name.         '+
+									'   ?author foaf:made ?uriPaper.     '+
+									'   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
+									' } ORDER BY ASC(?name) '; 
+				var  ajaxData = { query : query };
+							return ajaxData;
             },
             ModelCallBack : function(dataXML){
                                 ViewAdapter.appendFilterList(dataXML,'#proceedings-search/author-','name',{count:true,autodividers:true});
@@ -35,12 +37,14 @@ var SWDFCommandStore = {
         getQuery : function(parameters){ //JSON file parameters 
             var conferenceUri = parameters.conferenceUri; 
             var title = parameters.title;  
-            return '  PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
-                        '  PREFIX dc: <http://purl.org/dc/elements/1.1/>   ' +
-                        '  SELECT DISTINCT ?title WHERE {   ' +
-                        '  	 ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings> .' +
-                        '  	 ?uriPaper dc:title     ?title.         ' + 
-                        ' }  '; 
+            var query =   '  PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
+								'  PREFIX dc: <http://purl.org/dc/elements/1.1/>   ' +
+								'  SELECT DISTINCT ?title WHERE {   ' +
+								'  	 ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings> .' +
+								'  	 ?uriPaper dc:title     ?title.         ' + 
+								' }  '; 
+			var  ajaxData = { query : query };
+							return ajaxData;
              },
         ModelCallBack : function(dataXML){ 
                             ViewAdapter.appendFilterList(dataXML,'#publication/','title');
@@ -54,13 +58,15 @@ var SWDFCommandStore = {
         getQuery : function(parameters){ //JSON file parameters 
             var conferenceUri = parameters.conferenceUri; 
             var title = parameters.title;  
-            return '  PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
-                     ' PREFIX key:<http://www.w3.org/2004/02/skos/core#> ' +
-                     ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
-                     '  SELECT DISTINCT ?uriPaper ?keyword  WHERE { ' +
-                     '  	 ?uriPaper       swc:isPartOf  <'+ conferenceUri+'/proceedings> .' +
-                     '  	 ?uriPaper       dc:subject    ?keyword.         ' +
-                     ' }ORDER BY ASC(?keyword) ';  
+            var query = '  PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
+							  ' PREFIX key:<http://www.w3.org/2004/02/skos/core#> ' +
+							  ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
+							  '  SELECT DISTINCT ?uriPaper ?keyword  WHERE { ' +
+							  '  	 ?uriPaper       swc:isPartOf  <'+ conferenceUri+'/proceedings> .' +
+							  '  	 ?uriPaper       dc:subject    ?keyword.         ' +
+							  ' }ORDER BY ASC(?keyword) '; 
+			var  ajaxData = { query : query };
+					return ajaxData;
 				     
              },
         ModelCallBack : function(dataXML){ 
@@ -75,14 +81,16 @@ var SWDFCommandStore = {
         getQuery : function(parameters){ //JSON file parameters 
             var conferenceUri = parameters.conferenceUri;  
             var authorName = parameters.id.split('_').join(' ');
-            return 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
-                     ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
-                        ' SELECT DISTINCT ?title WHERE  { '+
-                        '   ?author foaf:name "'+ authorName +'".         '+
-                        '   ?author foaf:made ?uriPaper.     '+
-                        '  	 ?uriPaper dc:title     ?title.         ' + 
-                        '   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
+            var query = 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+							 ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
+							' SELECT DISTINCT ?title WHERE  { '+
+							'   ?author foaf:name "'+ authorName +'".         '+
+							'   ?author foaf:made ?uriPaper.     '+
+							'  	 ?uriPaper dc:title     ?title.         ' + 
+							'   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.'+ 
                         ' }  '; 
+			var  ajaxData = { query : query };
+					return ajaxData;
              },
         ModelCallBack : function(dataXML){ 
 			ViewAdapter.appendFilterList(dataXML,'#publication/','title');  
@@ -95,13 +103,15 @@ var SWDFCommandStore = {
         getQuery : function(parameters){ //JSON file parameters 
             var conferenceUri = parameters.conferenceUri;  
             var keyword = parameters.id.split('_').join(' ');
-			return '  PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
-				 ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
-				 '  SELECT DISTINCT ?publiUri ?publiTitle  WHERE { ' +
-				 '  	 ?publiUri       swc:isPartOf  <'+ conferenceUri+'/proceedings>       .' +
-				 '  	 ?publiUri       dc:subject     "'+keyword+'".' +
-				 '  	 ?publiUri       dc:title     ?publiTitle.      ' +
-				 ' }ORDER BY ASC(?publiTitle) ';  
+			var query = '  PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
+							 ' PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
+							 '  SELECT DISTINCT ?publiUri ?publiTitle  WHERE { ' +
+							 '  	 ?publiUri       swc:isPartOf  <'+ conferenceUri+'/proceedings>       .' +
+							 '  	 ?publiUri       dc:subject     "'+keyword+'".' +
+							 '  	 ?publiUri       dc:title     ?publiTitle.      ' +
+							 ' }ORDER BY ASC(?publiTitle) '; 
+			var  ajaxData = { query : query };
+					return ajaxData;
 		},
         ModelCallBack : function(dataXML, conferenceUri){ 
 			ViewAdapter.appendFilterList(dataXML,'#publication/','publiTitle');   
@@ -125,8 +135,8 @@ var SWDFCommandStore = {
 						    'OPTIONAL {?publiUri dc:title ?publiTitle .                    }'+ 
 						    'OPTIONAL {?publiUri  swrc:abstract ?publiAbstract.            ' +
 						    ' }} ' ;
-				       
-		       return prefix + query;	
+			var  ajaxData = { query : prefix+query };
+					return ajaxData;
 		},
         ModelCallBack : function(dataXML,conferenceUri){
 
@@ -169,8 +179,8 @@ var SWDFCommandStore = {
 						    ' ?publiUri dc:creator    ?authorUri.                      	 ' +
 						    ' ?authorUri   foaf:name     ?authorName   .                 ' +
 						    ' } ' ;
-				       
-		       return prefix + query;	
+		    var  ajaxData ={ query : prefix+query };
+					return ajaxData;
 		},
         ModelCallBack : function(dataXML,conferenceUri){
 			var result = $(dataXML).find("sparql > results> result").text();
@@ -202,7 +212,8 @@ var SWDFCommandStore = {
 						   	'  ?publiUri       dc:subject     ?keyword .                   ' +
 						    ' } ' ;
 				       
-		       return prefix + query;	
+		    var  ajaxData ={ query : prefix+query };
+					return ajaxData;
 		},
         ModelCallBack : function(dataXML,conferenceUri){
 			var result = $(dataXML).find("sparql > results> result").text();
@@ -235,7 +246,8 @@ var SWDFCommandStore = {
 						    'OPTIONAL {'+
 						    '?eventUri rdfs:label ?eventLabel.}} '+
 							'ORDER BY DESC(?eventLabel)';
-		    return prefix + query ; 
+		   var  ajaxData = { query : prefix+query };
+					return ajaxData;
 		
 	    },
 	    ModelCallBack : function(dataXML, conferenceUri){
@@ -287,7 +299,8 @@ var SWDFCommandStore = {
 						    'OPTIONAL { <'+conferenceUri+eventId+'> ical:dtEnd ?eventEnd.'+'}'+
 						
 						    '}';
-		    return prefix + query ; 
+		    var  ajaxData = { query : prefix+query };
+					return ajaxData;
 		
 	    },
 	    ModelCallBack : function(dataXML, conferenceUri){
@@ -336,7 +349,8 @@ var SWDFCommandStore = {
 						    '?eventUri swc:hasRelatedDocument ?publiUri.'+
 						    '?publiUri dc:title ?publiTitle.'+
 						    '}';
-		    return prefix + query ; 
+		    var  ajaxData ={ query : prefix+query };
+					return ajaxData;
 		
 	    },
 	    ModelCallBack : function(dataXML,conferenceUri){
@@ -371,7 +385,8 @@ var SWDFCommandStore = {
 						    '<'+conferenceUri+'> swc:isSuperEventOf  ?eventUri. '+
 						    '?eventUri rdf:type swc:TrackEvent.            '+
 						    '?eventUri rdfs:label ?eventLabel}';
-		    return prefix + query ; 
+		    var  ajaxData = { query : prefix+query };
+					return ajaxData;
 	    },
 	    ModelCallBack : function(dataXML,conferenceUri){
 		
@@ -407,7 +422,8 @@ var SWDFCommandStore = {
 									'   ?OrganizationUri       foaf:name   ?OrganizationName.     '  +
 									' } '
 													
-							   return prefix+query;
+				var  ajaxData = { query : prefix+query };
+							return ajaxData;
 						},
 
 	      ModelCallBack :  function(dataXML,conferenceUri){
@@ -438,7 +454,8 @@ getOrganization : {
 													   '    ?OrganizationUri  foaf:member ?MemberUri.      		     '+
 													   '    ?MemberUri         foaf:name   ?MemberName.     	     '+
 													   ' }  ';   															 
-											   return prefix+query;
+									var  ajaxData = { query : prefix+query };
+													return ajaxData;
 										 },
 					  ModelCallBack : function(dataXML,conferenceUri){
 							var result = $(dataXML).find("sparql > results> result").text();

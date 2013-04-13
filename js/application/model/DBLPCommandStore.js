@@ -30,7 +30,8 @@ getAuthor : {
 											 '   ?OtherPublicationUri dc:title ?OtherPublicationTitle  .    '+
 											 '   ?OtherPublicationUri dcterms:issued ?Years .      '+
 											 ' } ORDER BY (?OtherPublicationTitle )  DESC  (?Year)';
-									 return prefix+query;
+						var  ajaxData = { query : prefix+query , output : "json"};
+												return ajaxData;
 						  },
 	 ModelCallBack : function(dataJSON){ 
 								   $("[data-role = page]").find(".content").append("<div id='otherPublication'><h2>Other Publications</h2></div>");
@@ -70,7 +71,8 @@ getExternPublicationInfo : {
 										 '    ?uriConf 	 dc:publisher ?Publisher.                       '+			
 										 ' }';
 										 
-										 return prefix+query;
+							var  ajaxData = { query : prefix+query , output : "json"};
+												return ajaxData;
 							 },
 			  ModelCallBack : function(dataJSON){
 												 $("[data-role = page]").find(".content").append("<div id='externPublication'><h2>Extern Publication</h2></div>");
