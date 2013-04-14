@@ -1,9 +1,10 @@
 /**   
- *   Copyright <c> Claude Bernard - University Lyon 1 -  2013
- *   Author: Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, Lionnel MEDINI(supervisor)
- *   Description: Interface between backbone and jqueryUI-mobile to show up view
- *   Version: 1
- *   Tags:  
+*	Copyright <c> Claude Bernard - University Lyon 1 -  2013
+* 	License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
+*   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
+*   Description: This file provide simple function to build jquery mobile element such as button or sorted list plus some graph first attempt
+*   Version: 0.8
+*   Tags:  JQuery-Mobile
 **/
  (function(){
 
@@ -37,27 +38,23 @@ var Graph = ViewAdapter.Graph=function(queryUrl,command,conferenceUri){
     };
 
     function updateGraph( uri){
-    
-        /*
-        console.log(uri);
-         */
-         var result=undefined;
-         $.ajax({
-			    url: queryUrl,
-			    type: command.method,
-			    cache: false,
-			    async: false,
-			    dataType: command.dataType,
-			    data: {query : command.getQuery({entity:uri}).query },							
-			    success: function(dataXML){ 
-                            result = $(dataXML).find("sparql > results> result"); 
-                        },
-			    error: function(jqXHR, textStatus, errorThrown) {
-				    console.log('---- GRAPH REQUEST FAILED ----');
-				    console.log(jqXHR, textStatus);
-			    }
-		    });
-         
+
+		var result=undefined;
+		$.ajax({
+			url: queryUrl,
+			type: command.method,
+			cache: false,
+			async: false,
+			dataType: command.dataType,
+			data: {query : command.getQuery({entity:uri}).query },							
+			success: function(dataXML){ 
+						result = $(dataXML).find("sparql > results> result"); 
+					},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('---- GRAPH REQUEST FAILED ----');
+				console.log(jqXHR, textStatus);
+			}
+		});
          
         var theUI = {
             nodes:{},

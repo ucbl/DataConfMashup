@@ -1,10 +1,28 @@
+ /**   
+*	Copyright <c> Claude Bernard - University Lyon 1 -  2013
+* 	License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
+*   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
+*   Description: This JSON object contains all the configurations of the application. It is a crutial part of the system, it desribes :
+*				-> The conference informations, the uri, the logo uri and the name.
+*				-> All the datasources defined by their uris, the cross domain  mode they use, and the commandStore (see /model) related to them.
+*				   This command store contains the definition of all the command (a specific parameters+query+callback implementation) that can be send on it.
+*				-> All the routes that the app will use. Each route is configured to display a specific view, if a template exist for this view name (see /templates)
+				   it is rendered, otherwise a generic view is used. The commands we want to send are specified in a "command" array to explicit which command has to be send when the route is catched
+				   
+*   Tags:  JSON, ENDPOINT, SPARQL
+**/
  var Configuration = {
+			//Defnition of the conference
 			"conference" : {
 				"name": "ISWC 2012",
 				"logoUri": "http://iswc2012.semanticweb.org/sites/default/files/iswc_logo.jpg",
 				"baseUri": "http://data.semanticweb.org/conference/iswc/2012",
 			},
 			
+			//Defnition of the datasources 
+			// uri : It correspond to the uri to be used to access the service
+			// crossDomainMode : "CORS" or "JSONP" explicits the cross domain technique to be used on the service 
+			// commands : Name of the json var that implements all the commands that can be used on the service
 			"datasources" : {
 				"SemanticWebDogFoodDatasource" : {
 					"uri" : "http://data.semanticweb.org/sparql",
@@ -37,6 +55,11 @@
 				}
 
 			}, 
+			//Declaration of all the routes to be used by the router
+			// hash : url to be catched by the router
+			// view : the name of the view to display when catching the route (if a template in /templates matches the name, it is used, otherwise a generic view is used)
+			// title : the title to display on the header when showing the view
+			// commands : array of datasource/name to precise which command of which datasource to send when catching the route
 			"routes" : {
 			    "Home" : { 
 					"hash" : "",
