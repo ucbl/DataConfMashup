@@ -15,7 +15,9 @@
 		dataType : "JSONP",
 		method : "GET",
 		getQuery : function(parameters){ //JSON file parameters 
-			var authorName = parameters.id.split("_").join(" ");
+				var authorUri = parameters.id;
+			    var retrievedObject = localStorage.getItem(authorUri);
+			    var authorName = JSON.parse(retrievedObject).name;
 			var prefix =   ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' + 
 								' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
 								' PREFIX owl: <http://www.w3.org/2002/07/owl#>              ' +
@@ -35,6 +37,12 @@
 			return ajaxData;
 	},
 	 ModelCallBack : function(dataJSON){ 
+	
+		},
+		
+	 ViewCallBack : function(id){
+		//Pick up data in local storage
+		var JSONdata = getFromLocalStorage(id);
 		$("[data-role = page]").find(".content").append("<div id='otherPublication'><h2>Other Publications</h2></div>");
 		$.each(dataJSON.results.bindings,function(i,item){
 							var publiUri  = this.OtherPublicationUri.value;
@@ -42,17 +50,18 @@
 						   var newButton = $('<a href="#externPublication/'+publiTitle.split(' ').join('_')+'" data-role="button" data-icon="arrow-r" data-iconpos="right" >'+publiTitle+'</a>'); 
 						  $("[data-role = page]").find(".content").append(newButton).trigger("create");                             
 				  });
-
-		}
-	  },    
+	 }
+},    
                                 
                                 
 	getExternPublicationInfo : {
 		dataType : "JSONP",
 		method : "GET",
 		getQuery : function(parameters){ //JSON file parameters 
-			var publicationTitle = parameters.id.split('_').join(' '); 
-			var  type  = "^^xsd:string";
+			var publicationUri = parameters.id;
+			var retrievedObject = localStorage.getItem(publicationUri);
+			var publicationTitle = JSON.parse(retrievedObject).name;
+			var  type  = "^^xsd:string";//DBLP ontology
 			var prefix =   ' PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ' + 
 								' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
 								' PREFIX owl: <http://www.w3.org/2002/07/owl#>              ' +
@@ -76,7 +85,13 @@
 			return ajaxData;
 		},
 		ModelCallBack : function(dataJSON){
-			$("[data-role = page]").find(".content").append("<div id='externPublication'><h2>Extern Publication</h2></div>");
+			
+		},
+		
+		ViewCallBack : function(id){
+		//Pick up data in local storage
+		var JSONdata = getFromLocalStorage(id);
+		$("[data-role = page]").find(".content").append("<div id='externPublication'><h2>Extern Publication</h2></div>");
 				$.each(dataJSON.results.bindings,function(i,item){
 				var title       = this.Title.value;
 				var conf        = this.Conference.value;
@@ -93,7 +108,7 @@
 				$("[data-role = page]").find(".content").append('<p>'+publisher+'</p>').trigger("create"); 
 																								  
 			});
-		}										  
+		}
 	}
 
 };//End DBLPCommandStore JSON file  

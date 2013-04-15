@@ -16,13 +16,21 @@
 		dataType : "JSONP",
 		method : "GET",
 		getQuery : function(parameters){ 
-			var searchValue = parameters.id.split('_').join(' ');
+			var authorUri = parameters.id;
+			var retrievedObject = localStorage.getItem(authorUri);
+			var searchValue = JSON.parse(retrievedObject).name;
 			var  ajaxData = { q : searchValue, v : "1.0" };
 			return ajaxData ; 
 		},
 		ModelCallBack : function (dataJSON){									
+						
+		},
+		
+		ViewCallBack : function(id){
+		//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			$("[data-role = page]").find(".content").append('<h2>Personal Page</h2>').trigger("create");	
-			$("[data-role = page]").find(".content").append('<a href="'+ dataJSON.responseData.results[0].url+'" >' + dataJSON.responseData.results[0].url+'</a>').trigger("create");					
+			$("[data-role = page]").find(".content").append('<a href="'+ dataJSON.responseData.results[0].url+'" >' + dataJSON.responseData.results[0].url+'</a>').trigger("create");	
 		}
 	}
 

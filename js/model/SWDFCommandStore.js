@@ -12,7 +12,7 @@
 var SWDFCommandStore = { 
 
 	/** Command used to get and display  all the authors that have a publication in the conference's proceedings using the conference uri **/
-	getAllAuthors : {
+		getAllAuthors : {
 		//Declaration of the datatype to use when sending the query
 		dataType : "XML",
 		//Declaration of the method to use when sending the query
@@ -22,22 +22,27 @@ var SWDFCommandStore = {
 			//Catching the uri of the conference given by
 			var conferenceUri = parameters.conferenceUri;  
 			//Building sparql query with prefix
-			var query =   	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
-							'SELECT DISTINCT ?name  ?uriPaper  WHERE  {                                                           ' +
-							'   ?author foaf:name ?name.                               											  ' +
-							'   ?author foaf:made ?uriPaper.                           											  ' +
-							'   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.										  ' + 
-							'} ORDER BY ASC(?name) '; 
+			var query =   'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+								'SELECT DISTINCT ?name  ?uriPaper  WHERE  {                                                           ' +
+								'   ?author foaf:name ?name.                               											  ' +
+								'   ?author foaf:made ?uriPaper.                           											  ' +
+								'   ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings>.										  ' + 
+								'} ORDER BY ASC(?name) '; 
 			//Encapsulating query in json object to return it
 			var  ajaxData = { query : query };
 			return ajaxData;
 		},
 		//Declaring the callback function to use when sending the command
-		ModelCallBack : function(dataXML){
-			//Generating results with toolkit function (see view/Backbone-jQuery-ui-mobile-Adapter.js)
-			ViewAdapter.prependToBackboneView('<h2>Search By Author</h2>');  
-			ViewAdapter.appendFilterList(dataXML,'#proceedings-search/author-','name',{count:true,autodividers:true});
-		}
+		ModelCallBack : function(dataXML){},
+		
+		ViewCallBack : function(id){
+						//Pick up data in local storage
+						var JSONdata = getFromLocalStorage(id);
+						//Generating results with toolkit function (see view/Backbone-jQuery-ui-mobile-Adapter.js)
+						ViewAdapter.prependToBackboneView('<h2>Search By Author</h2>');  
+						ViewAdapter.appendFilterList(dataXML,'#proceedings-search/author-','name',{count:true,autodividers:true});
+					}
+		
     },
                                         
     /** Command used to get and display the title of the conference's publications **/
@@ -47,18 +52,25 @@ var SWDFCommandStore = {
         getQuery : function(parameters){
             var conferenceUri = parameters.conferenceUri; 
             var title = parameters.title;  
-            var query =   	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
-							'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                          ' +
-							'SELECT DISTINCT ?title WHERE {                                                                         ' +
-							'  	 ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings> .                                          ' +
-							'  	 ?uriPaper dc:title     ?title.                                                                     ' + 
-							'}'; 
+            var query =   'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
+								'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                          ' +
+								'SELECT DISTINCT ?title WHERE {                                                                         ' +
+								'  	 ?uriPaper swc:isPartOf  <'+conferenceUri+'/proceedings> .                                          ' +
+								'  	 ?uriPaper dc:title     ?title.                                                                     ' + 
+								'}'; 
 			var  ajaxData = { query : query };
 			return ajaxData;
 		},
         ModelCallBack : function(dataXML){ 
-			ViewAdapter.prependToBackboneView('<h2>Search By Title</h2>'); 
-			ViewAdapter.appendFilterList(dataXML,'#publication/','title');
+			
+		},
+		
+		ViewCallBack : function(id){
+						//Pick up data in local storage
+						var JSONdata = getFromLocalStorage(id);
+						ViewAdapter.prependToBackboneView('<h2>Search By Title</h2>'); 
+						ViewAdapter.appendFilterList(dataXML,'#publication/','title');
+		
 		}
 	},
         
@@ -81,9 +93,15 @@ var SWDFCommandStore = {
 			return ajaxData;
 				     
 		},
-        ModelCallBack : function(dataXML){ 
-			ViewAdapter.prependToBackboneView('<h2>Search By Keyword</h2>');
-			ViewAdapter.appendFilterList(dataXML,'#keyword/','keyword',{count:true,autodividers:true}); 
+        ModelCallBack : function(dataXML,conferenceUri){ 
+			
+		},
+		
+		ViewCallBack : function(id,conferenceUri){
+						//Pick up data in local storage
+						var JSONdata = getFromLocalStorage(id);
+						ViewAdapter.prependToBackboneView('<h2>Search By Keyword</h2>');
+						ViewAdapter.appendFilterList(dataXML,'#keyword/','keyword',{count:true,autodividers:true}); 
 		}
 	},
         
@@ -93,12 +111,12 @@ var SWDFCommandStore = {
         method : "GET",
         getQuery : function(parameters){
             var conferenceUri = parameters.conferenceUri;  
-            var authorName = parameters.id.split('_').join(' ');
+            var authorUri = parameters.id;
             var query = 	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
 							'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                        ' +
-							'SELECT DISTINCT ?publiTitle ?publiUri WHERE  { 															  ' +
-							'   ?author foaf:name "'+ authorName +'".       													  ' +
-							'   ?author foaf:made ?publiUri.    																  ' +
+							'SELECT DISTINCT ?publiTitle ?publiUri ?authorName WHERE  { 															  ' +
+							'   <'+authorUri+'> foaf:name ?authorName.       													  ' +
+							'   ?authorUri foaf:made ?publiUri.    																  ' +
 							'  	?publiUri dc:title     ?publiTitle.        															  ' + 
 							'   ?publiUri swc:isPartOf  <'+conferenceUri+'/proceedings>.										  ' + 
 							'}'; 
@@ -106,21 +124,28 @@ var SWDFCommandStore = {
 			return ajaxData;
 		},
         ModelCallBack : function(dataXML,conferenceUri){ 
-			var result = $(dataXML).find("sparql > results> result");
-			var textResult= result.text();
-			if( textResult == "")return;
-			var nBresult= result.length;
 			
-			$("[data-role = page]").find(".content").append($('<h2>Conference publications </h2>'));
-			if(nBresult>5)ViewAdapter.appendFilterList(dataXML,'#publication/','publiTitle'); 
-			else{
-				result.each(function(){                  
-					var publiTitle  = $(this).find("[name = publiTitle]").text();				
-					var publiUri  = $(this).find("[name = publiUri]").text().replace(conferenceUri,"");
-					ViewAdapter.appendButton('#publication/'+publiTitle.split(" ").join("_"),publiTitle);  
-				});            
-			} 			
+		},
+		ViewCallBack : function(id,conferenceUri){
+						//Pick up data in local storage
+						var JSONdata = getFromLocalStorage(id);
+						var result = $(dataXML).find("sparql > results> result");
+						var textResult= result.text();
+						if( textResult == "")return;
+						var nBresult= result.length;
+						
+						$("[data-role = page]").find(".content").append($('<h2>Conference publications </h2>'));
+						if(nBresult>5)ViewAdapter.appendFilterList(dataXML,'#publication/','publiTitle'); 
+						else{
+							result.each(function(){                  
+								var publiTitle  = $(this).find("[name = publiTitle]").text();				
+								var publiUri  = $(this).find("[name = publiUri]").text().replace(conferenceUri,"");
+								ViewAdapter.appendButton('#publication/'+publiTitle.split(" ").join("_"),publiTitle);  
+							});            
+						} 			
 		}
+		
+		
 	},  
 	
 	/** Command used to get and display all publications linked to a specific keyword **/     
@@ -141,6 +166,12 @@ var SWDFCommandStore = {
 			return ajaxData;
 		},
         ModelCallBack : function(dataXML, conferenceUri){ 
+			
+		},
+		
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result");
 			var textResult= result.text();
 			if( textResult == "")return;
@@ -164,17 +195,17 @@ var SWDFCommandStore = {
         dataType : "XML",
         method : "GET",
         getQuery : function(parameters){	
-            var publiTitle = parameters.id; 
+            var publiUri = parameters.id.split('_').join(' '); 
 		    var prefix =	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>         ' +
 						    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>               ' +
 						    'PREFIX dc: <http://purl.org/dc/elements/1.1/>                      ' +
 						    'PREFIX swrc: <http://swrc.ontoware.org/ontology#>                  ' +
 						    'PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		        ' ;
 						
-		    var query  =	'SELECT DISTINCT ?publiUri  ?publiTitle ?publiAbstract WHERE  {     ' +
-						    '	?publiUri dc:title  "'+publiTitle.split('_').join(' ') +'".     ' +
-						    '	OPTIONAL {?publiUri dc:title ?publiTitle . }                    ' + 
-						    '	OPTIONAL {?publiUri  swrc:abstract ?publiAbstract.              ' +
+		    var query  =	'SELECT DISTINCT   ?publiTitle ?publiAbstract WHERE  {     ' +
+						    '   <'+publiUri+'>  dc:title ?publiTitle.     ' +
+						    '	OPTIONAL { <'+publiUri+'>  dc:title ?publiTitle . }                    ' + 
+						    '	OPTIONAL {<'+publiUri+'>  swrc:abstract ?publiAbstract.              ' +
 						    '}}';
 							
 			var  ajaxData = { query : prefix+query };
@@ -182,6 +213,12 @@ var SWDFCommandStore = {
 		},
         ModelCallBack : function(dataXML,conferenceUri){
 
+			
+		},
+		
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result").text();
 			if( result != ""){
 
@@ -201,6 +238,7 @@ var SWDFCommandStore = {
 
 				});            
 			}
+			
 		}
 	},
      
@@ -210,16 +248,16 @@ var SWDFCommandStore = {
         method : "GET",
         getQuery : function(parameters){
 		     
-            var publiTitle = parameters.id; 
+            var publiUri = parameters.id; 
 		    var prefix =	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>                  ' +
 						    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>                        ' +
 						    'PREFIX dc: <http://purl.org/dc/elements/1.1/>                               ' +
 						    'PREFIX swrc: <http://swrc.ontoware.org/ontology#>                           ' +
 						    'PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		                 ' ;
 						
-		    var query =		'SELECT DISTINCT ?publiUri  ?publiAbstract ?authorUri   ?authorName  WHERE { ' +
-						    '	?publiUri    dc:title  "'+ publiTitle.split('_').join(' ') +'".          ' +
-						    '	?publiUri    dc:creator    ?authorUri.                      	         ' +
+		    var query =		'SELECT DISTINCT ?publiTitle ?publiAbstract ?authorUri   ?authorName  WHERE { ' +
+						    '	 <'+publiUri+'>   dc:title ?publiTitle.        ' +
+						    '	<'+publiUri+'>  dc:creator ?authorUri.'                      	         ' +
 						    '	?authorUri   foaf:name     ?authorName   .                               ' +
 						    '}';
 		    var  ajaxData ={ query : prefix + query };
@@ -227,7 +265,13 @@ var SWDFCommandStore = {
 		},
 
         ModelCallBack : function(dataXML,conferenceUri){
-			var result = $(dataXML).find("sparql > results> result").text();
+		
+		},
+		
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
+				var result = $(dataXML).find("sparql > results> result").text();
 			if( result != ""){
 				ViewAdapter.appendToBackboneView('<h2>Authors </h2>'); 
 				$(dataXML).find("sparql > results > result").each(function(){                  
@@ -265,6 +309,12 @@ var SWDFCommandStore = {
 	    
 	    ModelCallBack : function(dataXML, conferenceUri){
 	                                         
+		
+		},
+		
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result");
 			var textResult= result.text();
 			if( textResult == "")return;
@@ -316,6 +366,12 @@ var SWDFCommandStore = {
 	    
 	    ModelCallBack : function(dataXML, conferenceUri){
 	                                         
+		
+		},
+		
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result");
 			var textResult= result.text();
 			if( textResult == "")return;
@@ -366,6 +422,12 @@ var SWDFCommandStore = {
 		
 	    },
 	    ModelCallBack : function(dataXML, conferenceUri){
+			
+		}, 
+
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result").text();
 			if( result != ""){ 
 				$(dataXML).find("sparql > results > result").each(function(){                  
@@ -388,7 +450,7 @@ var SWDFCommandStore = {
 					}
 				});            
 			}
-		},                                  
+		}
     },
 
 	/** Command used to get and display the documents linked to an event **/ 
@@ -414,7 +476,12 @@ var SWDFCommandStore = {
 		
 	    },
 	    ModelCallBack : function(dataXML,conferenceUri){
-		
+	
+		},
+
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result");
 			var textResult= result.text();
 			if( textResult == "")return;
@@ -429,7 +496,7 @@ var SWDFCommandStore = {
 					ViewAdapter.appendButton('#publication/'+publiTitle.split(' ').join('_'),publiTitle);
 				});  
 			}   
-		},                                         
+		}
     },
 	
 	/** Command used to get the track events of a given conference **/ 
@@ -450,6 +517,12 @@ var SWDFCommandStore = {
 			return ajaxData;
 	    },
 	    ModelCallBack : function(dataXML,conferenceUri){
+			
+		},
+			
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result").text();
 			if( result != ""){
 				$(dataXML).find("sparql > results > result").each(function(){                  
@@ -460,8 +533,8 @@ var SWDFCommandStore = {
 
 					ViewAdapter.appendButton("#event/"+eventUri,eventLabel);
 				});
-			}
-		},     
+			}	
+		}
     },
 	
 	/** Command used to get the Session events of a given conference that are not subEvent of any trackEvent**/ 
@@ -485,18 +558,24 @@ var SWDFCommandStore = {
 			return ajaxData;
 	    },
 	    ModelCallBack : function(dataXML,conferenceUri){
+			
+		},
+		
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result").text();
-			if( result != ""){
-				$(dataXML).find("sparql > results > result").each(function(){                  
-					var eventLabel  = $(this).find("[name = eventLabel]").text();
-					var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,""); 
+				if( result != ""){
+					$(dataXML).find("sparql > results > result").each(function(){                  
+						var eventLabel  = $(this).find("[name = eventLabel]").text();
+						var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,""); 
 
-					var title = $(this).next().find(":first-child").text();
+						var title = $(this).next().find(":first-child").text();
 
-					ViewAdapter.appendButton("#event/"+eventUri,eventLabel);
-				});
-			}
-		},     
+						ViewAdapter.appendButton("#event/"+eventUri,eventLabel);
+					});
+				}
+		}
     },
  
 	/** Command used to get the keywords linked to a publication  **/ 
@@ -505,22 +584,28 @@ var SWDFCommandStore = {
 		method : "GET",
 		getQuery : function(parameters){
 
-			var publiTitle = parameters.id; 
+			var publiUri = parameters.id; 
 			var prefix = 	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>  ' +
 							'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>        ' +
 							'PREFIX dc: <http://purl.org/dc/elements/1.1/>               ' +
 							'PREFIX swrc: <http://swrc.ontoware.org/ontology#>           ' +
 							'PREFIX foaf: <http://xmlns.com/foaf/0.1/>                   ' ;
 
-			var query =  'SELECT DISTINCT ?keyword  WHERE { ' +
-						'	?publiUri     dc:title  "'+ publiTitle.split('_').join(' ') +'". ' +
-						' 	?publiUri     dc:subject     ?keyword .                          ' +
+			var query =  'SELECT DISTINCT ?keyword ?publiTitle  WHERE { ' +
+						'	<'+publiUri+'>   dc:title  ?publiTitle. ' +
+						' 	<'+publiUri+'>      dc:subject     ?keyword .                          ' +
 						'}';
 
 			var  ajaxData = { query : prefix + query };
 			return ajaxData;
 		},
 		ModelCallBack : function(dataXML,conferenceUri){
+			
+		},
+		
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result").text();
 			if( result != ""){
 				$("[data-role = page]").find(".content").append($('<h2>Keywords</h2>')).trigger("create");
@@ -552,7 +637,12 @@ var SWDFCommandStore = {
 			return ajaxData;
 		},
 		ModelCallBack : function(dataXML, conferenceUri){ 
+
+		},
 		
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result");
 			var textResult= result.text();
 			var nBresult= result.length;
@@ -576,13 +666,13 @@ var SWDFCommandStore = {
 		method : "GET",
 		getQuery : function(parameters){
 			var conferenceUri = parameters.conferenceUri;
-			var authorName = parameters.id.split('_').join(' ');   
+			var authorUri = parameters.id;   
 			
 			var prefix =	'PREFIX foaf: <http://xmlns.com/foaf/0.1/>                   ' ;
 
-			var query = 	'SELECT DISTINCT ?OrganizationName ?OrganizationUri WHERE {  ' +
-							'   ?AuthorUri      foaf:name  "'+ authorName +'".           ' +
-							'   ?OrganizationUri       foaf:member ?AuthorUri.           ' +
+			var query = 	'SELECT DISTINCT ?OrganizationName ?OrganizationUri  ?authorName WHERE {  ' +
+							'  <'+authorUri+'>    foaf:name  ?authorName.           ' +
+							'   ?OrganizationUri       foaf:member  <'+authorUri+'> .'+
 							'   ?OrganizationUri       foaf:name   ?OrganizationName.    ' +
 							'}';
 												
@@ -591,6 +681,12 @@ var SWDFCommandStore = {
 		},
 
 		ModelCallBack : function(dataXML,conferenceUri){
+			
+		},
+		
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result").text();
 			if( result != ""){
 				$("[data-role = page]").find(".content").append($('<h2>Organizations </h2>')).trigger("create");
@@ -611,17 +707,23 @@ var SWDFCommandStore = {
 		method : "GET",
 		getQuery : function(parameters){
 			
-			var OrganizationName = parameters.id.split('_').join(' ');
+			var organizationUri = parameters.id;
 			var prefix =	' PREFIX foaf: <http://xmlns.com/foaf/0.1/>                          ' ;
-			var query =  	' SELECT DISTINCT ?MemberName ?MemberUri ?OrganizationUri  WHERE {   ' +
-							'   ?OrganizationUri   foaf:name   "'+OrganizationName +'".          ' +															   
-							'   ?OrganizationUri  foaf:member ?MemberUri.      		             ' +
+			var query =  	' SELECT DISTINCT ?MemberName ?MemberUri ?organizationName  WHERE {   ' +
+							'    <'+organizationUri+'>   foaf:name  ?organizationName .   ' +															   
+							'  <'+organizationUri+'>  foaf:member ?MemberUri.      		             ' +
 							'   ?MemberUri         foaf:name   ?MemberName.     	             ' +
 							'}';   															 
 			var  ajaxData = { query : prefix + query };
 			return ajaxData;
 		},
 		ModelCallBack : function(dataXML,conferenceUri){
+			
+		},
+		
+		ViewCallBack : function(id,conferenceUri){
+			//Pick up data in local storage
+			var JSONdata = getFromLocalStorage(id);
 			var result = $(dataXML).find("sparql > results> result").text();
 			if( result != ""){
 				$("[data-role = page]").find(".content").append($('<h2>Members</h2>')).trigger("create");
@@ -640,15 +742,15 @@ var SWDFCommandStore = {
         method : "GET",
         getQuery : function(parameters){
 		     
-            var publiTitle = parameters.id; 
+            var publiUri = parameters.id; 
 		    var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
 						    ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
 						    ' PREFIX dc: <http://purl.org/dc/elements/1.1/>             ' +
 						    ' PREFIX swrc: <http://swrc.ontoware.org/ontology#>         ' +
 						    ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>            		' ;
 						
-		    var query =		'SELECT DISTINCT ?publiUri  WHERE   ' +
-						    '{ ?publiUri dc:title  "'+ publiTitle.split('_').join(' ') +'".' + 
+		    var query =		'SELECT DISTINCT ?publiTitle WHERE   ' +
+						    '{ <'+publiUri+'>  dc:title  ?publiTitle.' + 
 						    ' } ' ;
 		    var  ajaxData ={ query : prefix+query };
 			return ajaxData;
@@ -656,13 +758,19 @@ var SWDFCommandStore = {
       
        
         ModelCallBack : function(dataXML,conferenceUri,queryUrl){
-         var result = $(dataXML).find("sparql > results> result");
-         if( result.text() != ""){
-             var graph=new ViewAdapter.Graph(queryUrl,SWDFCommandStore.getRdfLink,conferenceUri); 
-			 graph.showGraph( result.find("[name = publiUri]").text()  );
-         }
-        }
-		                        
+       
+        },
+		
+		ViewCallBack : function(id,conferenceUri){
+				//Pick up data in local storage
+				var JSONdata = getFromLocalStorage(id);
+				var result = $(dataXML).find("sparql > results> result");
+			 if( result.text() != ""){
+				 var graph=new ViewAdapter.Graph(queryUrl,SWDFCommandStore.getRdfLink,conferenceUri); 
+				 graph.showGraph( result.find("[name = publiUri]").text()  );
+			 }
+		}
+    
     },
 	
 	
@@ -672,7 +780,7 @@ var SWDFCommandStore = {
         getQuery : function(parameters){
        
             var entity = parameters.entity; 
-      var prefix = ' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
+			var prefix = ' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>' +
           ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      ' +
           ' PREFIX dc: <http://purl.org/dc/elements/1.1/>             ' +
           ' PREFIX swrc: <http://swrc.ontoware.org/ontology#>         ' +

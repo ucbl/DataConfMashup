@@ -52,10 +52,16 @@ AppRouter = Backbone.Router.extend({
 						
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
+						//We try if informations are in the local storage before call getQuery and executeCommand
+						if(getFromLocalStorage(id) !== undefined){
+						//Informations already exists so we directly call the command callBack view to render them 
+						currentCommand.ViewCallBack(getFromLocalStorage(id));
+						}else{
 						//Retrieveing the query built by the command function "getQuery"
-						var ajaxData          = currentCommand.getQuery({conferenceUri : self.conference.baseUri, id : id });
+						var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, id : id });
 						//Preparing Ajax call 
 						self.executeCommand({datasource : currentDatasource, command : currentCommand},ajaxData);
+						}
 					});
 					
 				});

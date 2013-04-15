@@ -15,13 +15,20 @@
 		dataType : "JSONP",
 		method : "GET",
 		getQuery : function(parameters){ 
-			var searchValue = parameters.id.split('_').join(' ');
+			var authorUri = parameters.id;
+			var retrievedObject = localStorage.getItem(authorUri);
+			var searchValue = JSON.parse(retrievedObject).name;
 			var  ajaxData = { q : searchValue, format : "json",pretty : 1, no_redirect : 1  , output : "json"};
 			return ajaxData ; 
 		},
 		ModelCallBack : function (dataJSON){
 
-													
+		},
+		
+		ViewCallBack : function(id){
+		//Pick up data in local storage
+			var dataJSON = getFromLocalStorage(id);
+														
 			if(dataJSON.Heading !== undefined)			    $("[data-role = page]").find(".content").prepend('<h3>'+dataJSON.Heading+' </h3>').trigger("create");	
 			if(dataJSON.Image !== undefined)			    $("[data-role = page]").find(".content").prepend('<img src="'+ dataJSON.Image+'" alt="OrganizationLogo" height="100" width="100" style="box-shadow: 8px 8px 12px #aaa;">').trigger("create");	
 															$("[data-role = page]").find(".content").append('<h2>Abstract Text</h2>').trigger("create");	
