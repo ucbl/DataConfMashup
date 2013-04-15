@@ -68,7 +68,11 @@
 					"commands" : [ 
 						{
 						    "datasource" : "SemanticWebDogFoodDatasource",
-						    "name" : "getConferenceMainEvent",
+						    "name" : "getConferenceMainTrackEvent",
+						},
+						{
+						    "datasource" : "SemanticWebDogFoodDatasource",
+						    "name" : "getConferenceMainSessionEvent",
 						}
 					]
 				}, 
@@ -134,7 +138,12 @@
 						},
 						{
 							"datasource" : "SemanticWebDogFoodDatasource",
-							"name" : "getSubEvent",
+							"name" : "getSessionSubEvent",
+						
+						},
+						{
+							"datasource" : "SemanticWebDogFoodDatasource",
+							"name" : "getTrackSubEvent",
 						
 						},
 						{

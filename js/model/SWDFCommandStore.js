@@ -240,7 +240,7 @@ var SWDFCommandStore = {
     }, 
     
 	/** Command used to get all session's sub event of a given event  **/
-    getSubEvent : {
+    getSessionSubEvent : {
 	    dataType : "XML",
 	    method : "GET", 
 	    getQuery : function(parameters){
@@ -270,7 +270,58 @@ var SWDFCommandStore = {
 			if( textResult == "")return;
 			var nBresult= result.length;
 			
-			$("[data-role = page]").find(".content").append($('<h2>SubEvent</h2>'));
+			$("[data-role = page]").find(".content").append($('<h2>Session event</h2>'));
+			if(nBresult>5)ViewAdapter.appendFilterList(dataXML,'#event/','eventUri',
+				{
+					show:{"eventLabel":{
+							alt:"eventUri",
+							parseAlt:function(url){return url.replace(conferenceUri,"")}
+					}},
+					parseUrl:function(url){return url.replace(conferenceUri,"")}
+				});
+			else{
+				result.each(function(){                  
+					var eventLabel  = $(this).find("[name = eventLabel]").text();				
+					var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,"");
+					ViewAdapter.appendButton('#event/'+eventUri,eventLabel);  
+				});            
+			} 
+		}
+                                         
+    },
+	
+		/** Command used to get all session's sub event of a given event  **/
+    getTrackSubEvent : {
+	    dataType : "XML",
+	    method : "GET", 
+	    getQuery : function(parameters){
+
+		    var eventId = parameters.id;  
+		    var conferenceUri = parameters.conferenceUri;
+		
+		    var prefix =	' PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>   ' +
+						    ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>         ' ;
+						
+						
+		    var query = 	'SELECT DISTINCT ?eventUri ?eventLabel  WHERE {                ' +
+						    '	<'+conferenceUri+eventId+'> swc:isSuperEventOf  ?eventUri. ' +
+							'	?eventUri  rdf:type 	swc:TrackEvent.                    ' +
+						    '	OPTIONAL { ?eventUri rdfs:label ?eventLabel.} 			   ' +
+							'} ORDER BY DESC(?eventLabel)';
+							
+			var  ajaxData = { query : prefix + query };
+			return ajaxData;
+		
+	    },
+	    
+	    ModelCallBack : function(dataXML, conferenceUri){
+	                                         
+			var result = $(dataXML).find("sparql > results> result");
+			var textResult= result.text();
+			if( textResult == "")return;
+			var nBresult= result.length;
+			
+			$("[data-role = page]").find(".content").append($('<h2>Track event</h2>'));
 			if(nBresult>5)ViewAdapter.appendFilterList(dataXML,'#event/','eventUri',
 				{
 					show:{"eventLabel":{
@@ -382,7 +433,7 @@ var SWDFCommandStore = {
     },
 	
 	/** Command used to get the track events of a given conference **/ 
-    getConferenceMainEvent : {
+    getConferenceMainTrackEvent : {
 	    dataType : "XML",
 	    method : "GET", 
 	    getQuery : function(parameters){	
@@ -394,6 +445,41 @@ var SWDFCommandStore = {
 						    '	<'+conferenceUri+'> swc:isSuperEventOf  ?eventUri.        ' +
 						    '	?eventUri rdf:type swc:TrackEvent.                        ' +
 						    '	?eventUri rdfs:label ?eventLabel                          ' +
+							'}';
+		    var  ajaxData = { query : prefix+query };
+			return ajaxData;
+	    },
+	    ModelCallBack : function(dataXML,conferenceUri){
+			var result = $(dataXML).find("sparql > results> result").text();
+			if( result != ""){
+				$(dataXML).find("sparql > results > result").each(function(){                  
+					var eventLabel  = $(this).find("[name = eventLabel]").text();
+					var eventUri  = $(this).find("[name = eventUri]").text().replace(conferenceUri,""); 
+
+					var title = $(this).next().find(":first-child").text();
+
+					ViewAdapter.appendButton("#event/"+eventUri,eventLabel);
+				});
+			}
+		},     
+    },
+	
+	/** Command used to get the Session events of a given conference that are not subEvent of any trackEvent**/ 
+    getConferenceMainSessionEvent : {
+	    dataType : "XML",
+	    method : "GET", 
+	    getQuery : function(parameters){	
+		    var conferenceUri = parameters.conferenceUri;
+		    var prefix =	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>   ' +
+						    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>         ' ;
+					     
+		    var query = 	'SELECT DISTINCT ?eventUri ?eventLabel WHERE {                ' +
+						    '	<'+conferenceUri+'> swc:isSuperEventOf  ?eventUri.        ' +
+						    '	?eventUri rdf:type swc:SessionEvent.                      ' +
+						    '	?eventUri rdfs:label ?eventLabel                          ' +
+							'	OPTIONAL {?eventUri swc:isSubEventOf ?superEvent.  		  ' +
+							'    ?superEvent    rdf:type   swc:TrackEvent. }              ' +
+							'	FILTER (!BOUND(?superEvent))                              ' +
 							'}';
 		    var  ajaxData = { query : prefix+query };
 			return ajaxData;
