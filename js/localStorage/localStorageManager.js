@@ -15,18 +15,14 @@
 var StorageManager = {
 
 	initialize : function(){
-		this.dataContainer = {};
-		
-		//TODO : Mettre en place l'enregistrement des command effectuée pour pouvoir savoir si faut faire un requête dans le routeur
-		this.commandLog = [];
+		this.dataContainer = [];
 
 	},
 	pushToStorage : function (uri,commandName, JSONdata){
 		
 		
-		//this.commandLog.push(commandName);
+		
 		if(this.dataContainer.hasOwnProperty(uri)){
-			
 			var existingData = this.dataContainer[uri];
 			if(!this.dataContainer[uri].hasOwnProperty(commandName)){
 				console.log("ENRICHING ELEMENT :");
@@ -37,7 +33,7 @@ var StorageManager = {
 		}else{
 			console.log("SAVING ELEMENT :");
 			var newElement = {};
-			newElement.push(JSONdata);
+			newElement[commandName] = JSONdata;
 			
 			this.dataContainer[uri] = newElement;
 			//store.set(uri,newElement);
