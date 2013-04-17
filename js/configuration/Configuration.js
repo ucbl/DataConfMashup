@@ -16,7 +16,7 @@
 			"conference" : {
 				"name": "ISWC 2012",
 				"logoUri": "http://iswc2012.semanticweb.org/sites/default/files/iswc_logo.jpg",
-				"baseUri": "http://data.semanticweb.org/conference/iswc/2012",
+				"baseUri": "http://data.semanticweb.org/conference/www/2012",
 			},
 			
 			//Defnition of the datasources 
@@ -25,7 +25,7 @@
 			// commands : Name of the json var that implements all the commands that can be used on the service
 			"datasources" : {
 				"SemanticWebDogFoodDatasource" : {
-					"uri" : "http://data.semanticweb.org/sparql",
+					"uri" : "http://posters.www2012.org:8080/sparql/",
 					"crossDomainMode" : "CORS",
 					"commands" : SWDFCommandStore, 
 				},
@@ -70,21 +70,10 @@
 						    "datasource" : "SemanticWebDogFoodDatasource",
 						    "name" : "getConferenceMainTrackEvent",
 						},
-						{
-						    "datasource" : "SemanticWebDogFoodDatasource",
-						    "name" : "getConferenceMainSessionEvent",
-						}
 					]
 				}, 
-			    "Proceedings-search" : { 
-					"hash" : "proceedings-search",
-					"view" : "proceedingsSearch",
-					"title": "Search in proceedings",
-					"commands" : [
-					]
-				},
 			    "Proceedings-search-by-author" : { 
-					"hash" : "proceedings-search/by-author",
+					"hash" : "search/by-author/*uri",
 					"view" : "searchFormAuthor",
 					"title": "Search by author",
 					"commands" : [
@@ -94,19 +83,8 @@
 						} 
 					]
 				},
-			    "Proceedings-search-author" : { 
-					"hash" : "proceedings-search/author-:author",
-					"view" : "searchFormAuthorProceedings",
-					"title": "Author publications",
-					"commands" : [
-					    {
-							"datasource" : "SemanticWebDogFoodDatasource",
-							"name" : "getAuthorsProceedings",
-						} 
-					]
-				},
 			    "Proceedings-search-by-keyword" : { 
-					"hash" : "proceedings-search/by-keyword",
+					"hash" : "search/by-keyword/*uri",
 					"view" : "searchFormKeyword",
 					"title": "Search by keywords",
 					"commands" : [
@@ -117,7 +95,7 @@
 					]
 				},
 			    "Proceedings-search-by-title" : { 
-					"hash" : "proceedings-search/by-title",
+					"hash" : "search/by-title/*uri",
 					"view" : "searchFormTitle",
 					"title": "Search by title",
 					"commands" : [
@@ -128,7 +106,7 @@
 					]
 				},
 				"Event" : { 
-					"hash" : "event/*id",
+					"hash" : "event/*uri",
 					"view" : "event",
 					"title": "Search in event",
 					"commands" : [
@@ -153,7 +131,7 @@
 					]
 				},
 				"Publication" : { 
-					"hash" : "publication/:id",
+					"hash" : "publication/*uri",
 					"view" : "publication",
 					"title": "Publication",
 					"commands" : [
@@ -169,42 +147,21 @@
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getPublicationKeywords",
 						},
-						{
+						/*{
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getRdfGraphFromPublicationTitle",
-						} 
-					]
-				},
-				"Person" : {
-					"hash" : "Person/:id",
-					"view" : "PersonView",
-					"title": "Person",
-					"commands" : [
-					    {
-							"datasource" : "SemanticWebDogFoodDatasource",
-							"name" : "getPublications",
-						},
-						
-						{
-							"datasource" : "DblpDatasource",
-							"name" : "getPublications",
-						},
-						
-						{
-							"datasource" : "DblpDatasource",
-							"name" : "getPublications",
-						},
+						} */
 					]
 				},
 				"Author" : {
-					"hash" : "author/:id",
+					"hash" : "author/*uri",
 					"view" : "author",
 					"title": "Author",
 					"commands" : [
-					    {
+					   /* {
 							"datasource" : "DblpDatasource",
 							"name" : "getAuthor",
-						},
+						},*/
 						{
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getAuthorsProceedings",
@@ -213,18 +170,18 @@
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getAuthorOrganization",
 						},
-						{
+						/*{
 							"datasource" : "DuckDuckGoDatasource",
 							"name" : "getResultAuthor",
 						},
 						{
 							"datasource" : "GoogleDataSource",
 							"name" : "getAuthorPersonalPage",
-						}
+						}*/
 					]
 				},
 				"ExternPublication" : {
-					"hash" : "externPublication/:id",
+					"hash" : "externPublication/*uri",
 					"view" : "externPublication",
 					"title": "External publication",
 					"commands" : [
@@ -235,7 +192,7 @@
 					]
 				},
 				"Keyword" : {
-					"hash" : "keyword/:id",
+					"hash" : "keyword/:uri",
 					"view" : "keyword",
 					"title": "Keyword",
 					"commands" : [
@@ -246,7 +203,7 @@
 					]
 				},
 				"Organization" : {
-					"hash" : "organization/:id",
+					"hash" : "organization/*uri",
 					"view" : "organization",
 					"title": "Organization",
 					"commands" : [
