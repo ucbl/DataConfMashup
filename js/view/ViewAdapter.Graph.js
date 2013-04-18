@@ -1,6 +1,6 @@
 /**   
-*	Copyright <c> Claude Bernard - University Lyon 1 -  2013
-* 	License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
+* Copyright <c> Claude Bernard - University Lyon 1 -  2013
+*  License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
 *   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
 *   Description: This file provide simple function to build jquery mobile element such as button or sorted list plus some graph first attempt
 *   Version: 0.8
@@ -12,7 +12,7 @@ var Graph = ViewAdapter.Graph = {
     enabled : false,
     canvas : '', 
     rootNodeLabel : '',
-    nodeLimit : 20,
+    nodeLimit : 15,
     nodeCounter : 0,
     theUI : '',
     btnShowLabel : 'view as graph',
@@ -21,7 +21,7 @@ var Graph = ViewAdapter.Graph = {
     
     //generate root node
     init : function(el, rootNodeLabel){
-            console.log("-----GRAPH - INIT ------"); 
+            
       ViewAdapter.Graph["nodeCounter"]=0;
       ViewAdapter.Graph.rootNodeLabel=rootNodeLabel;
       ViewAdapter.Graph.canvas = $('<canvas style="clear:both;" id="'+ViewAdapter.Graph.canvasId+'">');
@@ -35,24 +35,24 @@ var Graph = ViewAdapter.Graph = {
       ViewAdapter.Graph.sys.renderer = Renderer(ViewAdapter.Graph.canvas);
       
       $(ViewAdapter.Graph.sys.renderer).on('navigate',function(event,data){
-            console.log("-----BROWSE RDF------"); 
+           
             //move to page
             if(data.href!=undefined)document.location.href = data.href;
       });
-		var btnlabel= ( ViewAdapter.Graph.enabled  ?    ViewAdapter.Graph.btnHideLabel : ViewAdapter.Graph.btnShowLabel );
-		console.log(el);
-		var button = ViewAdapter.appendButton(el,'javascript:void(0)',btnlabel,{tiny:true,theme:"a",prepend:true, align : "right",margin: "20px"});
-		button.css("margin"," 0px");   
-		button.css("z-index","20"); 
-		button.trigger("create");
-		var parent = el.parent();
-		el.show("slow");
-		
+  var btnlabel= ( ViewAdapter.Graph.enabled  ?    ViewAdapter.Graph.btnHideLabel : ViewAdapter.Graph.btnShowLabel );
+  console.log(el);
+  var button = ViewAdapter.appendButton(el,'javascript:void(0)',btnlabel,{tiny:true,theme:"a",prepend:true, align : "right",margin: "20px"});
+  button.css("margin"," 0px");   
+  button.css("z-index","20"); 
+  button.trigger("create");
+  var parent = el.parent();
+  el.show("slow");
+  
       button.toggle(function(){  
           $(this).find('.ui-btn-text').html("View as text");
           $(ViewAdapter.Graph.canvas).show("slow");
           parent.children().not(el).hide("slow");
-		$(this).trigger("create");
+         
           ViewAdapter.Graph.enabled = true;
           
         },function(){ 
@@ -60,7 +60,7 @@ var Graph = ViewAdapter.Graph = {
           parent.children().not(el).show("slow");
          
           $(this).find('.ui-btn-text').html("View as graph");
-			$(this).trigger("create");
+   
           ViewAdapter.Graph.enabled = false;
       });
       if(ViewAdapter.Graph.enabled){button.trigger('click');}
@@ -68,8 +68,8 @@ var Graph = ViewAdapter.Graph = {
     
     //generate clickable node
     addNode : function(label,href){
-            console.log("-----GRAPH - ADD NODE------"); 
       if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
+  
         var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
         ViewAdapter.Graph.theUI.nodes[label]={color:"#0B614B", fontColor:"#F2F2F2", alpha:0.8,href:href};
         ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
@@ -81,8 +81,8 @@ var Graph = ViewAdapter.Graph = {
     
     //generate info node
     addLeaf : function(label){
-            console.log("-----GRAPH - ADD LEAF------"); 
       if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
+         
         var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
         ViewAdapter.Graph.theUI.nodes[label]={color:"orange", fontColor:"#F2F2F2", alpha:0.7};
         ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
@@ -93,11 +93,3 @@ var Graph = ViewAdapter.Graph = {
     }, 
      
 };
-
-
-
-
-
-
-
-
