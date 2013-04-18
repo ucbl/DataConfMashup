@@ -52,7 +52,7 @@ var Graph = ViewAdapter.Graph = {
           $(this).find('.ui-btn-text').html("View as text");
           $(ViewAdapter.Graph.canvas).show("slow");
           parent.children().not(el).hide("slow");
-         
+		$(this).trigger("create");
           ViewAdapter.Graph.enabled = true;
           
         },function(){ 
@@ -60,7 +60,7 @@ var Graph = ViewAdapter.Graph = {
           parent.children().not(el).show("slow");
          
           $(this).find('.ui-btn-text').html("View as graph");
-		 
+			$(this).trigger("create");
           ViewAdapter.Graph.enabled = false;
       });
       if(ViewAdapter.Graph.enabled){button.trigger('click');}

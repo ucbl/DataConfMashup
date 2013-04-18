@@ -161,7 +161,7 @@ var SWDFCommandStore = {
 					if(_.size(keywordList) > 0 ){
 						$.each(keywordList, function(i,keyword){
 							ViewAdapter.Graph.addNode("Keyword : "+keyword.keyword,'#keyword/'+keyword.keyword);
-							ViewAdapter.appendButton(parameters.contentEl,'#keyword/'+keyword.keyword+'',keyword.keyword);
+							ViewAdapter.appendButton(parameters.contentEl,'#keyword/'+keyword.keyword.split(" ").join("_"),keyword.keyword);
 						});
 					}
 				}
