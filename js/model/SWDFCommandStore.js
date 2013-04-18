@@ -31,7 +31,7 @@ var SWDFCommandStore = {
 								'   ?uriPubli swc:isPartOf  <'+conferenceUri+proceedingsUri+'>.										       ' + 
 								'   ?authorUri foaf:made ?uriPubli.                           											   ' +
 								'   ?authorUri foaf:name ?authorName.                               									   ' +
-								'} ORDER BY ASC(?name) '; 
+								'} ORDER BY ASC(?authorName) '; 
 			//Encapsulating query in json object to return it
 			var  ajaxData = { query : query };
 			return ajaxData;
@@ -49,20 +49,22 @@ var SWDFCommandStore = {
 					JSONfile[i] = JSONToken;
 				});
 				StorageManager.pushToStorage(currentUri,"getAllAuthors",JSONfile);
-			} 
+			}
 		},
 		
 		ViewCallBack : function(parameters){
 			var JSONdata = parameters.JSONdata;
-					
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getAllAuthors")){
 					var authorList = JSONdata.getAllAuthors;
 					if(_.size(authorList) > 0 ){
-						$.each(authorList, function(i,author){
-							ViewAdapter.Graph.addNode("Name : "+author.authorName,'#author/'+author.authorName.split(" ").join("_")+'/'+author.authorUri);
-							ViewAdapter.appendButton(parameters.contentEl,'#author/'+author.authorName.split(" ").join("_")+'/'+author.authorUri+'',author.authorName);
-						});
+			      ViewAdapter.appendList(authorList,
+			                             '#author/',
+			                             function(str){return str["authorName"].split(" ").join("_")+'/'+str["authorUri"]},
+			                             "authorName",
+			                             parameters.contentEl,
+			                             {type:"Node",labelCllbck:function(str){return "Name : "+str["authorName"];}},
+			                             {autodividers:true});
 					}
 				}
 			}
@@ -77,12 +79,12 @@ var SWDFCommandStore = {
         getQuery : function(parameters){
             var conferenceUri = parameters.conferenceUri; 
             var proceedingsUri = parameters.uri; 
-            var query =   'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
-								'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                          ' +
-								'SELECT DISTINCT ?publiTitle ?publiUri WHERE {                                                            ' +
-								'  	 ?publiUri swc:isPartOf  <'+conferenceUri+proceedingsUri+'> .                                          ' +
-								'  	 ?publiUri dc:title     ?publiTitle.                                                                     ' + 
-								'}'; 
+            var query = 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
+	                      'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                        ' +
+	                      'SELECT DISTINCT ?publiTitle ?publiUri WHERE {                                                        ' +
+	                      '  	 ?publiUri swc:isPartOf  <'+conferenceUri+proceedingsUri+'> .                                     ' +
+	                      '  	 ?publiUri dc:title     ?publiTitle.                                                              ' + 
+	                      '}'; 
 			var  ajaxData = { query : query };
 			return ajaxData;
 		},
@@ -130,7 +132,7 @@ var SWDFCommandStore = {
             var query = 	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
 							'PREFIX key:<http://www.w3.org/2004/02/skos/core#>                                                      ' +
 							'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                          ' +
-							'SELECT DISTINCT  ?keyword  WHERE {                                                            ' +
+							'SELECT DISTINCT  ?keyword ?publiUri  WHERE {                                                            ' +
 							'  	 ?publiUri       swc:isPartOf  <'+conferenceUri+proceedingsUri+'> .                                   ' +
 							'  	 ?publiUri       dc:subject    ?keyword.                                                            ' +
 							'}ORDER BY ASC(?keyword) '; 
@@ -154,23 +156,24 @@ var SWDFCommandStore = {
 		
 		ViewCallBack : function(parameters){
 			var JSONdata = parameters.JSONdata;
-
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getAllKeyword")){
-					
 					var keywordList = JSONdata.getAllKeyword;
 					if(_.size(keywordList) > 0 ){
-						$.each(keywordList, function(i,keyword){
-							 ViewAdapter.Graph.addNode("Publication : "+keyword.keyword,'#keyword/'+keyword.keyword);
-							ViewAdapter.appendButton(parameters.contentEl,'#keyword/'+keyword.keyword+'',keyword.keyword);
-						});
+			      ViewAdapter.appendList(keywordList,
+			                             '#keyword/',
+			                             function(str){return str["keyword"]},
+			                             "keyword",
+			                             parameters.contentEl,
+			                             {type:"Node",labelCllbck:function(str){return "Publication : "+str["keyword"];}},
+			                             {autodividers:true,count:true});
 					}
 				}
-			}
+			} 
 		}
 	},
         
-    /** Command used to get and display all keywords of the conference's publications **/     
+    /** Command used to get and display all proceedings of the conference's publications **/     
     getAuthorsProceedings : {
         dataType : "XML",
         method : "GET",
@@ -432,7 +435,7 @@ var SWDFCommandStore = {
 					JSONfile[i] = JSONToken;
 				});
 				StorageManager.pushToStorage(currentUri,"getTrackSubEvent",JSONfile);
-			}                                
+			}
 		
 		},
 		
