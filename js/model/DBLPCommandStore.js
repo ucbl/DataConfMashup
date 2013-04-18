@@ -127,18 +127,22 @@
 					
 				
 					if(title != ""){  
+						ViewAdapter.Graph.addLeaf("Title :"+title);
 						parameters.contentEl.append('<h2>Title</h2>');
 						parameters.contentEl.find(".content").append('<p>'+title+'</p>'); 
 					} 
 					if(conf != ""){ 
+						ViewAdapter.Graph.addLeaf("Conference :"+conf);
 						parameters.contentEl.find(".content").append('<h2>Conference</h2>');
 						parameters.contentEl.find(".content").append('<p>'+conf+'</p>');
 					}
 					if(year != ""){ 
+						ViewAdapter.Graph.addLeaf("Year :"+year);
 						parameters.contentEl.find(".content").append('<h2>Year</h2>');
 						parameters.contentEl.find(".content").append('<p>'+year+'</p>'); 
 					}
 					if(publisher !=""){ 
+						ViewAdapter.Graph.addLeaf("Publisher :"+publisher);
 						parameters.contentEl.find(".content").append('<h2>Publisher</h2>');
 						parameters.contentEl.find(".content").append('<p>'+publisher+'</p>'); 
 					}			  

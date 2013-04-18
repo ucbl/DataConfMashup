@@ -34,8 +34,9 @@
 			if(JSONdata.hasOwnProperty("getAuthorPersonalPage")){
 				var authorHomepage = JSONdata.getAuthorPersonalPage;
 				if(_.size(authorHomepage) > 0 ){		  
-					var homepageUrl  = authorHomepage[0].authorHomepage;			
-					parameters.contentEl.append('<h2>Personal Page</h2>').trigger("create");	
+					var homepageUrl  = authorHomepage[0].authorHomepage;
+					ViewAdapter.Graph.addNode("Personnal page : "+homepageUrl, homepageUrl);
+					parameters.contentEl.append('<h2>Personal Page</h2>');	
 					parameters.contentEl.append('<a href="'+homepageUrl+'" >'+homepageUrl+'</a>');	
 				}
 			}

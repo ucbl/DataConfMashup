@@ -65,6 +65,20 @@ var appendButton = ViewAdapter.appendButton = function(el,href,label,option){
     return newButton;
 };
  
+ var prependButton = ViewAdapter.prependButton = function(el,href,label,option){
+	
+    if(!href)return;
+    if(!option)var option={}
+    var newButton = 
+        $(  '<a href="'+href+'" data-role="button" ' +
+            (option.tiny?'data-inline="true"':'data-icon="arrow-r" data-iconpos="right"') +
+            (option.theme?'data-theme="'+option.theme+'"':'') +
+			(option.align?'style="float:'+option.align+';"':'') +
+			
+            '>'+(label==""?href:label) +'</a>'); 
+		el.prepend(newButton);
+    return newButton;
+};
 
 //TODO make it free from swdf
 /** append filter list to current view using '$("[data-role = page]").find(".content")' selector (backbone)
