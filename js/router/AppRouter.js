@@ -28,6 +28,7 @@ AppRouter = Backbone.Router.extend({
 			this.datasources = this.configuration.datasources;
 			//Saving the routes definition
 			this.routes = this.configuration.routes;
+			
 
 			$.each(this.datasources,function(i,datasourceItem){
 				console.log("******* DATASOURCE ********");
@@ -58,8 +59,8 @@ AppRouter = Backbone.Router.extend({
 					self.changePage(new AbstractView({contentEl :  routeItem.view ,title : title, model : self.conference }));
 					
 					//Prepare AJAX call according to the commands declared
-					$.each(routeItem.commands,function(i,commandItem){ 
-						
+					$.each(routeItem.commands,function(i,commandItem){
+					
 
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
@@ -83,10 +84,9 @@ AppRouter = Backbone.Router.extend({
 							//Preparing Ajax call 
 							self.executeCommand({datasource : currentDatasource, command : currentCommand,commandName : commandItem.name,data : ajaxData, currentUri : uri, contentEl : contentEl});
 						}
-						
-						$("[data-role = page]").trigger("create");
 					});
-					
+				  //GRAPH
+				  ViewAdapter.Graph.init(uri);
 				});
 			});
 	  

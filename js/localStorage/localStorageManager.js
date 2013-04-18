@@ -20,16 +20,15 @@ var StorageManager = {
 		if(this.dataContainer.hasOwnProperty(uri)){
 			var existingData = this.dataContainer[uri];
 			if(!this.dataContainer[uri].hasOwnProperty(commandName)){
-				console.log("ENRICHING ELEMENT ON STORAGE");
-				existingData[commandName] = JSONdata;
+				existingData[commandName] = JSONdata;			
 				//store.set(uri,existingData);
 			}
 			
 		}else{
-			console.log("SAVING ELEMENT ON STORAGE");
 			var newElement = {};
 			newElement[commandName] = JSONdata;
 			this.dataContainer[uri] = newElement;
+			//	console.log(this.dataContainer);
 			//store.set(uri,newElement);
 		}
 	},

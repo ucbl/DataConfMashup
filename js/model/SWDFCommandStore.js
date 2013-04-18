@@ -11,8 +11,10 @@
 **/
 var SWDFCommandStore = { 
 
+
 	/** Command used to get and display  all the authors that have a publication in the conference's proceedings using the conference uri **/
 	getAllAuthors : {
+
 		//Declaration of the datatype to use when sending the query
 		dataType : "XML",
 		//Declaration of the method to use when sending the query
@@ -58,6 +60,7 @@ var SWDFCommandStore = {
 					var authorList = JSONdata.getAllAuthors;
 					if(_.size(authorList) > 0 ){
 						$.each(authorList, function(i,author){
+							ViewAdapter.Graph.addNode("Name : "+author.authorName,'#author/'+author.authorName.split(" ").join("_")+'/'+author.authorUri);
 							ViewAdapter.appendButton(parameters.contentEl,'#author/'+author.authorName.split(" ").join("_")+'/'+author.authorUri+'',author.authorName);
 						});
 					}
@@ -67,7 +70,7 @@ var SWDFCommandStore = {
 		
     },
                                         
-    /** Command used to get and display the title of the conference's publications **/
+/******** Command used to get and display the title of the conference's publications *********/
     getAllTitle : {
         dataType : "XML",
         method : "GET",
@@ -76,7 +79,7 @@ var SWDFCommandStore = {
             var proceedingsUri = parameters.uri; 
             var query =   'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
 								'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                          ' +
-								'SELECT DISTINCT ?publiTitle ?publiUri WHERE {                                                                         ' +
+								'SELECT DISTINCT ?publiTitle ?publiUri WHERE {                                                            ' +
 								'  	 ?publiUri swc:isPartOf  <'+conferenceUri+proceedingsUri+'> .                                          ' +
 								'  	 ?publiUri dc:title     ?publiTitle.                                                                     ' + 
 								'}'; 
@@ -99,17 +102,19 @@ var SWDFCommandStore = {
 		
 		ViewCallBack : function(parameters){
 			var JSONdata = parameters.JSONdata;
-			
+
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getAllTitle")){
 					var publicationList= JSONdata.getAllTitle;
 					if(_.size(publicationList) > 0 ){
 						$.each(publicationList, function(i,publication){
+							ViewAdapter.Graph.addNode("Title : "+publication.publiTitle,'#publication/'+publication.publiTitle.split(" ").join("_")+'/'+publication.publiUri);
 							ViewAdapter.appendButton(parameters.contentEl,'#publication/'+publication.publiTitle.split(" ").join("_")+'/'+publication.publiUri+'',publication.publiTitle);
 
 							
 						});
 					}
+
 				}
 			}
 		}
@@ -149,14 +154,14 @@ var SWDFCommandStore = {
 		
 		ViewCallBack : function(parameters){
 			var JSONdata = parameters.JSONdata;
-			var conferenceUri = parameters.conferenceUri;
-			
+
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getAllKeyword")){
 					
 					var keywordList = JSONdata.getAllKeyword;
 					if(_.size(keywordList) > 0 ){
 						$.each(keywordList, function(i,keyword){
+							 ViewAdapter.Graph.addNode("Publication : "+keyword.keyword,'#keyword/'+keyword.keyword);
 							ViewAdapter.appendButton(parameters.contentEl,'#keyword/'+keyword.keyword+'',keyword.keyword);
 						});
 					}
@@ -198,14 +203,14 @@ var SWDFCommandStore = {
 		},
 		ViewCallBack : function(parameters){
 			var JSONdata = parameters.JSONdata;
-			
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getAuthorsProceedings")){
 					var publiList = JSONdata.getAuthorsProceedings;
 					if(_.size(publiList) > 0 ){
 						parameters.contentEl.append($('<h2>Conference publications</h2>'));
 						$.each(publiList, function(i,publication){
-							ViewAdapter.appendButton(parameters.contentEl,'#publication/'+publication.publiTitle.split(" ").join("_")+'/'+publication.publiUri+'',publication.publiTitle);
+							ViewAdapter.Graph.addNode("Publication : "+publication.publiTitle,'#publication/'+publication.publiTitle.split(" ").join("_")+'/'+publication.publiUri);
+							ViewAdapter.appendButton(parameters.contentEl,'#publication/'+publication.publiTitle.split(" ").join("_")+'/'+publication.publiUri,publication.publiTitle);
 						});
 					}
 				}
@@ -255,7 +260,7 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			
 			var JSONdata = parameters.JSONdata;
-			
+
 			if(JSONdata != null ){
 				if(JSONdata.hasOwnProperty("getPublicationInfo")){
 					var publicationInfo = JSONdata.getPublicationInfo;
@@ -274,6 +279,7 @@ var SWDFCommandStore = {
 						}
 						
 					}
+
 				}
 			}
 		}
@@ -318,13 +324,14 @@ var SWDFCommandStore = {
 		
 			var JSONdata = parameters.JSONdata;
 			var conferenceUri = parameters.conferenceUri;
-			
+
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getPublicationAuthor")){
 					var authorList = JSONdata.getPublicationAuthor;
 					if(_.size(authorList) > 0 ){
 						parameters.contentEl.append($('<h2>Author</h2>'));
 						$.each(authorList, function(i,author){
+							 ViewAdapter.Graph.addNode("Author : "+author.authorName,'#author/'+author.authorName.split(" ").join("_")+'/'+author.authorUri);
 							ViewAdapter.appendButton(parameters.contentEl,'#author/'+author.authorName.split(" ").join("_")+'/'+author.authorUri,author.authorName,{tiny:true});
 						});
 					}
@@ -381,6 +388,7 @@ var SWDFCommandStore = {
 					if(_.size(subSessions) > 0 ){
 						parameters.contentEl.append($('<h2>Sub tracks</h2>')); 
 						$.each(subSessions, function(i,session){
+							 ViewAdapter.Graph.addNode("Sub session : "+session.eventLabel,'#event/'+session.eventUri);
 							ViewAdapter.appendButton(parameters.contentEl,'#event/'+session.eventUri,session.eventLabel);
 						});
 					}
@@ -437,6 +445,7 @@ var SWDFCommandStore = {
 					if(_.size(subTracks) > 0 ){
 						parameters.contentEl.append($('<h2>Sub tracks</h2>')); 
 						$.each(subTracks, function(i,track){
+							 ViewAdapter.Graph.addNode("Sub track : "+track.eventLabel,'#event/'+track.eventUri);
 							ViewAdapter.appendButton(parameters.contentEl,'#event/'+track.eventUri,track.eventLabel);
 						});
 					}
@@ -571,6 +580,7 @@ var SWDFCommandStore = {
 					if(_.size(publications) > 0 ){
 						parameters.contentEl.append($('<h2>Publications</h2>')); 
 						$.each(JSONdata.getEventPublications, function(i,publication){
+							 ViewAdapter.Graph.addNode("Publication : "+publication.publiTitle,'#publication/'+publication.publiTitle.split(" ").join("_")+'/'+publication.publiUri);
 							ViewAdapter.appendButton(parameters.contentEl,'#publication/'+publication.publiTitle.split(" ").join("_")+'/'+publication.publiUri,publication.publiTitle);
 
 						});
@@ -720,13 +730,14 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 		
 			var JSONdata = parameters.JSONdata;
-			
+
 			if(JSONdata != null ){
 				if(JSONdata.hasOwnProperty("getPublicationKeywords")){
 					var keywordList = JSONdata.getPublicationKeywords;
 					if(_.size(keywordList) > 0 ){
 						parameters.contentEl.append($('<h2>Keywords</h2> '));
 						$.each(keywordList, function(i,keyword){
+							ViewAdapter.Graph.addLeaf("Keyword : "+keyword.keyword);
 							ViewAdapter.appendButton(parameters.contentEl,'#keyword/'+keyword.keyword.split(' ').join('_'),keyword.keyword,{tiny:true});
 						});
 					}
@@ -820,14 +831,14 @@ var SWDFCommandStore = {
 		
 		ViewCallBack : function(parameters){
 			var JSONdata = parameters.JSONdata;
-			var conferenceUri = parameters.conferenceUri;
-			
+
 			if(JSONdata != null ){
 				if(JSONdata.hasOwnProperty("getAuthorOrganization")){
 					var organizationList = JSONdata.getAuthorOrganization;
 					if(_.size(organizationList) > 0 ){
 						parameters.contentEl.append($('<h2>Organizations</h2>'));
 						$.each(organizationList, function(i,organization){
+							ViewAdapter.Graph.addLeaf("Organization : "+organization.OrganizationName);
 							ViewAdapter.appendButton(parameters.contentEl,'#organization/'+organization.OrganizationName.split(" ").join("_")+'/'+organization.OrganizationUri,organization.OrganizationName,{tiny:true});
 
 						});
@@ -871,14 +882,14 @@ var SWDFCommandStore = {
 		
 		ViewCallBack : function(parameters){
 			var JSONdata = parameters.JSONdata;
-			var conferenceUri = parameters.conferenceUri;
-			
+
 			if(JSONdata != null ){
 				if(JSONdata.hasOwnProperty("getOrganization")){
 					var memberList = JSONdata.getOrganization;
 					if(_.size(memberList) > 0 ){
 						parameters.contentEl.append($('<h2>Members</h2>'));
 						$.each(memberList, function(i,author){
+							ViewAdapter.Graph.addNode("Member : "+author.MemberName,'#author/'+author.MemberName.split(" ").join("_")+'/'+author.MemberUri);
 							ViewAdapter.appendButton(parameters.contentEl,'#author/'+author.MemberName.split(" ").join("_")+'/'+author.MemberUri,author.MemberName,{tiny:true});
 						});
 
@@ -887,8 +898,10 @@ var SWDFCommandStore = {
 			}
 			
 		}
-	},
+	}
+
 
    
 };
  
+
