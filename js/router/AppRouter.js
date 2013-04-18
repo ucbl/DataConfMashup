@@ -44,10 +44,18 @@ AppRouter = Backbone.Router.extend({
 				console.log(routeItem);
 				
 				//Preparing the function to use when catching the current route
-				self.route(routeItem.hash, function(uri) {
+				self.route(routeItem.hash, function(name, uri) {
 					
+					var title = "";
+					if(name !== undefined){
+						title = name.split("_").join(" ");
+					}
+					if(uri == undefined){
+						title = routeItem.title;	
+						uri = name;
+					}
 					//Changing view
-					self.changePage(new AbstractView({contentEl :  routeItem.view ,title : routeItem.title, model : self.conference }));
+					self.changePage(new AbstractView({contentEl :  routeItem.view ,title : title, model : self.conference }));
 					
 					//Prepare AJAX call according to the commands declared
 					$.each(routeItem.commands,function(i,commandItem){ 
@@ -55,19 +63,25 @@ AppRouter = Backbone.Router.extend({
 
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
-						//We try if informations are in the local storage before call getQuery and executeCommand
 						
+						//Generating random number for command content box
+						var randomnumber = Math.floor(Math.random()*11);
+						//Creating the content box of the current command
+						var contentEl = $('<div id="'+commandItem.name+randomnumber+'"></div>');
+						$("[data-role = page]").find(".content").append(contentEl);
+						
+						//We try if informations are in the local storage before call getQuery and executeCommand
 						var JSONdata = StorageManager.pullFromStorage(uri,commandItem.name);
 						if( JSONdata != null ){
 							console.log("CAll : "+commandItem.name+" ON "+"Storage");
 							//Informations already exists so we directly call the command callBack view to render them 
-							currentCommand.ViewCallBack({JSONdata : JSONdata, conferenceUri : self.conference.baseUri});
+							currentCommand.ViewCallBack({JSONdata : JSONdata, contentEl : contentEl, name : name});
 						}else{
 							console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 							//Retrieveing the query built by the command function "getQuery"
-							var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri });
+							var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri, name : name});
 							//Preparing Ajax call 
-							self.executeCommand({datasource : currentDatasource, command : currentCommand,commandName : commandItem.name,data : ajaxData, currentUri : uri});
+							self.executeCommand({datasource : currentDatasource, command : currentCommand,commandName : commandItem.name,data : ajaxData, currentUri : uri, contentEl : contentEl});
 						}
 						
 						$("[data-role = page]").trigger("create");
@@ -111,6 +125,9 @@ AppRouter = Backbone.Router.extend({
 			//Catching the command
 			var command    = parameters.command;
 			
+			//Catching the rendering box
+			var contentEl    = parameters.contentEl;
+			
 			//Catching the command name
 			var commandName    = parameters.commandName;
 			//Catching the data
@@ -134,7 +151,7 @@ AppRouter = Backbone.Router.extend({
 				data: data,	
 				success: function(data){command.ModelCallBack(data,self.conference.baseUri,datasource.uri,currentUri);
 										
-										command.ViewCallBack({JSONdata : StorageManager.pullFromStorage(currentUri,commandName), conferenceUri : self.conference.baseUri});
+										command.ViewCallBack({JSONdata : StorageManager.pullFromStorage(currentUri,commandName), contentEl : contentEl});
 										$("[data-role = page]").trigger("create");
 										},
 				error: function(jqXHR, textStatus, errorThrown) { 

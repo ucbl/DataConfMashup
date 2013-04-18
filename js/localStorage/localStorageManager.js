@@ -9,9 +9,6 @@
 *   Tags:  JSON, Local Storage
 **/
 
-//Override method localStorage.getItem('id') and  localStorage.setItem('id',value) 
-
-//Method saveInLocalStorage override localStorage.setItem('id',value) 
 var StorageManager = {
 
 	initialize : function(){
@@ -20,34 +17,27 @@ var StorageManager = {
 	},
 	pushToStorage : function (uri,commandName, JSONdata){
 		
-		
-		
 		if(this.dataContainer.hasOwnProperty(uri)){
 			var existingData = this.dataContainer[uri];
 			if(!this.dataContainer[uri].hasOwnProperty(commandName)){
-				console.log("ENRICHING ELEMENT :");
+				console.log("ENRICHING ELEMENT ON STORAGE");
 				existingData[commandName] = JSONdata;
 				//store.set(uri,existingData);
 			}
 			
 		}else{
-			console.log("SAVING ELEMENT :");
+			console.log("SAVING ELEMENT ON STORAGE");
 			var newElement = {};
 			newElement[commandName] = JSONdata;
-			
 			this.dataContainer[uri] = newElement;
 			//store.set(uri,newElement);
 		}
 	},
 
    pullFromStorage : function (uri, commandName){
-  
-		
-		
 		if(this.dataContainer.hasOwnProperty(uri)){
 			var existingData = this.dataContainer[uri];
 			if(existingData.hasOwnProperty(commandName)){
-				
 				return existingData ;
 			}else{
 				return null;
@@ -55,9 +45,7 @@ var StorageManager = {
 		}else{
 		    return null;
 		}
-	}
-	
-	
+	},
 	
 	
 };

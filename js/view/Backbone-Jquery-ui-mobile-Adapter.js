@@ -121,7 +121,7 @@ var Graph = ViewAdapter.Graph=function(queryUrl,command,conferenceUri){
       }
     }*/
 
-var appendButton = ViewAdapter.appendButton = function(href,label,option){
+var appendButton = ViewAdapter.appendButton = function(el,href,label,option){
     if(!href)return;
     if(!option)var option={}
     var newButton = 
@@ -130,8 +130,7 @@ var appendButton = ViewAdapter.appendButton = function(href,label,option){
             (option.theme?'data-theme="'+option.theme+'"':'') +
 			(option.align?'style="float:'+option.align+';"':'') +
             '>'+(label==""?href:label) +'</a>'); 
-    if(option.prepend)prependToBackboneView(newButton);
-    else appendToBackboneView(newButton);
+	el.append(newButton);
     return newButton;
 };
  

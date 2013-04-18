@@ -16,21 +16,29 @@
 		dataType : "JSONP",
 		method : "GET",
 		getQuery : function(parameters){ 
-			var authorUri = parameters.id;
-			var retrievedObject = localStorage.getItem(authorUri);
-			var searchValue = JSON.parse(retrievedObject).name;
+			var searchValue = parameters.name.split("_").join(" ");
 			var  ajaxData = { q : searchValue, v : "1.0" };
 			return ajaxData ; 
 		},
-		ModelCallBack : function (dataJSON){									
-						
+		ModelCallBack : function (dataJSON,conferenceUri,datasourceUri, currentUri){									
+			var JSONfile   = {};
+			var JSONToken  = {};
+			JSONToken.authorHomepage  = dataJSON.responseData.results[0].url;
+			JSONfile[0] = JSONToken;
+			StorageManager.pushToStorage(currentUri,"getAuthorPersonalPage",JSONfile);			
 		},
 		
-		ViewCallBack : function(id){
-		//Pick up data in local storage
-			var JSONdata = getFromLocalStorage(id);
-			$("[data-role = page]").find(".content").append('<h2>Personal Page</h2>').trigger("create");	
-			$("[data-role = page]").find(".content").append('<a href="'+ dataJSON.responseData.results[0].url+'" >' + dataJSON.responseData.results[0].url+'</a>').trigger("create");	
+		ViewCallBack : function(parameters){
+			var JSONdata = parameters.JSONdata;
+
+			if(JSONdata.hasOwnProperty("getAuthorPersonalPage")){
+				var authorHomepage = JSONdata.getAuthorPersonalPage;
+				if(_.size(authorHomepage) > 0 ){		  
+					var homepageUrl  = authorHomepage[0].authorHomepage;			
+					parameters.contentEl.append('<h2>Personal Page</h2>').trigger("create");	
+					parameters.contentEl.append('<a href="'+homepageUrl+'" >'+homepageUrl+'</a>');	
+				}
+			}
 		}
 	}
 

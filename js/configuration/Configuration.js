@@ -14,8 +14,8 @@
  var Configuration = {
 			//Defnition of the conference
 			"conference" : {
-				"name": "ISWC 2012",
-				"logoUri": "http://iswc2012.semanticweb.org/sites/default/files/iswc_logo.jpg",
+				"name": "WWW'2012",
+				"logoUri": "http://data.semanticweb.org/images/logo_www2012.jpg",
 				"baseUri": "http://data.semanticweb.org/conference/www/2012",
 			},
 			
@@ -64,7 +64,7 @@
 			    "Home" : { 
 					"hash" : "",
 					"view" : "home",
-					"title": "ISCW - publications",
+					"title": "WWW'2012 - publications",
 					"commands" : [ 
 						{
 						    "datasource" : "SemanticWebDogFoodDatasource",
@@ -127,11 +127,15 @@
 						{
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getEventPublications",
+						},
+						{
+							"datasource" : "SemanticWebDogFoodDatasource",
+							"name" : "getConferenceMainSessionEvent",
 						}
 					]
 				},
 				"Publication" : { 
-					"hash" : "publication/*uri",
+					"hash" : "publication/:name/*uri",
 					"view" : "publication",
 					"title": "Publication",
 					"commands" : [
@@ -146,22 +150,18 @@
 						{
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getPublicationKeywords",
-						},
-						/*{
-							"datasource" : "SemanticWebDogFoodDatasource",
-							"name" : "getRdfGraphFromPublicationTitle",
-						} */
+						}
 					]
 				},
 				"Author" : {
-					"hash" : "author/*uri",
+					"hash" : "author/:name/*uri",
 					"view" : "author",
 					"title": "Author",
 					"commands" : [
-					   /* {
-							"datasource" : "DblpDatasource",
-							"name" : "getAuthor",
-						},*/
+						{
+							"datasource" : "GoogleDataSource",
+							"name" : "getAuthorPersonalPage",
+						},
 						{
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getAuthorsProceedings",
@@ -170,14 +170,11 @@
 							"datasource" : "SemanticWebDogFoodDatasource",
 							"name" : "getAuthorOrganization",
 						},
-						/*{
-							"datasource" : "DuckDuckGoDatasource",
-							"name" : "getResultAuthor",
-						},
-						{
-							"datasource" : "GoogleDataSource",
-							"name" : "getAuthorPersonalPage",
-						}*/
+					    {
+							"datasource" : "DblpDatasource",
+							"name" : "getAuthor",
+						}
+						
 					]
 				},
 				"ExternPublication" : {
@@ -203,17 +200,17 @@
 					]
 				},
 				"Organization" : {
-					"hash" : "organization/*uri",
+					"hash" : "organization/:name/*uri",
 					"view" : "organization",
 					"title": "Organization",
 					"commands" : [
-					    {
-							"datasource" : "SemanticWebDogFoodDatasource",
-							"name" : "getOrganization",
-						},
 						{
 							"datasource" : "DuckDuckGoDatasource",
 							"name" : "getResultOrganization",
+						},
+						{
+							"datasource" : "SemanticWebDogFoodDatasource",
+							"name" : "getOrganization",
 						}
 					]
 				}
