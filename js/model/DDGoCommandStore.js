@@ -56,10 +56,12 @@
 						parameters.contentEl.append('<p>'+Heading+'</p>'); 
 					}
 					if(AbstractText != ""){ 
+						ViewAdapter.Graph.addLeaf("Abstract :"+AbstractText);
 						parameters.contentEl.append('<h2>Abstract</h2>');
 						parameters.contentEl.append('<p>'+AbstractText+'</p>'); 
 					}
 					if(FirstURL !== undefined){ 
+						ViewAdapter.Graph.addLeaf("Homepage :"+FirstURL);
 						parameters.contentEl.append('<h2>Homepage</h2>');
 						parameters.contentEl.append('<a href="'+FirstURL+'">'+FirstURL+'</a>'); 
 					}			  
