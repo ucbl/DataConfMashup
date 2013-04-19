@@ -16,7 +16,7 @@
 		dataType : "JSONP",
 		method : "GET",
 		getQuery : function(parameters){ 
-			var searchValue = parameters.name.split("_").join(" ");
+			var searchValue = parameters.name;
 			var  ajaxData = { q : searchValue, v : "1.0" };
 			return ajaxData ; 
 		},

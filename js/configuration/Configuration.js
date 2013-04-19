@@ -16,6 +16,7 @@
 			"conference" : {
 				"name": "WWW'2012",
 				"logoUri": "http://data.semanticweb.org/images/logo_www2012.jpg",
+				"website": "http://www2012.wwwconference.org/",
 				"baseUri": "http://data.semanticweb.org/conference/www/2012",
 			},
 			
@@ -193,7 +194,7 @@
 					]
 				},
 				"Keyword" : {
-					"hash" : "keyword/:uri",
+					"hash" : "keyword/*uri",
 					"view" : "keyword",
 					"title": "Keyword",
 					"commands" : [

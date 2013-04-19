@@ -50,8 +50,8 @@
 					if(_.size(publicationList) > 0 ){
 						parameters.contentEl.append('<h2>Other Publications</h2>');
 						$.each(publicationList, function(i,publication){
-							ViewAdapter.Graph.addNode("OtherPubli : "+publication.publiTitle,'#externPublication/'+publication.publiUri);
-							ViewAdapter.appendButton(parameters.contentEl,'#externPublication/'+publication.publiUri,publication.publiTitle);
+							ViewAdapter.Graph.addNode("OtherPubli : "+publication.publiTitle,'#externPublication/'+Encoder.encode(publication.publiUri));
+							ViewAdapter.appendButton(parameters.contentEl,'#externPublication/'+Encoder.encode(publication.publiUri),publication.publiTitle);
 						});
 					}
 				}
@@ -96,8 +96,8 @@
 					if(_.size(authorList) > 0 ){
 						parameters.contentEl.append('<h2>Authors</h2>');
 						$.each(authorList, function(i,auhtor){
-							ViewAdapter.Graph.addNode("Author : "+auhtor.authorName,'#author/'+auhtor.authorName.split(" ").join("_")+'/'+auhtor.authorUri);
-							ViewAdapter.appendButton(parameters.contentEl,'#author/'+auhtor.authorName.split(" ").join("_")+'/'+auhtor.authorUri,auhtor.authorName,{tiny : true});
+							ViewAdapter.Graph.addNode("Author : "+auhtor.authorName,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri));
+							ViewAdapter.appendButton(parameters.contentEl,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri),auhtor.authorName,{tiny : true});
 						});
 					}
 				}

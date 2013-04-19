@@ -20,10 +20,10 @@ var AbstractView = Backbone.View.extend({
 		this.headerTpl = _.template(tpl.get("header"));
 		this.navBarTpl = _.template(tpl.get("navBar"));
 		
-		this.contentEl = options.contentEl;
-	
-		if(tpl.get(this.contentEl)!== undefined){
-			this.contentTpl = _.template(tpl.get(this.contentEl));
+		this.templateName = options.templateName;
+		
+		if(tpl.get(this.templateName)!== undefined){
+			this.contentTpl = _.template(tpl.get(this.templateName));
 		}else{
 			this.contentTpl =  _.template('<article><section class="content"></section></article>');
 		}
@@ -35,8 +35,8 @@ var AbstractView = Backbone.View.extend({
 	render: function(){
 		$(this.el).append(this.headerTpl({conference : this.model, title : this.title} ));
 		$(this.el).append(this.navBarTpl());
-		$(this.el).append(this.contentTpl());
-		$(this.el).append(this.footerTpl());
+		$(this.el).append(this.contentTpl({conference : this.model}));
+		$(this.el).append(this.footerTpl({conference : this.model}));
 	}
 
 });

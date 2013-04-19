@@ -48,15 +48,28 @@ AppRouter = Backbone.Router.extend({
 				self.route(routeItem.hash, function(name, uri) {
 					
 					var title = "";
+					
 					if(name !== undefined){
-						title = name.split("_").join(" ");
+						if(name.indexOf("/") == -1){
+							name = Encoder.decode(name);
+						}
+						title = name;
+						
 					}
-					if(uri == undefined){
+					if(uri !== undefined){
+						if(uri.indexOf("/") == -1){
+							uri = Encoder.decode(uri);
+						}
+					}else{
 						title = routeItem.title;	
 						uri = name;
 					}
+					
+					
+					
+
 					//Changing view
-					self.changePage(new AbstractView({contentEl :  routeItem.view ,title : title, model : self.conference }));
+					self.changePage(new AbstractView({templateName :  routeItem.view ,title : title, model : self.conference }));
 					
 					//Generating random number for command content box
 					var randomnumber = Math.floor(Math.random()*20);
@@ -151,6 +164,7 @@ AppRouter = Backbone.Router.extend({
 			}else{
 				jQuery.support.cors = false;	
 			} 
+			$.mobile.loading( 'show' );
 			//Sending AJAX request on the datasource
 			$.ajax({
 				url: datasource.uri,
@@ -159,12 +173,13 @@ AppRouter = Backbone.Router.extend({
 				dataType: command.dataType,
 				data: data,	
 				success: function(data){command.ModelCallBack(data,self.conference.baseUri,datasource.uri,currentUri);
-										
+										$.mobile.loading( 'hide' );
 										command.ViewCallBack({JSONdata : StorageManager.pullFromStorage(currentUri,commandName), contentEl : contentEl});
 										$("[data-role = page]").trigger("create");
 										},
 				error: function(jqXHR, textStatus, errorThrown) { 
 					console.log(errorThrown);
+					$.mobile.loading( 'hide' );
 				}
 			});
 		}
