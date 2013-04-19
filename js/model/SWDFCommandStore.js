@@ -6,7 +6,7 @@
 *				 Each one of those commands declare the datatype, the method, the query string it is supposed to use on the endpoint and provide a model Callback to store results, a view CallBack to render data stored.		
 *				 To declare a request, each commands can use the parameters declared for the route they are called in (see Configuration.js). Those parameters can be a name, an uri or both and represents
 *				 the entity which we want informations on. After calling a command, the results are stored using the localStorageManager (see localStorage.js) and rendered when needed. It is the role of the router to call those commands according to the configuration file.
-*   Version: 0.8
+*   Version: 1.0
 *   Tags:  JSON, SPARQL, AJAX
 **/
 var SWDFCommandStore = { 
@@ -162,13 +162,13 @@ var SWDFCommandStore = {
 				if(JSONdata.hasOwnProperty("getAllKeyword")){
 					var keywordList = JSONdata.getAllKeyword;
 					if(_.size(keywordList) > 0 ){
-			      ViewAdapter.appendList(keywordList,
-			                             '#keyword/',
-			                             function(str){return str["keyword"]},
-			                             "keyword",
-			                             parameters.contentEl,
-			                             {type:"Node",labelCllbck:function(str){return "Publication : "+str["keyword"];}},
-			                             {autodividers:true,count:true});
+					  ViewAdapter.appendList(keywordList,
+											 '#keyword/',
+											 function(str){return str["keyword"]},
+											 "keyword",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["keyword"];}},
+											 {autodividers:true,count:true});
 
 					}
 				}

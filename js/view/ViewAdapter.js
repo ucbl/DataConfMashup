@@ -3,7 +3,7 @@
 *  License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
 *   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
 *   Description: This file provide simple function to build jquery mobile element such as button or sorted list plus some graph first attempt
-*   Version: 0.8
+*   Version: 1.0
 *   Tags:  Backbone Jquery-ui-mobile Adapter 
 **/
 
@@ -104,19 +104,19 @@ var appendList = ViewAdapter.appendList = function(dataList,baseHref,hrefCllbck,
  
 
 
-            /************ basic append functions ************/
+        /************ basic append functions ************/
 
-var appendToBackboneView = ViewAdapter.appendToBackboneView=function(div){
-    if(!div)return;
-    var el=$(div)
-    $("[data-role = page]").find(".content").append(el).trigger("create"); 
-    return el;
-};
+		var appendToBackboneView = ViewAdapter.appendToBackboneView=function(div){
+			if(!div)return;
+			var el=$(div)
+			$("[data-role = page]").find(".content").append(el).trigger("create"); 
+			return el;
+		};
 
-var prependToBackboneView = ViewAdapter.prependToBackboneView=function(div){
-    if(!div)return;
-    var el=$(div)
-    $("[data-role = page]").find(".content").prepend(el).trigger("create");
-    return el;
-};
+		var prependToBackboneView = ViewAdapter.prependToBackboneView=function(div){
+			if(!div)return;
+			var el=$(div)
+			$("[data-role = page]").find(".content").prepend(el).trigger("create");
+			return el;
+		};
 }).call(this);
