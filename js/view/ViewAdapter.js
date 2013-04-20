@@ -60,8 +60,7 @@ var appendList = ViewAdapter.appendList = function(dataList,href,labelProperty,a
       var currentRank=0,counter=1;
       
       var bubble= option.count  ?   '<span class="ui-li-count">1</span>'    :   ''  ;  
-      var ulContainer = $( 
-                        '<ul  id="SearchByAuthorUl" data-role="listview"'+ 
+      var ulContainer = $('<ul  id="SearchByAuthorUl" data-role="listview"'+ 
                           (option.autodividers ? 'data-autodividers="true"':'')+
                           (isfilter?'data-filter="true" ':'')+
                           'data-filter-placeholder="filter ..." class="ui-listview ui-corner-all ui-shadow"> ');

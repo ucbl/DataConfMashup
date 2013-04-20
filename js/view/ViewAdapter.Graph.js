@@ -39,15 +39,15 @@ var Graph = ViewAdapter.Graph = {
             //move to page
             if(data.href!=undefined)document.location.href = data.href;
       });
-  var btnlabel= ( ViewAdapter.Graph.enabled  ?    ViewAdapter.Graph.btnHideLabel : ViewAdapter.Graph.btnShowLabel );
-  console.log(el);
-  var button = ViewAdapter.appendButton(el,'javascript:void(0)',btnlabel,{tiny:true,theme:"a",prepend:true, align : "right",margin: "20px"});
-  button.css("margin"," 0px");   
-  button.css("z-index","20"); 
-  button.trigger("create");
-  var parent = el.parent();
-  el.show("slow");
-  
+      var btnlabel= ( ViewAdapter.Graph.enabled  ?    ViewAdapter.Graph.btnHideLabel : ViewAdapter.Graph.btnShowLabel );
+      console.log(el);
+      var button = ViewAdapter.appendButton(el,'javascript:void(0)',btnlabel,{tiny:true,theme:"a",prepend:true, align : "right",margin: "20px"}).trigger("create");
+      button.css("margin"," 0px");   
+      button.css("z-index","20"); 
+      button.trigger("create");
+      var parent = el.parent();
+      el.show("slow");
+      
       button.toggle(function(){  
           $(this).find('.ui-btn-text').html("View as text");
           $(ViewAdapter.Graph.canvas).show("slow");

@@ -580,22 +580,23 @@ var SWDFCommandStore = {
 			}
 		},
 		ViewCallBack : function(parameters){
-			var JSONdata = parameters.JSONdata;
-			var conferenceUri = parameters.conferenceUri;
-			
+			var JSONdata = parameters.JSONdata; 
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getEventPublications")){
 					var publications = JSONdata.getEventPublications;
 					if(_.size(publications) > 0 ){
 						parameters.contentEl.append($('<h2>Publications</h2>')); 
-						$.each(JSONdata.getEventPublications, function(i,publication){
-							 ViewAdapter.Graph.addNode("Publication : "+publication.publiTitle,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+publication.publiUri);
-							ViewAdapter.appendButton(parameters.contentEl,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri),publication.publiTitle);
+					  ViewAdapter.appendList(publications,
+											 {baseHref:'#publication/',
+											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+											  },
+											 "publiTitle",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
 
-						});
 					}
 				}
-			}
+			} 
 		}
     },
 	
@@ -633,21 +634,23 @@ var SWDFCommandStore = {
 		},
 			
 		ViewCallBack : function(parameters){
-			
-			var JSONdata = parameters.JSONdata;
-			var conferenceUri = parameters.conferenceUri;
+			var JSONdata = parameters.JSONdata; 
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getConferenceMainTrackEvent")){
 					var tracks = JSONdata.getConferenceMainTrackEvent;
-					if(_.size(tracks) > 0 ) {
+					if(_.size(tracks) > 0 ){
 						parameters.contentEl.append($('<h2>Browse conference tracks</h2>')); 
-						$.each(tracks, function(i,track){
-							ViewAdapter.Graph.addNode("Track : "+track.eventLabel,'#event/'+Encoder.encode(track.eventUri));
-							ViewAdapter.appendButton(parameters.contentEl,'#event/'+Encoder.encode(track.eventUri),track.eventLabel);
-						});
+					  ViewAdapter.appendList(tracks,
+											 {baseHref:'#event/',
+											  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+											  },
+											 "eventLabel",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+
 					}
 				}
-			}
+			} 
 		}
     },
 	
@@ -685,22 +688,23 @@ var SWDFCommandStore = {
 		},
 		
 		ViewCallBack : function(parameters){
-				
-			var JSONdata = parameters.JSONdata;
-			
+			var JSONdata = parameters.JSONdata; 
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getConferenceMainSessionEvent")){
 					var sessions = JSONdata.getConferenceMainSessionEvent;
-					if(_.size(sessions) > 0 ) {
+					if(_.size(sessions) > 0 ){
 						parameters.contentEl.append($('<h2>Session event</h2>')); 
-						$.each(sessions, function(i,session){
-							ViewAdapter.Graph.addNode("Track : "+session.sessionEventLabel,'#event/'+Encoder.encode(session.sessionEvent));
-							ViewAdapter.appendButton(parameters.contentEl,'#event/'+Encoder.encode(session.sessionEvent),session.sessionEventLabel);
-				
-						});
+					  ViewAdapter.appendList(sessions,
+											 {baseHref:'#event/',
+											  hrefCllbck:function(str){return Encoder.encode(str["sessionEvent"])},
+											  },
+											 "sessionEventLabel",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];}});
+
 					}
 				}
-			}
+			} 
 		}
     },
  
@@ -791,21 +795,23 @@ var SWDFCommandStore = {
 		},
 		
 		ViewCallBack : function(parameters){
-			var JSONdata = parameters.JSONdata;
-			var conferenceUri = parameters.conferenceUri;
-			if(JSONdata != null ){
+			var JSONdata = parameters.JSONdata; 
+			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getPublicationsByKeyword")){
 					var publiList = JSONdata.getPublicationsByKeyword;
 					if(_.size(publiList) > 0 ){
 						parameters.contentEl.append($('<h2>Publications</h2>')); 
-						$.each(publiList, function(i,publication){
-							ViewAdapter.Graph.addNode("publication : "+publication.publiTitle,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri));
-							ViewAdapter.appendButton(parameters.contentEl,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri),publication.publiTitle);
-							
-						});
+					  ViewAdapter.appendList(publiList,
+											 {baseHref:'#publication/',
+											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+											  },
+											 "publiTitle",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
+
 					}
 				}
-			}
+			} 
 		}
 	 },
 	

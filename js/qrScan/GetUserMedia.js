@@ -41,7 +41,8 @@ function initCanvas(ww,hh)
     gCtx.clearRect(0, 0, w, h);
     imageData = gCtx.getImageData( 0,0,w,h);
 }
- 
+
+//copy img then try to decode qrcode
 function captureToCanvas() {
     if(stype!=1)
         return;
@@ -80,20 +81,7 @@ function read(a)
 function isCanvasSupported(){
   var elem = document.createElement('canvas');
   return !!(elem.getContext && elem.getContext('2d'));
-}
-function success(stream) {
-    if(webkit)
-        v.src = window.webkitURL.createObjectURL(stream);
-    else
-        v.src = stream;
-    gUM=true;
-    setTimeout(captureToCanvas, 500);
-}
-		
-function error(error) {
-    gUM=false;
-    return;
-}
+} 
 
 function load()
 {
@@ -188,11 +176,10 @@ function setwebcam()
         });
 	    }
 
-    // IE > 9. Devrait marcher, mais IE10 ne connait pas msGetUserMedia http://html5labs.interoperabilitybridges.com/prototypes/media-capture-api-%282nd-updated%29/media-capture-api-%282nd-update%29/documentation
-    // (le test ci-dessus retourne false)...
+    // IE > 9. Devrait marcher, /_!_\ IE10 doesnt know msGetUserMedia http://html5labs.interoperabilitybridges.com/prototypes/media-capture-api-%282nd-updated%29/media-capture-api-%282nd-update%29/documentation
     
     
-    } else if (n.msGetUserMedia != undefined) { 
+    } else if (n.msGetUserMedia != undefined) {
 	    requestMedia = function(constraints, successCallback, errorCallback) {
 		    return n.msGetUserMedia(constraints, successCallback);
 	    };
@@ -204,7 +191,7 @@ function setwebcam()
 		    };
 		    stream.onended = mediaError;
 	    }
-    }
+    }else{ document.getElementById("outdiv").innerHTML = camhtml;}
     
     if(requestMedia) {
 	  // camera activation prompt  http://dev.w3.org/2011/webrtc/editor/getusermedia.html#navigatorusermedia 
