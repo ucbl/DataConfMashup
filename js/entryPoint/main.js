@@ -9,7 +9,7 @@
  $(document).ready(function() {
 	
 	//Loading templates from /templates directory
-	tpl.loadTemplates(['header', 'footer', 'navBar', 'home'], 
+	tpl.loadTemplates(['header', 'footer', 'navBar', 'home', 'qrcScan'], 
 	
 	function () {
 		//Instantiate the router with configuration (see Configuration.js)

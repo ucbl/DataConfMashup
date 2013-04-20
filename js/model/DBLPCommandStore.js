@@ -42,7 +42,25 @@
 			}
 		},
 		
-		ViewCallBack : function(parameters){ 
+		ViewCallBack : function(parameters){
+		
+			var JSONdata = parameters.JSONdata;
+			if(JSONdata != null){
+				if(JSONdata.hasOwnProperty("getAuthorPublications")){
+					var publicationList = JSONdata.getAuthorPublications;
+					if(_.size(publicationList) > 0 ){
+						parameters.contentEl.append('<h2>Other Publications</h2>');
+					  ViewAdapter.appendList(publicationList,
+											             {baseHref:'#externPublication/',
+											              hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},}, 
+											             "publiTitle",
+											             parameters.contentEl,
+											             {type:"Node",labelCllbck:function(str){return "OtherPubli : "+str["publiTitle"];}}
+											             );
+
+					}
+				}
+			} /*
 			var JSONdata = parameters.JSONdata;
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty("getAuthorPublications")){
@@ -55,7 +73,7 @@
 						});
 					}
 				}
-			}
+			}*/
 		}
 	},
 	

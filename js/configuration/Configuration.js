@@ -62,7 +62,7 @@
 			// title : the title to display on the header when showing the view
 			// commands : array of datasource/name to precise which command of which datasource to send when catching the route
 			"routes" : {
-			    "Home" : { 
+			    "Home" : {
 					"hash" : "",
 					"view" : "home",
 					"title": "WWW'2012 - publications",
@@ -71,6 +71,13 @@
 						    "datasource" : "SemanticWebDogFoodDatasource",
 						    "name" : "getConferenceMainTrackEvent",
 						},
+					]
+				}, 
+			    "qrScan" : {
+					"hash" : "qrcScan",
+					"view" : "qrcScan",
+					"title": "Qr-code scanner",
+					"commands" : [ 
 					]
 				}, 
 			    "Proceedings-search-by-author" : { 

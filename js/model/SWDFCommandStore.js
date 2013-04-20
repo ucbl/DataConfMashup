@@ -25,7 +25,7 @@ var SWDFCommandStore = {
 			//Building sparql query with prefix
 			var query =   'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>            ' +
 								'SELECT DISTINCT ?authorName  ?authorUri ?uriPubli WHERE  {                                                         ' +
-								'   ?uriPubli swc:isPartOf  <'+parameters.uri+"/proceedings"+'>.										       ' + 
+								'   ?uriPubli swc:isPartOf  <'+parameters.conferenceUri+"/proceedings"+'>.										       ' + 
 								'   ?authorUri foaf:made ?uriPubli.                           											   ' +
 								'   ?authorUri foaf:name ?authorName.                               									   ' +
 								'} ORDER BY ASC(?authorName) '; 
@@ -56,8 +56,9 @@ var SWDFCommandStore = {
 					var authorList = JSONdata.getAllAuthors;
 					if(_.size(authorList) > 0 ){
 			      ViewAdapter.appendList(authorList,
-			                             '#author/',
-			                             function(str){return Encoder.encode(str["authorName"])+'/'+Encoder.encode(str["authorUri"])},
+			                             {baseHref: '#author/',
+			                             hrefCllbck:function(str){return Encoder.encode(str["authorName"])+'/'+Encoder.encode(str["authorUri"])}
+			                             },
 			                             "authorName",
 			                             parameters.contentEl,
 			                             {type:"Node",labelCllbck:function(str){return "Name : "+str["authorName"];}},
@@ -77,7 +78,7 @@ var SWDFCommandStore = {
             var query = 'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
 	                      'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                        ' +
 	                      'SELECT DISTINCT ?publiTitle ?publiUri WHERE {                                                        ' +
-	                      '  	 ?publiUri swc:isPartOf  <'+parameters.uri+"/proceedings"+'> .                                     ' +
+	                      '  	 ?publiUri swc:isPartOf  <'+parameters.conferenceUri+"/proceedings"+'> .                                     ' +
 	                      '  	 ?publiUri dc:title     ?publiTitle.  ' + 
 						  '}ORDER BY ASC(?publiTitle) '; 
 	             
@@ -106,8 +107,9 @@ var SWDFCommandStore = {
 					var publicationList= JSONdata.getAllTitle;
 					if(_.size(publicationList) > 0 ){
 						ViewAdapter.appendList(publicationList,
-			                             '#publication/',
-			                             function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+			                             {baseHref: '#publication/',
+			                             hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+			                             },
 			                             "publiTitle",
 			                             parameters.contentEl,
 			                             {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}},
@@ -130,7 +132,7 @@ var SWDFCommandStore = {
 							'PREFIX key:<http://www.w3.org/2004/02/skos/core#>                                                      ' +
 							'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                          ' +
 							'SELECT DISTINCT  ?keyword ?publiUri  WHERE {                                                            ' +
-							'  	 ?publiUri       swc:isPartOf  <'+parameters.uri+"/proceedings"+'> .                                   ' +
+							'  	 ?publiUri       swc:isPartOf  <'+parameters.conferenceUri+"/proceedings"+'> .                                   ' +
 							'  	 ?publiUri       dc:subject    ?keyword.                                                            ' +
 							'}ORDER BY ASC(?keyword) '; 
 							
@@ -158,8 +160,9 @@ var SWDFCommandStore = {
 					var keywordList = JSONdata.getAllKeyword;
 					if(_.size(keywordList) > 0 ){
 					  ViewAdapter.appendList(keywordList,
-											 '#keyword/',
-											 function(str){return Encoder.encode(str["keyword"])},
+											 {baseHref:'#keyword/',
+											  hrefCllbck:function(str){return Encoder.encode(str["keyword"])},
+											  },
 											 "keyword",
 											 parameters.contentEl,
 											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["keyword"];}},

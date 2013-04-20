@@ -24,9 +24,9 @@ var appendButton = ViewAdapter.appendButton = function(el,href,label,option){
     if(!option)var option={}
     var newButton = 
         $(  '<a href="'+href+'" data-role="button" ' +
-            (option.tiny?'data-inline="true"':'data-icon="arrow-r" data-iconpos="right"') +
-            (option.theme?'data-theme="'+option.theme+'"':'') +
-   (option.align?'style="float:'+option.align+';"':'') +
+            (option.tiny  ? 'data-inline="true"'              : 'data-icon="arrow-r" data-iconpos="right"') +
+            (option.theme ? 'data-theme="'+option.theme+'"'   : '') +
+            (option.align ? 'style="float:'+option.align+';"' : '') +
             '>'+(label==""?href:label) +'</a>'); 
  el.append(newButton);
     return newButton;
@@ -50,23 +50,24 @@ var appendButton = ViewAdapter.appendButton = function(el,href,label,option){
   */ 
   
   // /*
-var appendList = ViewAdapter.appendList = function(dataList,baseHref,hrefCllbck,labelProperty,appendToDiv,graphPt,option){
-      console.log(dataList);console.log(baseHref);console.log(hrefCllbck);console.log(labelProperty);console.log(appendToDiv);console.log(graphPt);console.log(option);
-      if(!option)var option = {};
+var appendList = ViewAdapter.appendList = function(dataList,href,labelProperty,appendToDiv,graphPt,option){
       
-      var isfilter = _.size(dataList) > 10 ? true : false;
-      var what, to ;
+      if(!option)var option = {};
+      if(!href) var href={};
+      //limit of results to enable the filter mode
+      var isfilter = _.size(dataList) > 10 ? true : false; 
+      
       var currentRank=0,counter=1;
       
       var bubble= option.count  ?   '<span class="ui-li-count">1</span>'    :   ''  ;  
-      var ulContainer = $('<ul  id="SearchByAuthorUl" '+
-                  (option.autodividers?'data-autodividers="true"':'')+
-                  ' data-role="listview" '+
-                  (_.size(dataList) > 10?'data-filter="true" ':'')+
-                  'data-filter-placeholder="filter ..." class="ui-listview ui-corner-all ui-shadow"> ');
-                  
+      var ulContainer = $( 
+                        '<ul  id="SearchByAuthorUl" data-role="listview"'+ 
+                          (option.autodividers ? 'data-autodividers="true"':'')+
+                          (isfilter?'data-filter="true" ':'')+
+                          'data-filter-placeholder="filter ..." class="ui-listview ui-corner-all ui-shadow"> ');
+                          
    $.each(dataList, function(i,currentData){
-     var currentHref=baseHref+hrefCllbck(currentData);
+     var currentHref=href.baseHref+href.hrefCllbck(currentData);
      var currentLabel=currentData[labelProperty];
    
         //count
@@ -87,19 +88,24 @@ var appendList = ViewAdapter.appendList = function(dataList,baseHref,hrefCllbck,
         
           //graph node
           if(graphPt){
-         var nodeLabel = graphPt.labelCllbck(currentData);
-         ViewAdapter.Graph.addNode(nodeLabel,currentHref);
-       }
-          ulContainer.append(
-                  $('<li></li>').append(
-                      $('<a href='+currentHref+'>'+currentLabel+'</a>')
-                                 .append($(bubble)))) ;
+            var nodeLabel = graphPt.labelCllbck(currentData);
+            ViewAdapter.Graph.addNode(nodeLabel,currentHref);
+          }
+          var a = $('<a href='+currentHref+' '+(isfilter?' ':'data-corners="true" data-role="button" data-iconpos="right" data-icon="arrow-r"')+'>'+currentLabel+'</a>');
+          var li = $('<li ></li>');
+          if(isfilter){
+            ulContainer.append(li.append(a).append($(bubble)))
+          }else{
+            appendToDiv.append(a);
+          }
+          
+                   
          currentRank++;
         }
      
      
    });//end each
-       ulContainer.appendTo(appendToDiv);
+   if(isfilter)ulContainer.appendTo(appendToDiv);
 }
  
 
