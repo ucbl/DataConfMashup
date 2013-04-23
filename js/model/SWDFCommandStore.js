@@ -275,12 +275,12 @@ var SWDFCommandStore = {
 						if(publiTitle!=""){
 							ViewAdapter.Graph.addLeaf("Title :"+publiTitle);
 							parameters.contentEl.append('<h2>Title</h2>');
-							parameters.contentEl.append('<h4>'+publiTitle+'</h4>');		
+							parameters.contentEl.append('<p>'+publiTitle+'</p>');		
 						}
 						if(publiAbstract!=""){
 							ViewAdapter.Graph.addLeaf("Abstract :"+publiAbstract);
 							parameters.contentEl.append('<h2>Abstract</h2>');
-							parameters.contentEl.append('<h4>'+publiAbstract+'</h4>'); 
+							parameters.contentEl.append('<p>'+publiAbstract+'</p>'); 
 							
 						}	
 					}
@@ -519,21 +519,21 @@ var SWDFCommandStore = {
 						var eventStart  = eventInfo.eventStart;	
 						var eventEnd  = eventInfo.eventEnd;
 					
-						if(eventEnd != ""){
-							ViewAdapter.Graph.addLeaf("Ends at :"+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a'));
-							parameters.contentEl.append($('<p>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));  
-						} 
+						if(eventDescription != ""){ 
+							ViewAdapter.Graph.addLeaf("Description :"+eventDescription);
+							parameters.contentEl.append($('<p>'+eventDescription+'</p>'));   
+						}
 						if(eventStart != ""){ 
 							ViewAdapter.Graph.addLeaf("Starts at :"+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a'));
 							parameters.contentEl.append($('<p>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));
 						}
+						if(eventEnd != ""){
+							ViewAdapter.Graph.addLeaf("Ends at :"+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a'));
+							parameters.contentEl.append($('<p>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));  
+						} 
 						if(locationName != ""){ 
 							ViewAdapter.Graph.addLeaf("Location :"+locationName);
 							parameters.contentEl.append($('<p>Location : '+locationName+'</p>'));   
-						}
-						if(eventDescription != ""){ 
-							ViewAdapter.Graph.addLeaf("Location :"+eventDescription);
-							parameters.contentEl.append($('<p>'+eventDescription+'</p>'));   
 						}
 						if(eventLabel !=""){ 
 							ViewAdapter.Graph.addLeaf("Label :"+eventLabel);
@@ -600,6 +600,9 @@ var SWDFCommandStore = {
 		}
     },
 	
+	
+	
+	
 	/** Command used to get the track events of a given conference **/ 
     getConferenceMainTrackEvent : {
 	    dataType : "XML",
@@ -654,6 +657,59 @@ var SWDFCommandStore = {
 		}
     },
 	
+	/** Command used to get the session events of a given publication **/ 
+    getEventRelatedPublication : {
+	    dataType : "XML",
+	    method : "GET", 
+	    getQuery : function(parameters){	
+		  
+		    var prefix =	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>   ' +
+							'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>    ' +
+						    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>         ' ;
+					     
+		    var query = 	'SELECT DISTINCT ?eventUri ?eventLabel WHERE {                ' +
+						    '	<'+conferenceUri+'> swc:isSuperEventOf  ?eventUri.        ' +
+						    '	?eventUri rdf:type swc:TrackEvent.                        ' +
+						    '	?eventUri rdfs:label ?eventLabel                          ' +
+							'}';
+		    var  ajaxData = { query : prefix+query };
+			return ajaxData;
+	    },
+	    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+			
+			var result = $(dataXML).find("sparql > results > result").text();
+			if( result != ""){
+				var JSONfile = {};
+				$(dataXML).find("sparql > results > result").each(function(i){  
+					var JSONToken = {};
+					JSONToken.eventLabel =  $(this).find("[name = eventLabel]").text();
+					JSONToken.eventUri =  $(this).find("[name = eventUri]").text(); 	
+					JSONfile[i] = JSONToken;
+				});
+				StorageManager.pushToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+			}
+		},
+			
+		ViewCallBack : function(parameters){
+			var JSONdata = parameters.JSONdata; 
+			if(JSONdata != null){
+				if(JSONdata.hasOwnProperty("getConferenceMainTrackEvent")){
+					var tracks = JSONdata.getConferenceMainTrackEvent;
+					if(_.size(tracks) > 0 ){
+						parameters.contentEl.append($('<h2>Browse conference tracks</h2>')); 
+					  ViewAdapter.appendList(tracks,
+											 {baseHref:'#event/',
+											  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+											  },
+											 "eventLabel",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+
+					}
+				}
+			} 
+		}
+    },
 	/** Command used to get the Session events of a given conference that are not subEvent of any trackEvent**/ 
     getConferenceMainSessionEvent : {
 	    dataType : "XML",
@@ -701,6 +757,61 @@ var SWDFCommandStore = {
 											 "sessionEventLabel",
 											 parameters.contentEl,
 											 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];}});
+
+					}
+				}
+			} 
+		}
+    },
+	
+	/** Command used to get the Keynotes events of a given conference**/  
+    getConferenceKeynoteEvent : {
+	    dataType : "XML",
+	    method : "GET", 
+	    getQuery : function(parameters){	
+		    var conferenceUri = parameters.conferenceUri;
+		    var prefix =	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>   ' +
+							'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>    ' +
+						    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>         ' ;
+					     
+		    var query = 	'SELECT DISTINCT ?eventUri ?eventLabel WHERE {                ' +
+						    '	?eventUri rdf:type swc:TalkEvent.                      ' +
+						    '	OPTIONAL {?eventUri rdfs:label ?eventLabel .  }                       ' +
+							' FILTER regex(str(?eventUri), "'+conferenceUri+'","i") .'+
+							' FILTER regex(str(?eventLabel), "keynote","i") .'+
+							'}';
+		    var  ajaxData = { query : prefix+query };
+			return ajaxData;
+	    },
+	    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+			
+			var result = $(dataXML).find("sparql > results > result").text();
+			if( result != ""){
+				var JSONfile = {};
+				$(dataXML).find("sparql > results > result").each(function(i){  
+					var JSONToken = {};
+					JSONToken.eventLabel =  $(this).find("[name = eventLabel]").text();
+					JSONToken.eventUri =  $(this).find("[name = eventUri]").text(); 	
+					JSONfile[i] = JSONToken;
+				});
+				StorageManager.pushToStorage(currentUri,"getConferenceKeynoteEvent",JSONfile);
+			}
+		},
+			
+		ViewCallBack : function(parameters){
+			var JSONdata = parameters.JSONdata; 
+			if(JSONdata != null){
+				if(JSONdata.hasOwnProperty("getConferenceKeynoteEvent")){
+					var tracks = JSONdata.getConferenceKeynoteEvent;
+					if(_.size(tracks) > 0 ){
+						parameters.contentEl.append($('<h2>Browse conference keynotes</h2>')); 
+					  ViewAdapter.appendList(tracks,
+											 {baseHref:'#event/',
+											  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+											  },
+											 "eventLabel",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
 
 					}
 				}
