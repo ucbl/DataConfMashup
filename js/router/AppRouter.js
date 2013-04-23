@@ -60,7 +60,7 @@ AppRouter = Backbone.Router.extend({
 						uri = name;
 					}else{
 						uri = Encoder.decode(uri);
-					]
+					}
 					
 					
 					
