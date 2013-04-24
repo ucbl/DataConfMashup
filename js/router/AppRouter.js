@@ -50,20 +50,17 @@ AppRouter = Backbone.Router.extend({
 					
 					var title = "";
 					
+					
+					
 					if(name !== undefined){
-						if(name.indexOf("/") == -1){
-							name = Encoder.decode(name);
-						}
+						name = Encoder.decode(name);
 						title = name;
-						
 					}
-					if(uri !== undefined){
-						if(uri.indexOf("/") == -1){
-							uri = Encoder.decode(uri);
-						}
-					}else{
+					if(uri == undefined){
 						title = routeItem.title;	
 						uri = name;
+					}else{
+						uri = Encoder.decode(uri);
 					}
 					
 

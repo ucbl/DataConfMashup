@@ -2,7 +2,7 @@
 * Copyright <c> Claude Bernard - University Lyon 1 -  2013
 *   License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
 *   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
-*   Description: Simple object containing function to encode and decode a string in 64 base.
+*   Description: Simple object containing function to encode and decode a string in 64 base, ut8, and using encodeURIComponent function from javascript.
 *   Version: 1.0
 *   Tags:  base64 encoding decoding
 **/
@@ -12,7 +12,7 @@ var Encoder = {
 	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
  
 	// public method for encoding
-	encode : function (input) {
+	encode64 : function (input) {
 		var output = "";
 		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
 		var i = 0;
@@ -46,7 +46,7 @@ var Encoder = {
 	},
  
 	// public method for decoding
-	decode : function (input) {
+	decode64 : function (input) {
 		var output = "";
 		var chr1, chr2, chr3;
 		var enc1, enc2, enc3, enc4;
@@ -83,7 +83,7 @@ var Encoder = {
 	},
  
 	// private method for UTF-8 encoding
-	_utf8_encode : function (string) {
+	encodeUtf8 : function (string) {
 		string = string.replace(/\r\n/g,"\n");
 		var utftext = "";
  
@@ -110,7 +110,7 @@ var Encoder = {
 	},
  
 	// private method for UTF-8 decoding
-	_utf8_decode : function (utftext) {
+	decodeUtf8 : function (utftext) {
 		var string = "";
 		var i = 0;
 		var c = c1 = c2 = 0;
@@ -138,6 +138,15 @@ var Encoder = {
 		}
  
 		return string;
+	},
+	
+	encode : function (string){
+		return encodeURIComponent(string);
+	},
+	
+	decode : function (string){
+		return decodeURIComponent(string);
 	}
+	
  
 }
