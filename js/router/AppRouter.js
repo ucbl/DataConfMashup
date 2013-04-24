@@ -29,6 +29,7 @@ AppRouter = Backbone.Router.extend({
 			//Saving the routes definition
 			this.routes = this.configuration.routes;
 			
+		  ViewAdapter.Graph.init();
 
 			$.each(this.datasources,function(i,datasourceItem){
 				console.log("******* DATASOURCE ********");
@@ -44,6 +45,7 @@ AppRouter = Backbone.Router.extend({
 				console.log("******* ROUTE ********");
 				console.log(routeItem);
 				
+			  
 				//Preparing the function to use when catching the current route
 				self.route(routeItem.hash, function(name, uri) {
 					
@@ -61,9 +63,7 @@ AppRouter = Backbone.Router.extend({
 					}else{
 						uri = Encoder.decode(uri);
 					}
-					
-					
-					
+					 
 
 					//Changing view
 					self.changePage(new AbstractView({templateName :  routeItem.view ,title : title, model : self.conference }));
@@ -71,9 +71,12 @@ AppRouter = Backbone.Router.extend({
 					//Generating random number for command content box
 					var randomnumber = Math.floor(Math.random()*20);
 					
-					var graphEl = $('<div id="'+"graph"+randomnumber+'"></div>');
-					$("[data-role = page]").find(".content").prepend(graphEl);
-					
+				  //GRAPH
+					var graphEl = $('<div id="graph'+randomnumber+'"></div>');
+					$("[data-role = page]").find(".content").prepend(graphEl);   
+				  ViewAdapter.Graph.initBtn(graphEl);
+					ViewAdapter.Graph.initRootNode(uri);
+				  
 					//Prepare AJAX call according to the commands declared
 					$.each(routeItem.commands,function(i,commandItem){
 					
@@ -102,9 +105,8 @@ AppRouter = Backbone.Router.extend({
 							//Preparing Ajax call 
 							self.executeCommand({datasource : currentDatasource, command : currentCommand,commandName : commandItem.name,data : ajaxData, currentUri : uri, contentEl : contentEl});
 						}
+						
 					});
-				  //GRAPH
-				  ViewAdapter.Graph.init(graphEl,uri);
 				});
 			});
 	  

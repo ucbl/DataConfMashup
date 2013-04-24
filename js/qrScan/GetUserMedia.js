@@ -25,8 +25,7 @@ var camhtml='  	<object  id="iembedflash" classid="clsid:d27cdb6e-ae6d-11cf-96b8
   		'<embed  allowScriptAccess="always"  id="embedflash" src="js/lib/camcanvas.swf" quality="high" style="max-width:90%;" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" mayscript="true"  />'+
     '</object>'; 
 
-var vidhtml = '<video id="v" autoplay  style="max-width:90%;" ></video>';
-//$('#qr-canvas').hide();
+var vidhtml = '<video id="v" autoplay  style="max-width:90%;" ></video>'; 
 
 function initCanvas(ww,hh)
 {
@@ -66,7 +65,7 @@ function captureToCanvas() {
         catch(e)
         {
             console.log(e);
-            setTimeout(captureToCanvas, 1000);
+            setTimeout( captureToCanvas,  1000);
         }
     }
 }
@@ -75,7 +74,9 @@ function read(a)
 {  
     var html='<a href="'+a+'" data-role="button" data-icon="arrow-r" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="b">Found ! => '+a+'</a>';   
     $('#command-btn').html(html).trigger("create");
-    setTimeout(captureToCanvas, 500);
+    stype=1; 
+    $('#outdiv').remove();
+    $('#v').remove();
 }	
 
 function isCanvasSupported(){
@@ -115,7 +116,7 @@ function setwebcam()
     //Fonction mediaSuccess : callback qui affiche le flux de la caméra dans la balise HTML5 "video"
     var mediaSuccess;
     var n=navigator;
-    //Opera > 12 (non préfixé, mais non conforme à la spec)  https://dev.opera.com/articles/view/playing-with-html5-video-and-getusermedia-support/
+    //Opera > 12  https://dev.opera.com/articles/view/playing-with-html5-video-and-getusermedia-support/
     document.getElementById("outdiv").innerHTML = vidhtml;
     v=document.getElementById("v");
     if (n.getUserMedia) {
@@ -129,14 +130,14 @@ function setwebcam()
 			    stream.stop();
 		    };
 		    stream.onended = mediaError;
-        setTimeout(captureToCanvas, 500);
+        setTimeout( captureToCanvas , 500);
         $(window).one('hashchange', function() {  
           stream.stop();
           stype=0;
         });
 	    }
 
-    // Chrome > 22 (testé sur Chrome Canary, version : 28.0.1459.0)  http://stackoverflow.com/questions/12442864/chrome-webkitgetusermedia
+    // Chrome > 22 (tested on Chrome Canary, version : 28.0.1459.0)  http://stackoverflow.com/questions/12442864/chrome-webkitgetusermedia
     } else if (n.webkitGetUserMedia) {
 	    requestMedia =  function(constraints, successCallback, errorCallback) {
 		    return n.webkitGetUserMedia(constraints, successCallback, errorCallback);
@@ -148,14 +149,14 @@ function setwebcam()
 			    stream.stop();
 		    };
 		    stream.onended = mediaError;
-        setTimeout(captureToCanvas, 500);
-        $(window).one('hashchange', function() {  
+        setTimeout( captureToCanvas , 500); 
+        window.onhashchange = function() {  
           stream.stop();
           stype=0;
-        });
+        };
 	    }
 
-    // FF Nightly > 18 (testé sur 22a.01)  https://developer.mozilla.org/en-US/docs/WebRTC/Taking_webcam_photos
+    // FF Nightly > 18 (tested on 22a.01)  https://developer.mozilla.org/en-US/docs/WebRTC/Taking_webcam_photos
     } else if (n.mozGetUserMedia) { 
 	    requestMedia =  function(constraints, successCallback, errorCallback) {
 		    return n.mozGetUserMedia(constraints, successCallback, errorCallback);
@@ -169,15 +170,14 @@ function setwebcam()
 			    stream.stop();
 		    };
 		    stream.onended = mediaError;
-        setTimeout(captureToCanvas, 500);
-        $(window).one('hashchange', function() {  
+        setTimeout( captureToCanvas , 500);
+        window.onhashchange = function() {  
           stream.stop();
           stype=0;
-        });
+        };
 	    }
 
-    // IE > 9. Devrait marcher, /_!_\ IE10 doesnt know msGetUserMedia http://html5labs.interoperabilitybridges.com/prototypes/media-capture-api-%282nd-updated%29/media-capture-api-%282nd-update%29/documentation
-    
+    // IE > 9. should work, /_!_\ IE10 doesnt know msGetUserMedia http://html5labs.interoperabilitybridges.com/prototypes/media-capture-api-%282nd-updated%29/media-capture-api-%282nd-update%29/documentation
     
     } else if (n.msGetUserMedia != undefined) {
 	    requestMedia = function(constraints, successCallback, errorCallback) {
@@ -189,6 +189,11 @@ function setwebcam()
 		    v.onerror = function () {
 			    stream.stop();
 		    };
+        setTimeout( captureToCanvas , 500);
+        window.onhashchange = function() {  
+          stream.stop();
+          stype=0;
+        };
 		    stream.onended = mediaError;
 	    }
     }else{ document.getElementById("outdiv").innerHTML = camhtml;}
