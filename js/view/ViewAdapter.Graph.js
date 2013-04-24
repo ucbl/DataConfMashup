@@ -20,38 +20,34 @@ var Graph = ViewAdapter.Graph = {
     
     //called once
     init: function(){
+      console.log("Graph init");
       ViewAdapter.Graph.sys = arbor.ParticleSystem();
       ViewAdapter.Graph.sys.renderer = Renderer(ViewAdapter.Graph.canvas);
-      console.log("GRAPH init");
-      // mettre cette function ds approuter
-      // mettre cette function ds approuter
-      // mettre cette function ds approuter
-      // mettre cette function ds approuter
-    },
+      
+      //likable nodes make sys.mergeer triggers the "navigate" event move to page
+      $(ViewAdapter.Graph.sys.renderer).on('navigate',function(event,data){
+            if(data.href!=undefined)document.location.href = data.href;
+      });
+      
+    },  
+    initRootNode : function(rootNodeLabel){
+      //console.log("-------  GRAPH initRootNode");
     
-    //////////////////// SHOW GRAPH ////////////////////
-    //////////////////// SHOW GRAPH ////////////////////
-    //////////////////// SHOW GRAPH ////////////////////
-    //called once per route (show btn)
-    initBtn : function(el, rootNodeLabel){ 
-            
-      el.append(ViewAdapter.Graph.canvas).hide();
+      ViewAdapter.Graph["nodeCounter"]=0;
+      ViewAdapter.Graph["theUI"] = {nodes:{},edges:{}}; 
+       
       ViewAdapter.Graph.rootNodeLabel=rootNodeLabel;
+      ViewAdapter.Graph.theUI.nodes[rootNodeLabel]={color:"red", alpha:1, rootNode:true, alone:true, mass:.5};
+      ViewAdapter.Graph.theUI.edges[rootNodeLabel]={};
+       
+    }, 
+    initBtn : function(el){  
+      //console.log("------- GRAPH initUi"); 
+       
+      el.append(ViewAdapter.Graph.canvas).hide();
       
       ViewAdapter.Graph.canvas.hide();
       
-      //reset vars
-      ViewAdapter.Graph["nodeCounter"]=0;
-      ViewAdapter.Graph["theUI"] = {nodes:{},edges:{}}; 
-      console.log("GRAPH initBtn");
-      ViewAdapter.Graph.theUI.nodes[rootNodeLabel]={color:"red", alpha:1, rootNode:true, alone:true, mass:.5};
-      ViewAdapter.Graph.theUI.edges[rootNodeLabel]={};
-      
-      
-      //likable nodes make sys.renderer triggers the "navigate" event move to page
-      $(ViewAdapter.Graph.sys.renderer).on('navigate',function(event,data){
-            if(data.href!=undefined)document.location.href = data.href;
-      }); 
       
       var btnlabel= ( ViewAdapter.Graph.enabled ? ViewAdapter.Graph.btnHideLabel : ViewAdapter.Graph.btnShowLabel ); 
       var button = ViewAdapter.appendButton(el,'javascript:void(0)',btnlabel,{tiny:true,theme:"a",prepend:true, align : "right", margin: "20px"}).trigger("create");
@@ -62,15 +58,15 @@ var Graph = ViewAdapter.Graph = {
       el.show("slow");
       
       button.toggle(function(){  
-        console.log("GRAPH click show");
+          //console.log("GRAPH click show");
           ViewAdapter.Graph.enabled = true;
-          ViewAdapter.Graph.render();
+          if(ViewAdapter.Graph.enabled)ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);
           $(this).find('.ui-btn-text').html("View as text");
           $(ViewAdapter.Graph.canvas).show("slow");
           parent.children().not(el).hide("slow"); 
           
         },function(){ 
-        console.log("GRAPH click hide");
+          //console.log("GRAPH click hide");
           $(ViewAdapter.Graph.canvas).hide("slow"); 
           parent.children().not(el).show("slow");
          
@@ -79,42 +75,32 @@ var Graph = ViewAdapter.Graph = {
           ViewAdapter.Graph.enabled = false;
       });
       if(ViewAdapter.Graph.enabled){button.trigger('click');}
-    },
-    
-    render: function(){
-      if(ViewAdapter.Graph.enabled){
-        console.log("!!! GRAPH render the graph !!!");
-        console.log(ViewAdapter.Graph.theUI);
-      
-        ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);
-      }
-    },
+    }, 
     
     //generate clickable node
     addNode : function(label,href){
       if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
-        console.log("GRAPH addNode !");
+        //console.log("GRAPH addNode !");
         
         var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
         ViewAdapter.Graph.theUI.nodes[label]={color:"#0B614B", fontColor:"#F2F2F2", alpha:0.8,href:href};
         ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
         ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
         
-          ViewAdapter.Graph.render();
-        //cacher le reste
+          if(ViewAdapter.Graph.enabled)ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);
       }
     },
     
     //generate info node
     addLeaf : function(label){
       if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
-        console.log("GRAPH addLeaf !");
+        //console.log("GRAPH addLeaf !");
          
         var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
         ViewAdapter.Graph.theUI.nodes[label]={color:"orange", fontColor:"#F2F2F2", alpha:0.7};
         ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
         ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1; 
-        ViewAdapter.Graph.render();
+        if(ViewAdapter.Graph.enabled)ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);
         //cacher le reste
       }
     }, 
