@@ -5,9 +5,4 @@ $(document).bind("mobileinit", function () {
     $.mobile.hashListeningEnabled = false;
     $.mobile.pushStateEnabled = false;
 	$.mobile.defaultPageTransition = "slidefade";
-	
-    // Remove page from DOM when it's being replaced
-    $('div[data-role="page"]').live('pagehide', function (event, ui) {
-        $(event.currentTarget).remove();
-    });
 });

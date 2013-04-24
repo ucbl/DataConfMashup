@@ -23,7 +23,7 @@
 							'	?publiUri akt:has-author ?o       '+
 							'	?o akt:full-name "'+authorName+'". '+
 							'	?publiUri  akt:has-title ?publiTitle.  '+
-							'}  ';
+							'} ';
 			var  ajaxData = { query : prefix + query };
 			return ajaxData;
 		},
@@ -132,15 +132,15 @@
 							' PREFIX akts: <http://www.aktors.org/ontology/support#>       '; 
 								
 			var query =     ' SELECT DISTINCT ?publiTitle ?publiDate ?publiJournal ?publiLink ?publiResume WHERE {  '+
-							'	<'+parameters.uri+'>   akt:article-of-journal ?publiJournalUri. '+	
-							'	?publiJournalUri akt:has-title ?publiJournal   . '+
-							'	<'+parameters.uri+'>   akt:has-date  ?year. '+
-							'   ?year				   akts:year-of ?publiDate. '+
-							'	<'+parameters.uri+'>   akt:has-title ?publiTitle. '+
+							'	OPTIONAL { <'+parameters.uri+'>   akt:article-of-journal ?publiJournalUri. '+	
+							'	?publiJournalUri akt:has-title ?publiJournal   . }'+
+							'	OPTIONAL {<'+parameters.uri+'>   akt:has-date  ?year. '+
+							'   ?year				   akts:year-of ?publiDate. }'+
+							'	OPTIONAL {<'+parameters.uri+'>   akt:has-title ?publiTitle. } '+
 							
-							'	<'+parameters.uri+'>  akt:cites-publication-reference ?publiResumeUri. '+
-							'	?publiResumeUri akt:has-title  ?publiResume . '+
-							'	<'+parameters.uri+'>   akt:has-web-address ?publiLink. '+
+							'	OPTIONAL {<'+parameters.uri+'>  akt:cites-publication-reference ?publiResumeUri. '+
+							'	?publiResumeUri akt:has-title  ?publiResume . } '+
+							'	OPTIONAL {<'+parameters.uri+'>   akt:has-web-address ?publiLink. }'+
 							' } ';
 			var  ajaxData = { query : prefix+query , output : "json"};
 			return ajaxData;

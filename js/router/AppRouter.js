@@ -115,7 +115,9 @@ AppRouter = Backbone.Router.extend({
 		/************************************************      PAGE CHANGE HANDLERS            **************************************/
 		/** Chaning page handling, call the rendering of the page and execute transition **/
 		changePage:function (page) {
-		   $(page.el).attr('data-role', 'page');
+			
+		    $(page.el).attr('data-role', 'page');
+			
 			page.render();
 			$('body').append($(page.el));
 			var transition = $.mobile.defaultPageTransition;
@@ -126,6 +128,9 @@ AppRouter = Backbone.Router.extend({
 			}
 			$.mobile.changePage($(page.el), {changeHash:false, transition: transition});
 			
+			$(page.el).bind('pagehide', function(event, data) {
+				$(event.currentTarget).remove();
+			});
 		},
 		
 

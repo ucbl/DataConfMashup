@@ -168,6 +168,10 @@
 							"name" : "getPublicationKeywords",
 						},
 						{
+							"datasource" : "SemanticWebConferenceDatasource",
+							"name" : "getEventRelatedPublication",
+						},
+						{
 							"datasource" : "DataPaperDatasource",
 							"name" : "getDataPaper",
 						} 
