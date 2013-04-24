@@ -50,9 +50,6 @@ AppRouter = Backbone.Router.extend({
 				self.route(routeItem.hash, function(name, uri) {
 					
 					var title = "";
-					
-					
-					
 					if(name !== undefined){
 						name = Encoder.decode(name);
 						title = name;
@@ -74,7 +71,7 @@ AppRouter = Backbone.Router.extend({
 				  //GRAPH
 					var graphEl = $('<div id="graph'+randomnumber+'"></div>');
 					$("[data-role = page]").find(".content").prepend(graphEl);   
-				  ViewAdapter.Graph.initBtn(graphEl);
+					ViewAdapter.Graph.initBtn(graphEl);
 					ViewAdapter.Graph.initRootNode(uri);
 				  
 					//Prepare AJAX call according to the commands declared
