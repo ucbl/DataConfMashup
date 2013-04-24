@@ -35,6 +35,7 @@ AppRouter = Backbone.Router.extend({
 				console.log(datasourceItem);
 			});
 			
+			  ViewAdapter.Graph.init();
 			//Initialize storage manager
 			StorageManager.initialize();
 			
@@ -65,8 +66,6 @@ AppRouter = Backbone.Router.extend({
 						uri = name;
 					}
 					
-					
-					
 
 					//Changing view
 					self.changePage(new AbstractView({templateName :  routeItem.view ,title : title, model : self.conference }));
@@ -74,9 +73,12 @@ AppRouter = Backbone.Router.extend({
 					//Generating random number for command content box
 					var randomnumber = Math.floor(Math.random()*20);
 					
-					var graphEl = $('<div id="'+"graph"+randomnumber+'"></div>');
+					var graphEl = $('<div id="graph'+randomnumber+'"></div>');
 					$("[data-role = page]").find(".content").prepend(graphEl);
 					
+				  ViewAdapter.Graph.initBtn(graphEl,uri);
+				  //GRAPH
+				  
 					//Prepare AJAX call according to the commands declared
 					$.each(routeItem.commands,function(i,commandItem){
 					
@@ -105,9 +107,8 @@ AppRouter = Backbone.Router.extend({
 							//Preparing Ajax call 
 							self.executeCommand({datasource : currentDatasource, command : currentCommand,commandName : commandItem.name,data : ajaxData, currentUri : uri, contentEl : contentEl});
 						}
+						
 					});
-				  //GRAPH
-				  ViewAdapter.Graph.init(graphEl,uri);
 				});
 			});
 	  
