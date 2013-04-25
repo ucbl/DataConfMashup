@@ -6,7 +6,7 @@
 *				 Each one of those commands declare the datatype, the method, the query string it is supposed to use on the endpoint and provide a model Callback to store results, a view CallBack to render data stored.		
 *				 To declare a request, each commands can use the parameters declared for the route they are called in (see Configuration.js). Those parameters can be a name, an uri or both and represents
 *				 the entity which we want informations on. After calling a command, the results are stored using the localStorageManager (see localStorage.js) and rendered when needed. It is the role of the router to call those commands according to the configuration file.
-*   Version: 1.0
+*   Version: 1.1
 *   Tags:  JSON, SPARQL, AJAX
 **/
 var SWDFCommandStore = { 
@@ -390,7 +390,7 @@ var SWDFCommandStore = {
 				if(JSONdata.hasOwnProperty("getSessionSubEvent")){
 					var subSessions = JSONdata.getSessionSubEvent;
 					if(_.size(subSessions) > 0 ){
-						parameters.contentEl.append($('<h2>Sub tracks</h2>')); 
+						parameters.contentEl.append($('<h2>Sub Sessions</h2>')); 
 						$.each(subSessions, function(i,session){
 							ViewAdapter.Graph.addNode("Sub session : "+session.eventLabel,'#event/'+Encoder.encode(session.eventUri));
 							ViewAdapter.appendButton(parameters.contentEl,'#event/'+Encoder.encode(session.eventUri),session.eventLabel);
@@ -521,9 +521,11 @@ var SWDFCommandStore = {
 					
 						if(eventDescription != ""){ 
 							ViewAdapter.Graph.addLeaf("Description :"+eventDescription);
+							parameters.contentEl.append($('<h2>Description</h2>')); 
 							parameters.contentEl.append($('<p>'+eventDescription+'</p>'));   
 						}
 						if(eventStart != ""){ 
+							parameters.contentEl.append($('<h2>Schedule</h2>')); 
 							ViewAdapter.Graph.addLeaf("Starts at :"+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a'));
 							parameters.contentEl.append($('<p>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));
 						}
@@ -586,7 +588,7 @@ var SWDFCommandStore = {
 					var publications = JSONdata.getEventPublications;
 					if(_.size(publications) > 0 ){
 						parameters.contentEl.append($('<h2>Publications</h2>')); 
-					  ViewAdapter.appendList(publications,
+						ViewAdapter.appendList(publications,
 											 {baseHref:'#publication/',
 											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
 											  },
@@ -668,11 +670,12 @@ var SWDFCommandStore = {
 						    'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>         ' ;
 					     
 		    var query = 	'SELECT DISTINCT ?eventUri ?eventLabel WHERE {                ' +
-						    '	<'+conferenceUri+'> swc:isSuperEventOf  ?eventUri.        ' +
-						    '	?eventUri rdf:type swc:TrackEvent.                        ' +
-						    '	?eventUri rdfs:label ?eventLabel                          ' +
+							'	?event swc:hasRelatedDocument  <'+parameters.uri+'>  .        ' +
+						    '	 ?event            swc:isSubEventOf  ?eventUri.        ' +
+						    '	 ?eventUri rdfs:label ?eventLabel.                          ' +
+							' FILTER (?eventUri != <'+parameters.conferenceUri+'>) '+
 							'}';
-		    var  ajaxData = { query : prefix+query };
+		    var  ajaxData = { query : prefix + query };
 			return ajaxData;
 	    },
 	    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
@@ -686,24 +689,24 @@ var SWDFCommandStore = {
 					JSONToken.eventUri =  $(this).find("[name = eventUri]").text(); 	
 					JSONfile[i] = JSONToken;
 				});
-				StorageManager.pushToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+				StorageManager.pushToStorage(currentUri,"getEventRelatedPublication",JSONfile);
 			}
 		},
 			
 		ViewCallBack : function(parameters){
 			var JSONdata = parameters.JSONdata; 
 			if(JSONdata != null){
-				if(JSONdata.hasOwnProperty("getConferenceMainTrackEvent")){
-					var tracks = JSONdata.getConferenceMainTrackEvent;
+				if(JSONdata.hasOwnProperty("getEventRelatedPublication")){
+					var tracks = JSONdata.getEventRelatedPublication;
 					if(_.size(tracks) > 0 ){
-						parameters.contentEl.append($('<h2>Browse conference tracks</h2>')); 
-					  ViewAdapter.appendList(tracks,
+						parameters.contentEl.append($('<h2>Related Sessions</h2>')); 
+					    ViewAdapter.appendList(tracks,
 											 {baseHref:'#event/',
 											  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
 											  },
 											 "eventLabel",
 											 parameters.contentEl,
-											 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+											 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
 
 					}
 				}
@@ -749,7 +752,7 @@ var SWDFCommandStore = {
 				if(JSONdata.hasOwnProperty("getConferenceMainSessionEvent")){
 					var sessions = JSONdata.getConferenceMainSessionEvent;
 					if(_.size(sessions) > 0 ){
-						parameters.contentEl.append($('<h2>Session event</h2>')); 
+						parameters.contentEl.append($('<h2>Sub sessions</h2>')); 
 					  ViewAdapter.appendList(sessions,
 											 {baseHref:'#event/',
 											  hrefCllbck:function(str){return Encoder.encode(str["sessionEvent"])},
@@ -811,7 +814,7 @@ var SWDFCommandStore = {
 											  },
 											 "eventLabel",
 											 parameters.contentEl,
-											 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+											 {type:"Node",labelCllbck:function(str){return "Keynote : "+str["eventLabel"];}});
 
 					}
 				}

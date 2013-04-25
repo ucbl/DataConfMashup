@@ -6,7 +6,7 @@
 *				 Each one of those commands declare the datatype, the method, the query string it is supposed to use on the endpoint and provide the Callback function used to parse the results.		
 *				 To declare a request, each commands can use the parameters declared for the route they are called in (see Configuration.js). This parameter can be a name or an uri and represents
 *				 the entity which we want informations on. After calling a command, the results are parsed with it own callback function. It is the role of the router to call those commands according to the configuration file.
-*   Version: 1.0
+*   Version: 1.1
 *   Tags:  JSON, SPARQL, AJAX
 **/
  var DBLPCommandStore = {
@@ -23,7 +23,7 @@
 							'	?publiUri akt:has-author ?o       '+
 							'	?o akt:full-name "'+authorName+'". '+
 							'	?publiUri  akt:has-title ?publiTitle.  '+
-							'}  ';
+							'} ';
 			var  ajaxData = { query : prefix + query };
 			return ajaxData;
 		},
@@ -132,15 +132,15 @@
 							' PREFIX akts: <http://www.aktors.org/ontology/support#>       '; 
 								
 			var query =     ' SELECT DISTINCT ?publiTitle ?publiDate ?publiJournal ?publiLink ?publiResume WHERE {  '+
-							'	<'+parameters.uri+'>   akt:article-of-journal ?publiJournalUri. '+	
-							'	?publiJournalUri akt:has-title ?publiJournal   . '+
-							'	<'+parameters.uri+'>   akt:has-date  ?year. '+
-							'   ?year				   akts:year-of ?publiDate. '+
-							'	<'+parameters.uri+'>   akt:has-title ?publiTitle. '+
+							'	OPTIONAL { <'+parameters.uri+'>   akt:article-of-journal ?publiJournalUri. '+	
+							'	?publiJournalUri akt:has-title ?publiJournal   . }'+
+							'	OPTIONAL {<'+parameters.uri+'>   akt:has-date  ?year. '+
+							'   ?year				   akts:year-of ?publiDate. }'+
+							'	OPTIONAL {<'+parameters.uri+'>   akt:has-title ?publiTitle. } '+
 							
-							'	<'+parameters.uri+'>  akt:cites-publication-reference ?publiResumeUri. '+
-							'	?publiResumeUri akt:has-title  ?publiResume . '+
-							'	<'+parameters.uri+'>   akt:has-web-address ?publiLink. '+
+							'	OPTIONAL {<'+parameters.uri+'>  akt:cites-publication-reference ?publiResumeUri. '+
+							'	?publiResumeUri akt:has-title  ?publiResume . } '+
+							'	OPTIONAL {<'+parameters.uri+'>   akt:has-web-address ?publiLink. }'+
 							' } ';
 			var  ajaxData = { query : prefix+query , output : "json"};
 			return ajaxData;

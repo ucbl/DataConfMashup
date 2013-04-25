@@ -9,7 +9,7 @@
 *				RUNTIME:
 *					-> Using the powerfull routing system of backbone, the router catch url changes. If a change occurs, the router execute the action prepared at initialization time
 *					and process the view changes plus the AJAX call.
-*					   
+*	Version: 1.1				   
 *   Tags:  BACKBONE, AJAX, ROUTING
 **/
 AppRouter = Backbone.Router.extend({
@@ -50,9 +50,6 @@ AppRouter = Backbone.Router.extend({
 				self.route(routeItem.hash, function(name, uri) {
 					
 					var title = "";
-					
-					
-					
 					if(name !== undefined){
 						name = Encoder.decode(name);
 						title = name;
@@ -74,7 +71,7 @@ AppRouter = Backbone.Router.extend({
 				  //GRAPH
 					var graphEl = $('<div id="graph'+randomnumber+'"></div>');
 					$("[data-role = page]").find(".content").prepend(graphEl);   
-				  ViewAdapter.Graph.initBtn(graphEl);
+					ViewAdapter.Graph.initBtn(graphEl);
 					ViewAdapter.Graph.initRootNode(uri);
 				  
 					//Prepare AJAX call according to the commands declared
@@ -117,7 +114,9 @@ AppRouter = Backbone.Router.extend({
 		/************************************************      PAGE CHANGE HANDLERS            **************************************/
 		/** Chaning page handling, call the rendering of the page and execute transition **/
 		changePage:function (page) {
-		   $(page.el).attr('data-role', 'page');
+			
+		    $(page.el).attr('data-role', 'page');
+			
 			page.render();
 			$('body').append($(page.el));
 			var transition = $.mobile.defaultPageTransition;
@@ -128,6 +127,9 @@ AppRouter = Backbone.Router.extend({
 			}
 			$.mobile.changePage($(page.el), {changeHash:false, transition: transition});
 			
+			$(page.el).bind('pagehide', function(event, data) {
+				$(event.currentTarget).remove();
+			});
 		},
 		
 
