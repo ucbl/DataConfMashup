@@ -1,9 +1,9 @@
   /**   
  *   Copyright <c> Claude Bernard - University Lyon 1 -  2013
  *   Author: Lionnel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan, Nicolas ARMANDO
- *   Description: Interface of a Datasource model
- *   Version: 1
- *   Tags:  
+ *   Description: Command store for the DataPaper datasource 
+ *   Version: 1.1
+ *   Tags:  REST, AJAX
  **/
  
 //Web Service REST

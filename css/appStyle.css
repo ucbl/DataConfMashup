@@ -1,5 +1,5 @@
 
- H2, H3 {
+H2, H3 {
 	color : #C96E28;
 }
 
@@ -13,7 +13,6 @@ H1 , H2 {
 a, span {
 	font-size : 10pt !important;
 }
-
 
 p{
 	font-size : 12pt !important;

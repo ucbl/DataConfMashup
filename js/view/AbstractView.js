@@ -5,7 +5,7 @@
 *   Description: The abstract view is a generic view used for any instance of the views in the application. At every change of page, a new abstract view is created.
 *				 This view is setted up to render header, footer and navbar no matters what. For the content part, two options are possible. If the parameter contentEl
 *				 matches with a templates name, it is rendered, otherwise an empty content section is rendered.
-			   
+*	 Version: 1.1		   
 *   Tags:  TEMPLATE
 **/
 var AbstractView = Backbone.View.extend({

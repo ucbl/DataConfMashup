@@ -3,7 +3,7 @@
 *  License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
 *   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
 *   Description: This file provide simple functions to populate and generate a graph view (see lib/Arbor.js)
-*   Version: 1.0
+*   Version: 1.1
 *   Tags:  Backbone Jquery-ui-mobile Adapter Linked-Data Graph html5 canvas
 **/
 var Graph = ViewAdapter.Graph = { 
@@ -28,6 +28,8 @@ var Graph = ViewAdapter.Graph = {
 		$(ViewAdapter.Graph.sys.renderer).on('navigate',function(event,data){
 			if(data.href!=undefined)document.location.href = data.href;
 		});
+		
+		
     },  
 	
     initRootNode : function(rootNodeLabel){
@@ -39,41 +41,37 @@ var Graph = ViewAdapter.Graph = {
 		ViewAdapter.Graph.rootNodeLabel=rootNodeLabel;
 		ViewAdapter.Graph.theUI.nodes[rootNodeLabel]={color:"red", alpha:1, rootNode:true, alone:true, mass:.5};
 		ViewAdapter.Graph.theUI.edges[rootNodeLabel]={};
-       
+		
+		
     }, 
 	
     initBtn : function(el){  
-	
-
-		el.append(ViewAdapter.Graph.canvas);
+		
 
 		ViewAdapter.Graph.canvas.hide();
 		var btnlabel= ( ViewAdapter.Graph.enabled ? ViewAdapter.Graph.btnHideLabel : ViewAdapter.Graph.btnShowLabel ); 
-		var button = ViewAdapter.appendButton(el,'javascript:void(0)',btnlabel,{tiny:true,prepend:true, align : "right"});
+		var button = ViewAdapter.appendButton(el,'javascript:void(0)',btnlabel,{tiny:true,theme : "a",prepend:true, align : "right"});
 		button.css("margin"," 0px");   
 		button.css("z-index","20"); 
-		button.trigger("create");
-		
-		
+		el.append(ViewAdapter.Graph.canvas);
 		var parent = el.parent();
-		el.show("slow");
-		
-		button.toggle(function(){  
-			
-			ViewAdapter.Graph.enabled = true;
-			if(ViewAdapter.Graph.enabled)ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);
-			$(this).find('.ui-btn-text').html("View as text");
-			$(ViewAdapter.Graph.canvas).show("slow");
-			parent.children().not(el).hide("slow"); 
 
-		},function(){ 
-			//console.log("GRAPH click hide");
-			$(ViewAdapter.Graph.canvas).hide("slow"); 
-			parent.children().not(el).show("slow");
+		button.click(function(){  
+	
+			if(ViewAdapter.Graph.enabled == false){
+				ViewAdapter.Graph.enabled = true;
+				if(ViewAdapter.Graph.enabled)ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);
+				$(this).find('.ui-btn-text').html("View as text");
+				$(ViewAdapter.Graph.canvas).show("slow");
+				parent.children().not(el).hide("slow"); 
+			}else{
+				$(ViewAdapter.Graph.canvas).hide("slow"); 
+				parent.children().not(el).show("slow");
 
-			$(this).find('.ui-btn-text').html("View as graph");
-
-			ViewAdapter.Graph.enabled = false;
+				$(this).find('.ui-btn-text').html("View as graph");
+				$(this).show();	
+				ViewAdapter.Graph.enabled = false;
+			}
 		});
 		if(ViewAdapter.Graph.enabled){button.trigger('click');}
     }, 
