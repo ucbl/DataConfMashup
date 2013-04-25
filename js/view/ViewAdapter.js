@@ -108,14 +108,14 @@ var appendList = ViewAdapter.appendList = function(dataList,href,labelProperty,a
 	var appendToBackboneView = ViewAdapter.appendToBackboneView=function(div){
 		if(!div)return;
 		var el=$(div)
-		$("[data-role = page]").find(".content").append(el).trigger("create"); 
+		$("[data-role = page]").find(".content").append(el); 
 		return el;
 	};
 
 	var prependToBackboneView = ViewAdapter.prependToBackboneView=function(div){
 		if(!div)return;
 		var el=$(div)
-		$("[data-role = page]").find(".content").prepend(el).trigger("create");
+		$("[data-role = page]").find(".content").prepend(el);
 		return el;
 	};
 }).call(this);

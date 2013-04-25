@@ -17,14 +17,10 @@ var gUM=false;
 var webkit=false;
 var v=null; 
 
-//if html5 isnt supported, try flash !
-var camhtml='  	<object  id="iembedflash" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0"  style="max-width:90%;" '+
-  		'<param name="movie" value="js/lib/camcanvas.swf" />'+
-  		'<param name="quality" value="high" />'+
-		'<param name="allowScriptAccess" value="always" />'+
-  		'<embed  allowScriptAccess="always"  id="embedflash" src="js/lib/camcanvas.swf" quality="high" style="max-width:90%;" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" mayscript="true"  />'+
-    '</object>'; 
-
+var requestMedia = false;
+//Fonction mediaSuccess : callback qui affiche le flux de la caméra dans la balise HTML5 "video"
+var mediaSuccess;
+ 
 var vidhtml = '<video id="v" autoplay  style="max-width:90%;" ></video>'; 
 
 function initCanvas(ww,hh)
@@ -93,7 +89,7 @@ function load()
 	}
 	else
 	{ 
-		document.getElementById("qrcscan").innerHTML='<br><p id="mp2">sorry your browser is not supported</p><br><br>';
+		document.getElementById("message").innerHTML='<br><p id="mp2">sorry your browser is not supported</p><br><br>';
 	}
 }
 
@@ -102,19 +98,7 @@ function mediaError(evt) {
 }
 
 function setwebcam()
-{ 
-	  load();
-    $('#camBtn').fadeOut("slow");
-    if(stype==1)
-    {
-        setTimeout(captureToCanvas, 500);    
-        return;
-    }
-    
-    
-    var requestMedia = false;
-    //Fonction mediaSuccess : callback qui affiche le flux de la caméra dans la balise HTML5 "video"
-    var mediaSuccess;
+{
     var n=navigator;
     //Opera > 12  https://dev.opera.com/articles/view/playing-with-html5-video-and-getusermedia-support/
     document.getElementById("outdiv").innerHTML = vidhtml;
@@ -196,16 +180,23 @@ function setwebcam()
         };
 		    stream.onended = mediaError;
 	    }
-    }else{ document.getElementById("outdiv").innerHTML = camhtml;}
-    
+    } 
+} 
+ function activateQrRead(){ 
+    setwebcam();
+    document.getElementById("message").innerHTML = '';
     if(requestMedia) {
-	  // camera activation prompt  http://dev.w3.org/2011/webrtc/editor/getusermedia.html#navigatorusermedia 
-	  requestMedia({video:true}, mediaSuccess, mediaError);
-	  stype=1;
-  } else {
-	  document.getElementById("message").innerHTML = 'getUserMedia() is not supported in your browser';
-  } 
+	    load();
+      $('#camBtn').hide("slow");
+      
+	    // camera activation prompt  http://dev.w3.org/2011/webrtc/editor/getusermedia.html#navigatorusermedia 
+	    requestMedia({video:true}, mediaSuccess, mediaError);
+	    stype=1;
+    } else {
+	    document.getElementById("message").innerHTML = 'getUserMedia() is not supported in your browser';
+    }
 }
+    
 
 
 
