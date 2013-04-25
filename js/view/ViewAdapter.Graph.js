@@ -49,22 +49,27 @@ var Graph = ViewAdapter.Graph = {
 		
 
 		ViewAdapter.Graph.canvas.hide();
-		var btnlabel= ( ViewAdapter.Graph.enabled ? ViewAdapter.Graph.btnHideLabel : ViewAdapter.Graph.btnShowLabel ); 
+		var btnlabel=  ViewAdapter.Graph.btnShowLabel ; 
 		var button = ViewAdapter.appendButton(el,'javascript:void(0)',btnlabel,{tiny:true,theme : "a",prepend:true, align : "right"});
 		button.css("margin"," 0px");   
 		button.css("z-index","20"); 
 		el.append(ViewAdapter.Graph.canvas);
 		var parent = el.parent();
 
-		button.click(function(){  
+		button.click(function(){
 	
 			if(ViewAdapter.Graph.enabled == false){
+			  console.log("shown state");
+			  //shown
 				ViewAdapter.Graph.enabled = true;
 				if(ViewAdapter.Graph.enabled)ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);
 				$(this).find('.ui-btn-text').html("View as text");
 				$(ViewAdapter.Graph.canvas).show("slow");
 				parent.children().not(el).hide("slow"); 
 			}else{
+			
+			  //hidden
+			  console.log("hidden state");
 				$(ViewAdapter.Graph.canvas).hide("slow"); 
 				parent.children().not(el).show("slow");
 
@@ -73,7 +78,7 @@ var Graph = ViewAdapter.Graph = {
 				ViewAdapter.Graph.enabled = false;
 			}
 		});
-		if(ViewAdapter.Graph.enabled){button.trigger('click');}
+		if(ViewAdapter.Graph.enabled){ViewAdapter.Graph.enabled = false; button.trigger('click');}
     }, 
     
     //generate clickable node
