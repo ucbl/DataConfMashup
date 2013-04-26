@@ -27,18 +27,18 @@ AppRouter = Backbone.Router.extend({
 			//Saving the datasources definition
 			this.datasources = this.configuration.datasources;
 			//Saving the routes definition
-			this.routes = this.configuration.routes;
-			
-		  ViewAdapter.Graph.init();
+			this.routes = this.configuration.routes; 
 
 			$.each(this.datasources,function(i,datasourceItem){
 				console.log("******* DATASOURCE ********");
 				console.log(datasourceItem);
 			});
 			
+			//ViewAdapter.Graph.init();
+			
 			//Initialize storage manager
 			StorageManager.initialize();
-			
+			 
 			//Preparing all the routes and their actions
 		    $.each(this.routes,function(i,routeItem){
 				
@@ -72,11 +72,12 @@ AppRouter = Backbone.Router.extend({
 					var graphEl = $('<div id="graph'+randomnumber+'"></div>');
 					$("[data-role = page]").find(".content").prepend(graphEl);   
 				
+					ViewAdapter.init(graphEl,uri); 
 				  
 					//Prepare AJAX call according to the commands declared
 					$.each(routeItem.commands,function(i,commandItem){
 					
-
+          
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
 						
@@ -103,8 +104,6 @@ AppRouter = Backbone.Router.extend({
 						}
 						
 					});
-					ViewAdapter.Graph.initBtn(graphEl);
-					ViewAdapter.Graph.initRootNode(uri);
 				});
 			});
 	  
@@ -177,7 +176,7 @@ AppRouter = Backbone.Router.extend({
 				success: function(data){command.ModelCallBack(data,self.conference.baseUri,datasource.uri,currentUri);
 										$.mobile.loading( 'hide' );
 										command.ViewCallBack({JSONdata : StorageManager.pullFromStorage(currentUri,commandName), contentEl : contentEl});
-										$("[data-role = page]").trigger("create");
+										ViewAdapter.render();
 										},
 				error: function(jqXHR, textStatus, errorThrown) { 
 					console.log(errorThrown);
