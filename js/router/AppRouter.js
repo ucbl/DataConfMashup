@@ -60,6 +60,10 @@ AppRouter = Backbone.Router.extend({
 					}else{
 						uri = Encoder.decode(uri);
 					}
+					
+					if(name == undefined && uri == undefined){
+						uri = self.conference.baseUri;
+					}
 					 
 
 					//Changing view
@@ -72,11 +76,13 @@ AppRouter = Backbone.Router.extend({
 					var graphEl = $('<div id="graph'+randomnumber+'"></div>');
 					$("[data-role = page]").find(".content").prepend(graphEl);   
 				
+					//We try if informations are in the local storage before call getQuery and executeCommand
+					var JSONdata = StorageManager.pullFromStorage(uri);
 				  
 					//Prepare AJAX call according to the commands declared
 					$.each(routeItem.commands,function(i,commandItem){
 					
-
+						
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
 						
@@ -87,14 +93,17 @@ AppRouter = Backbone.Router.extend({
 						var contentEl = $('<div id="'+commandItem.name+randomnumber+'"></div>');
 						$("[data-role = page]").find(".content").append(contentEl);
 						
-						//We try if informations are in the local storage before call getQuery and executeCommand
-						var JSONdata = StorageManager.pullFromStorage(uri,commandItem.name);
-						if( JSONdata != null ){
-							console.log("CAll : "+commandItem.name+" ON "+"Storage");
-							//Informations already exists so we directly call the command callBack view to render them 
-							currentCommand.ViewCallBack({JSONdata : JSONdata, contentEl : contentEl, name : name});
-							$("[data-role = page]").trigger("create");
-						}else{
+						var doRequest = true;
+						if(JSONdata != null){
+							if(JSONdata.hasOwnProperty(commandItem.name)){
+								doRequest = false;
+								console.log("CAll : "+commandItem.name+" ON "+"Storage");
+								//Informations already exists so we directly call the command callBack view to render them 
+								currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : contentEl, name : name});
+								$("[data-role = page]").trigger("create");
+							}
+						}
+						if(doRequest){
 							console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
 							//Retrieveing the query built by the command function "getQuery"
 							var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri, name : name});
@@ -174,9 +183,9 @@ AppRouter = Backbone.Router.extend({
 				cache: false,
 				dataType: command.dataType,
 				data: data,	
-				success: function(data){command.ModelCallBack(data,self.conference.baseUri,datasource.uri,currentUri);
+				success: function(data){data = command.ModelCallBack(data,self.conference.baseUri,datasource.uri,currentUri);
 										$.mobile.loading( 'hide' );
-										command.ViewCallBack({JSONdata : StorageManager.pullFromStorage(currentUri,commandName), contentEl : contentEl});
+										command.ViewCallBack({JSONdata : data, contentEl : contentEl});
 										$("[data-role = page]").trigger("create");
 										},
 				error: function(jqXHR, textStatus, errorThrown) { 

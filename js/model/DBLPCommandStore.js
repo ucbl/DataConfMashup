@@ -29,51 +29,31 @@
 		},
 	
 		ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){ 
-			var result = $(dataXML).find("sparql > results > result").text();
-			if( result != ""){
-				var JSONfile = {};
-				$(dataXML).find("sparql > results > result").each(function(i){ 
-					var JSONToken = {};
-					JSONToken.publiTitle =  $(this).find("[name = publiTitle]").text();
-					JSONToken.publiUri =   $(this).find("[name = publiUri]").text();			
-					JSONfile[i] = JSONToken;
-				});
-				StorageManager.pushToStorage(currentUri,"getAuthorPublications",JSONfile);
-			}
+			var JSONfile = {};
+			$(dataXML).find("sparql > results > result").each(function(i){ 
+				var JSONToken = {};
+				JSONToken.publiTitle =  $(this).find("[name = publiTitle]").text();
+				JSONToken.publiUri =   $(this).find("[name = publiUri]").text();			
+				JSONfile[i] = JSONToken;
+			});
+			StorageManager.pushToStorage(currentUri,"getAuthorPublications",JSONfile);
+			return JSONfile;
 		},
 		
 		ViewCallBack : function(parameters){
-		
-			var JSONdata = parameters.JSONdata;
-			if(JSONdata != null){
-				if(JSONdata.hasOwnProperty("getAuthorPublications")){
-					var publicationList = JSONdata.getAuthorPublications;
-					if(_.size(publicationList) > 0 ){
-						parameters.contentEl.append('<h2>Other Publications</h2>');
-					  ViewAdapter.appendList(publicationList,
-											             {baseHref:'#externPublication/',
-											              hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},}, 
-											             "publiTitle",
-											             parameters.contentEl,
-											             {type:"Node",labelCllbck:function(str){return "OtherPubli : "+str["publiTitle"];}}
-											             );
+			if(parameters.JSONdata != null){
+				if(_.size(parameters.JSONdata) > 0 ){
+					parameters.contentEl.append('<h2>Other Publications</h2>');
+					ViewAdapter.appendList(parameters.JSONdata,
+													 {baseHref:'#externPublication/',
+													  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},}, 
+													 "publiTitle",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "OtherPubli : "+str["publiTitle"];}}
+													 );
 
-					}
 				}
-			} /*
-			var JSONdata = parameters.JSONdata;
-			if(JSONdata != null){
-				if(JSONdata.hasOwnProperty("getAuthorPublications")){
-					var publicationList = JSONdata.getAuthorPublications;
-					if(_.size(publicationList) > 0 ){
-						parameters.contentEl.append('<h2>Other Publications</h2>');
-						$.each(publicationList, function(i,publication){
-							ViewAdapter.Graph.addNode("OtherPubli : "+publication.publiTitle,'#externPublication/'+Encoder.encode(publication.publiUri));
-							ViewAdapter.appendButton(parameters.contentEl,'#externPublication/'+Encoder.encode(publication.publiUri),publication.publiTitle);
-						});
-					}
-				}
-			}*/
+			} 
 		}
 	},
 	
@@ -93,31 +73,25 @@
 		},
 	
 		ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){ 
-			var result = $(dataXML).find("sparql > results > result").text();
-			if( result != ""){
-				var JSONfile = {};
-				$(dataXML).find("sparql > results > result").each(function(i){ 
-					var JSONToken = {};
-					JSONToken.authorName =  $(this).find("[name = authorName]").text();
-					JSONToken.authorUri =   $(this).find("[name = authorUri]").text();			
-					JSONfile[i] = JSONToken;
-				});
-				StorageManager.pushToStorage(currentUri,"getExternPublicationAuthors",JSONfile);
-			}
+			var JSONfile = {};
+			$(dataXML).find("sparql > results > result").each(function(i){ 
+				var JSONToken = {};
+				JSONToken.authorName =  $(this).find("[name = authorName]").text();
+				JSONToken.authorUri =   $(this).find("[name = authorUri]").text();			
+				JSONfile[i] = JSONToken;
+			});
+			StorageManager.pushToStorage(currentUri,"getExternPublicationAuthors",JSONfile);
+			return JSONfile;	
 		},
 		
 		ViewCallBack : function(parameters){ 
-			var JSONdata = parameters.JSONdata;
-			if(JSONdata != null){
-				if(JSONdata.hasOwnProperty("getExternPublicationAuthors")){
-					var authorList = JSONdata.getExternPublicationAuthors;
-					if(_.size(authorList) > 0 ){
-						parameters.contentEl.append('<h2>Authors</h2>');
-						$.each(authorList, function(i,auhtor){
-							ViewAdapter.Graph.addNode("Author : "+auhtor.authorName,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri));
-							ViewAdapter.appendButton(parameters.contentEl,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri),auhtor.authorName,{tiny : true});
-						});
-					}
+			if(parameters.JSONdata != null){
+				if(_.size(parameters.JSONdata) > 0 ){
+					parameters.contentEl.append('<h2>Authors</h2>');
+					$.each(parameters.JSONdata, function(i,auhtor){
+						ViewAdapter.Graph.addNode("Author : "+auhtor.authorName,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri));
+						ViewAdapter.appendButton(parameters.contentEl,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri),auhtor.authorName,{tiny : true});
+					});
 				}
 			}
 		}
@@ -146,63 +120,57 @@
 			return ajaxData;
 		},
 		ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
-			var result = $(dataXML).find("sparql > results > result").text();
-			if( result != ""){
-				var JSONfile = {};
-				$(dataXML).find("sparql > results > result").each(function(i){  
-					var JSONToken = {};
-					JSONToken.title       = $(this).find("[name = publiTitle]").text();
-					JSONToken.resume       = $(this).find("[name = publiResume]").text();
-					JSONToken.year        = $(this).find("[name = publiDate]").text();
-					JSONToken.publisher   = $(this).find("[name = publiJournal]").text();
-					JSONToken.publiLink   = $(this).find("[name = publiLink]").text();
-					JSONfile[i] = JSONToken;
-				});
-				StorageManager.pushToStorage(currentUri,"getExternPublicationInfo",JSONfile);
-			}
+			var JSONfile = {};
+			$(dataXML).find("sparql > results > result").each(function(i){  
+				var JSONToken = {};
+				JSONToken.title       = $(this).find("[name = publiTitle]").text();
+				JSONToken.resume       = $(this).find("[name = publiResume]").text();
+				JSONToken.year        = $(this).find("[name = publiDate]").text();
+				JSONToken.publisher   = $(this).find("[name = publiJournal]").text();
+				JSONToken.publiLink   = $(this).find("[name = publiLink]").text();
+				JSONfile[i] = JSONToken;
+			});
+			StorageManager.pushToStorage(currentUri,"getExternPublicationInfo",JSONfile);
+			return JSONfile;
 		},
 		
 		ViewCallBack : function(parameters){
-	
-			var JSONdata = parameters.JSONdata;
-			if(JSONdata != null){
-				if(JSONdata.hasOwnProperty("getExternPublicationInfo")){
-					var publiInfo = JSONdata.getExternPublicationInfo;
-					if(_.size(publiInfo) > 0 ){
-								  
-						var title  = publiInfo[0].title;				
-						var link  = publiInfo[0].publiLink;	
-						var resume  = publiInfo[0].resume;	
-						var year  = publiInfo[0].year;	
-						var publisher  = publiInfo[0].publisher;	
-						
+			if(parameters.JSONdata != null){
+				var publiInfo = parameters.JSONdata;
+				if(_.size(publiInfo) > 0 ){
+							  
+					var title  = publiInfo[0].title;				
+					var link  = publiInfo[0].publiLink;	
+					var resume  = publiInfo[0].resume;	
+					var year  = publiInfo[0].year;	
+					var publisher  = publiInfo[0].publisher;	
 					
-						if(title != ""){  
-							ViewAdapter.Graph.addLeaf("Title :"+title);
-							parameters.contentEl.append('<h2>Title</h2>');
-							parameters.contentEl.append('<p>'+title+'</p>'); 
-						} 
-						if(resume != ""){  
-							ViewAdapter.Graph.addLeaf("Reference :"+resume);
-							parameters.contentEl.append('<h2>Reference</h2>');
-							parameters.contentEl.append('<p>'+resume+'</p>'); 
-						} 
-						if(link != ""){ 
-							ViewAdapter.Graph.addLeaf("Link : "+link);
-							parameters.contentEl.append('<h2>Link</h2>');
-							parameters.contentEl.append('<a href="'+link+'">'+link+'</p>');
-						}
-						if(year != ""){ 
-							ViewAdapter.Graph.addLeaf("Year :"+year);
-							parameters.contentEl.append('<h2>Year</h2>');
-							parameters.contentEl.append('<p>'+year+'</p>'); 
-						}
-						if(publisher !=""){ 
-							ViewAdapter.Graph.addLeaf("Publisher :"+publisher);
-							parameters.contentEl.append('<h2>Publisher</h2>');
-							parameters.contentEl.append('<p>'+publisher+'</p>'); 
-						}			  
+				
+					if(title != ""){  
+						ViewAdapter.Graph.addLeaf("Title :"+title);
+						parameters.contentEl.append('<h2>Title</h2>');
+						parameters.contentEl.append('<p>'+title+'</p>'); 
+					} 
+					if(resume != ""){  
+						ViewAdapter.Graph.addLeaf("Reference :"+resume);
+						parameters.contentEl.append('<h2>Reference</h2>');
+						parameters.contentEl.append('<p>'+resume+'</p>'); 
+					} 
+					if(link != ""){ 
+						ViewAdapter.Graph.addLeaf("Link : "+link);
+						parameters.contentEl.append('<h2>Link</h2>');
+						parameters.contentEl.append('<a href="'+link+'">'+link+'</p>');
 					}
+					if(year != ""){ 
+						ViewAdapter.Graph.addLeaf("Year :"+year);
+						parameters.contentEl.append('<h2>Year</h2>');
+						parameters.contentEl.append('<p>'+year+'</p>'); 
+					}
+					if(publisher !=""){ 
+						ViewAdapter.Graph.addLeaf("Publisher :"+publisher);
+						parameters.contentEl.append('<h2>Publisher</h2>');
+						parameters.contentEl.append('<p>'+publisher+'</p>'); 
+					}			  
 				}
 			}
 		}

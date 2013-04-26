@@ -12,40 +12,67 @@
 var StorageManager = {
 
 	initialize : function(){
-		this.dataContainer = [];
-
+		if(!$.jStorage.storageAvailable()){
+			this.store = {};
+		}
+		this.store = [];
+		this.maxSize = 50;
 	},
 	pushToStorage : function (uri,commandName, JSONdata){
+		var dataContainer = StorageManager.get(uri);
 		
-		if(this.dataContainer.hasOwnProperty(uri)){
-			var existingData = this.dataContainer[uri];
-			if(!this.dataContainer[uri].hasOwnProperty(commandName)){
-				existingData[commandName] = JSONdata;			
-				//store.set(uri,existingData);
-			}
-			
+		if(dataContainer != null){
+			if(!dataContainer.hasOwnProperty(commandName)){
+				dataContainer[commandName] = JSONdata;
+				StorageManager.controlSize();
+				StorageManager.set(uri,dataContainer);
+				
+			}	
 		}else{
 			var newElement = {};
 			newElement[commandName] = JSONdata;
-			this.dataContainer[uri] = newElement;
-			//	console.log(this.dataContainer);
-			//store.set(uri,newElement);
+			StorageManager.set(uri,newElement);
 		}
 	},
-
-   pullFromStorage : function (uri, commandName){
-		if(this.dataContainer.hasOwnProperty(uri)){
-			var existingData = this.dataContainer[uri];
-			if(existingData.hasOwnProperty(commandName)){
-				return existingData ;
-			}else{
-				return null;
-			}
+	pullFromStorage : function (uri){
+        
+		var dataContainer = StorageManager.get(uri);
+		if(dataContainer != null){
+			return dataContainer;
 		}else{
 		    return null;
 		}
 	},
-	
+	set : function(uri,dataContainer){
+		if(this.store !== undefined){
+			this.store[uri] = dataContainer;
+		}else{
+			$.jStorage.set(uri,JSON.stringify(dataContainer));
+		}
+	},
+	get : function(uri){
+		if(this.store !== undefined){
+			return this.store[uri];
+		}else{
+			return JSON.parse($.jStorage.get(uri));
+		}
+	},
+	controlSize : function (){
+		if(this.store !== undefined){
+			alert("javascript store : "+jQuery(this.store).size());
+			console.log(this.store[0]);
+			if(this.store.length > this.maxSize ){
+			
+			
+			}
+		}else{
+			alert("cloud store : "+$.jStorage.index().length);
+			if($.jStorage.index() > this.maxSize ){
+			
+				
+			}
+		}
+	}
 	
 };
 

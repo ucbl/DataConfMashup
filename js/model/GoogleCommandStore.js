@@ -26,14 +26,13 @@ ions on. After calling a command, the results are parsed with it own callback fu
 			var JSONToken  = {};
 			JSONToken.authorHomepage  = dataJSON.responseData.results[0].url;
 			JSONfile[0] = JSONToken;
-			StorageManager.pushToStorage(currentUri,"getAuthorPersonalPage",JSONfile);			
+			StorageManager.pushToStorage(currentUri,"getAuthorPersonalPage",JSONfile);		
+			return JSONfile;
 		},
 		
 		ViewCallBack : function(parameters){
-			var JSONdata = parameters.JSONdata;
-
-			if(JSONdata.hasOwnProperty("getAuthorPersonalPage")){
-				var authorHomepage = JSONdata.getAuthorPersonalPage;
+			if(parameters.JSONdata != null){
+				var authorHomepage = parameters.JSONdata;
 				if(_.size(authorHomepage) > 0 ){		  
 					var homepageUrl  = authorHomepage[0].authorHomepage;
 					ViewAdapter.Graph.addNode("Personnal page : "+homepageUrl, homepageUrl);

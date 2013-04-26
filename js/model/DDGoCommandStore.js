@@ -33,14 +33,13 @@
 			JSONfile[0] = JSONToken;
 		
 			StorageManager.pushToStorage(currentUri,"getResultOrganization",JSONfile);
-												
+			return JSONfile;									
 		},
 		
 		ViewCallBack : function(parameters){
-			
-			var JSONdata = parameters.JSONdata;
-			if(JSONdata.hasOwnProperty("getResultOrganization")){
-				var organizationInfo = JSONdata.getResultOrganization;
+
+			if(parameters.JSONdata != null){
+				var organizationInfo = parameters.JSONdata;
 				if(_.size(organizationInfo) > 0 ){
 							  
 					var Heading  = organizationInfo[0].Heading;				

@@ -78,7 +78,7 @@
 						{
 						    "datasource" : "SemanticWebConferenceDatasource",
 						    "name" : "getConferenceKeynoteEvent",
-						}
+						},
 					]
 				}, 
 			    "qrScan" : {
