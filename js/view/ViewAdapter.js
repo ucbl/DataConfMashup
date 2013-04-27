@@ -10,7 +10,6 @@ var ViewAdapter = {
 
 	initialize : function(mode){
 		ViewAdapter.mode = mode;
-		ViewAdapter.addswitchButton();
 	},
 	update : function(template,title,conference,datasources,commands,uri,name){
 		ViewAdapter.currentPage = ViewAdapter.changePage(new AbstractView({templateName :  template ,title : title, model : conference }));
@@ -48,7 +47,9 @@ var ViewAdapter = {
 	initPage : function (){
 		if(ViewAdapter.mode == "text"){
 			$.each(ViewAdapter.commands,function(i,commandItem){
-				ViewAdapter.Text.generateContainer(ViewAdapter.currentPage,commandItem.name);	
+				console.log(ViewAdapter.currentPage);
+				console.log(ViewAdapter.currentPage.find('.content'));
+				ViewAdapter.Text.generateContainer(ViewAdapter.currentPage.find('.content'),commandItem.name);	
 			});
 		}else{
 			ViewAdapter.currentPage.find(".content").empty();
@@ -66,7 +67,7 @@ var ViewAdapter = {
 			btnlabel = "Text View";
 		}
 
-		switchViewBtn = ViewAdapter.Text.appendButton($("[data-role = page]").find(".content"),'javascript:void(0)',btnlabel,{tiny:true,theme:"a",prepend:true, align : "right",margin: "20px"}) ;
+		switchViewBtn = ViewAdapter.Text.appendButton(ViewAdapter.currentPage.find(".content"),'javascript:void(0)',btnlabel,{tiny:true,theme:"a",prepend:true, align : "right",margin: "20px"}) ;
 		switchViewBtn.css("margin"," 0px");   
 		switchViewBtn.css("z-index","20"); 
 		switchViewBtn.trigger("create");

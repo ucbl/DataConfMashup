@@ -47,7 +47,7 @@ var ViewAdapterText = ViewAdapter.Text ={
 						  (isfilter?'data-filter="true" ':'')+
 						  'data-shadow="false"'+
 						  'data-filter-placeholder="filter ..." class="ui-listview ui-corner-all"> ');
-							  
+		
 		$.each(dataList, function(i,currentData){
 			var currentHref=href.baseHref+href.hrefCllbck(currentData);
 			var currentLabel=currentData[labelProperty];
