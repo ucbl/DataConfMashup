@@ -27,25 +27,24 @@ AppRouter = Backbone.Router.extend({
 			//Saving the datasources definition
 			this.datasources = this.configuration.datasources;
 			//Saving the routes definition
-			this.routes = this.configuration.routes;
-			
-		  ViewAdapter.Graph.init();
+			this.routes = this.configuration.routes; 
 
 			$.each(this.datasources,function(i,datasourceItem){
 				console.log("******* DATASOURCE ********");
 				console.log(datasourceItem);
 			});
-			
+	
 			//Initialize storage manager
 			StorageManager.initialize();
-			
+			//Initialize ViewAdapter to text mode
+			ViewAdapter.initialize("text");
 			//Preparing all the routes and their actions
 		    $.each(this.routes,function(i,routeItem){
 				
 				console.log("******* ROUTE ********");
 				console.log(routeItem);
 				
-			  
+				
 				//Preparing the function to use when catching the current route
 				self.route(routeItem.hash, function(name, uri) {
 					
@@ -65,33 +64,18 @@ AppRouter = Backbone.Router.extend({
 						uri = self.conference.baseUri;
 					}
 					 
-
-					//Changing view
-					self.changePage(new AbstractView({templateName :  routeItem.view ,title : title, model : self.conference }));
+					//Appending button and keeping track of new route in case the mode changes
+					var currentPage = ViewAdapter.update(routeItem.view ,title, self.conference, self.datasources,routeItem.commands,uri,name); 
 					
-					//Generating random number for command content box
-					var randomnumber = Math.floor(Math.random()*20);
-					
-				  //GRAPH
-					var graphEl = $('<div id="graph'+randomnumber+'"></div>');
-					$("[data-role = page]").find(".content").prepend(graphEl);   
-				
 					//We try if informations are in the local storage before call getQuery and executeCommand
 					var JSONdata = StorageManager.pullFromStorage(uri);
 				  
 					//Prepare AJAX call according to the commands declared
 					$.each(routeItem.commands,function(i,commandItem){
 					
-						
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
 						
-						//Generating random number for command content box
-						var randomnumber = Math.floor(Math.random()*20);
-						
-						//Creating the content box of the current command
-						var contentEl = $('<div id="'+commandItem.name+randomnumber+'"></div>');
-						$("[data-role = page]").find(".content").append(contentEl);
 						
 						var doRequest = true;
 						if(JSONdata != null){
@@ -99,8 +83,8 @@ AppRouter = Backbone.Router.extend({
 								doRequest = false;
 								console.log("CAll : "+commandItem.name+" ON "+"Storage");
 								//Informations already exists so we directly call the command callBack view to render them 
-								currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : contentEl, name : name});
-								$("[data-role = page]").trigger("create");
+								currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : currentPage.find("#"+commandItem.name), name : name});
+									
 							}
 						}
 						if(doRequest){
@@ -108,40 +92,14 @@ AppRouter = Backbone.Router.extend({
 							//Retrieveing the query built by the command function "getQuery"
 							var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri, name : name});
 							//Preparing Ajax call 
-							self.executeCommand({datasource : currentDatasource, command : currentCommand,commandName : commandItem.name,data : ajaxData, currentUri : uri, contentEl : contentEl});
+							self.executeCommand({datasource : currentDatasource, command : currentCommand,data : ajaxData, currentUri : uri, contentEl :  currentPage.find("#"+commandItem.name)});
 						}
 						
 					});
-					ViewAdapter.Graph.initBtn(graphEl);
-					ViewAdapter.Graph.initRootNode(uri);
 				});
 			});
-	  
-			this.firstPage = true;
 	
 		},
-		
-		/************************************************      PAGE CHANGE HANDLERS            **************************************/
-		/** Chaning page handling, call the rendering of the page and execute transition **/
-		changePage:function (page) {
-			
-		    $(page.el).attr('data-role', 'page');
-			
-			page.render();
-			$('body').append($(page.el));
-			var transition = $.mobile.defaultPageTransition;
-			
-			if (this.firstPage || ViewAdapter.Graph.enabled) {
-				transition = 'fade';
-				this.firstPage = false;
-			}
-			$.mobile.changePage($(page.el), {changeHash:false, transition: transition});
-			
-			$(page.el).bind('pagehide', function(event, data) {
-				$(event.currentTarget).remove();
-			});
-		},
-		
 
 		/************************************************      COMMANDS EXECUTION            **************************************/
 		/** Ajax query launcher function 
@@ -158,11 +116,7 @@ AppRouter = Backbone.Router.extend({
 			//Catching the command
 			var command    = parameters.command;
 			
-			//Catching the rendering box
-			var contentEl    = parameters.contentEl;
-			
-			//Catching the command name
-			var commandName    = parameters.commandName;
+			var contentEl = parameters.contentEl;
 			//Catching the data
 			var data    = parameters.data;
 			//Catching the current uri searched
@@ -171,7 +125,6 @@ AppRouter = Backbone.Router.extend({
 			//Preparing the cross domain technic according to datasource definition
 			if(datasource.crossDomainMode == "CORS"){
 				jQuery.support.cors = true;
-
 			}else{
 				jQuery.support.cors = false;	
 			} 

@@ -53,7 +53,7 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					ViewAdapter.appendList(parameters.JSONdata,
+					ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref: '#author/',
 										 hrefCllbck:function(str){return Encoder.encode(str["authorName"])+'/'+Encoder.encode(str["authorUri"])}
 										 },
@@ -97,7 +97,7 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					ViewAdapter.appendList(parameters.JSONdata,
+					ViewAdapter.Text.appendList(parameters.JSONdata,
 									 {baseHref: '#publication/',
 									 hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
 									 },
@@ -143,7 +143,7 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-				  ViewAdapter.appendList(parameters.JSONdata,
+				  ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref:'#keyword/',
 										  hrefCllbck:function(str){return Encoder.encode(str["keyword"])},
 										  },
@@ -192,7 +192,7 @@ var SWDFCommandStore = {
 					parameters.contentEl.append($('<h2>Conference publications</h2>'));
 					$.each(parameters.JSONdata, function(i,publication){
 						ViewAdapter.Graph.addNode("Publication : "+publication.publiTitle,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri));
-						ViewAdapter.appendButton(parameters.contentEl,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri),publication.publiTitle);
+						ViewAdapter.Text.appendButton(parameters.contentEl,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri),publication.publiTitle);
 					});
 				}
 			}
@@ -299,7 +299,7 @@ var SWDFCommandStore = {
 					parameters.contentEl.append($('<h2>Authors</h2>'));
 					$.each(parameters.JSONdata, function(i,author){
 						ViewAdapter.Graph.addNode("Author : "+author.authorName,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri));
-						ViewAdapter.appendButton(parameters.contentEl,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri),author.authorName,{tiny:true});
+						ViewAdapter.Text.appendButton(parameters.contentEl,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri),author.authorName,{tiny:true});
 					});
 				}
 			}
@@ -348,7 +348,7 @@ var SWDFCommandStore = {
 					parameters.contentEl.append($('<h2>Sub Sessions</h2>')); 
 					$.each(parameters.JSONdata, function(i,session){
 						ViewAdapter.Graph.addNode("Sub session : "+session.eventLabel,'#event/'+Encoder.encode(session.eventUri));
-						ViewAdapter.appendButton(parameters.contentEl,'#event/'+Encoder.encode(session.eventUri),session.eventLabel);
+						ViewAdapter.Text.appendButton(parameters.contentEl,'#event/'+Encoder.encode(session.eventUri),session.eventLabel);
 					});
 				}
 			}
@@ -396,7 +396,7 @@ var SWDFCommandStore = {
 					parameters.contentEl.append($('<h2>Sub tracks</h2>')); 
 					$.each(parameters.JSONdata, function(i,track){
 						ViewAdapter.Graph.addNode("Sub track : "+track.eventLabel,'#event/'+Encoder.encode(track.eventUri));
-						ViewAdapter.appendButton(parameters.contentEl,'#event/'+Encoder.encode(track.eventUri),track.eventLabel);
+						ViewAdapter.Text.appendButton(parameters.contentEl,'#event/'+Encoder.encode(track.eventUri),track.eventLabel);
 					});
 				}
 			}
@@ -542,7 +542,7 @@ var SWDFCommandStore = {
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
 					parameters.contentEl.append($('<h2>Publications</h2>')); 
-					ViewAdapter.appendList(parameters.JSONdata,
+					ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref:'#publication/',
 										  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
 										  },
@@ -592,14 +592,21 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Browse conference tracks</h2>')); 
-				  ViewAdapter.appendList(parameters.JSONdata,
-										 {baseHref:'#event/',
-										  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-										  },
-										 "eventLabel",
-										 parameters.contentEl,
-										 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+					if(ViewAdapter.mode == "text"){
+						console.log(parameters.contentEl);
+						parameters.contentEl.append('<h2>Browse conference tracks</h2>'); 
+						ViewAdapter.Text.appendList(parameters.JSONdata,
+												 {baseHref:'#event/',
+												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+												  },
+												 "eventLabel",
+												 parameters.contentEl,
+												 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
+					}else{
+					
+					
+					
+					}
 
 				}
 			} 
@@ -641,7 +648,7 @@ var SWDFCommandStore = {
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
 					parameters.contentEl.append($('<h2>Related Sessions</h2>')); 
-					ViewAdapter.appendList(parameters.JSONdata,
+					ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref:'#event/',
 										  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
 										  },
@@ -688,7 +695,7 @@ var SWDFCommandStore = {
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
 					parameters.contentEl.append($('<h2>Sub sessions</h2>')); 
-				  ViewAdapter.appendList(parameters.JSONdata,
+				  ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref:'#event/',
 										  hrefCllbck:function(str){return Encoder.encode(str["sessionEvent"])},
 										  },
@@ -735,17 +742,21 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
+					if(ViewAdapter.mode == "text"){
 					parameters.contentEl.append($('<h2>Browse conference keynotes</h2>')); 
-				    ViewAdapter.appendList(parameters.JSONdata,
+				    ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref:'#event/',
 										  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
 										  },
 										 "eventLabel",
 										 parameters.contentEl,
 										 {type:"Node",labelCllbck:function(str){return "Keynote : "+str["eventLabel"];}});
-
+					}else{
+					
+					
+					
+					}
 				}
-				
 			} 
 		}
     },
@@ -762,9 +773,9 @@ var SWDFCommandStore = {
 							'PREFIX swrc: <http://swrc.ontoware.org/ontology#>           ' +
 							'PREFIX foaf: <http://xmlns.com/foaf/0.1/>                   ' ;
 
-			var query =  'SELECT DISTINCT ?keyword ?publiTitle  WHERE { ' +
+			var query =  'SELECT DISTINCT ?keyword WHERE { ' +
 						'	<'+parameters.uri+'>   dc:title  ?publiTitle. ' +
-						' 	<'+parameters.uri+'>      dc:subject     ?keyword .                          ' +
+						' 	<'+parameters.uri+'>      dc:subject     ?keyword . ' +
 						'}';
 
 			var  ajaxData = { query : prefix + query };
@@ -788,7 +799,7 @@ var SWDFCommandStore = {
 					$.each(parameters.JSONdata, function(i,keyword){
 						
 						ViewAdapter.Graph.addNode("Keyword : "+keyword.keyword,'#keyword/'+Encoder.encode(keyword.keyword));
-						ViewAdapter.appendButton(parameters.contentEl,'#keyword/'+Encoder.encode(keyword.keyword),keyword.keyword,{tiny:true});
+						ViewAdapter.Text.appendButton(parameters.contentEl,'#keyword/'+Encoder.encode(keyword.keyword),keyword.keyword,{tiny:true});
 					});
 				}
 			}
@@ -829,7 +840,7 @@ var SWDFCommandStore = {
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
 					parameters.contentEl.append($('<h2>Publications</h2>')); 
-				  ViewAdapter.appendList(parameters.JSONdata,
+				  ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref:'#publication/',
 										  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
 										  },
@@ -881,7 +892,7 @@ var SWDFCommandStore = {
 					$.each(parameters.JSONdata, function(i,organization){
 						
 						ViewAdapter.Graph.addNode("Organization : "+organization.OrganizationName,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri));
-						ViewAdapter.appendButton(parameters.contentEl,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri),organization.OrganizationName,{tiny:true});
+						ViewAdapter.Text.appendButton(parameters.contentEl,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri),organization.OrganizationName,{tiny:true});
 
 					});
 				}
@@ -898,10 +909,10 @@ var SWDFCommandStore = {
 		getQuery : function(parameters){
 			
 			var organizationUri = parameters.uri;
-			var prefix =	' PREFIX foaf: <http://xmlns.com/foaf/0.1/>                              ' ;
-			var query =  	' SELECT DISTINCT ?MemberName ?MemberUri ?organizationName  WHERE {      ' +												   
-							'  <'+organizationUri+'>  foaf:member ?MemberUri.      		             ' +
-							'   ?MemberUri         foaf:name   ?MemberName.     	                 ' +
+			var prefix =	' PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' ;
+			var query =  	' SELECT DISTINCT ?MemberName ?MemberUri ?organization  WHERE {' +												   
+							'   <'+organizationUri+'>  foaf:member ?MemberUri.' +
+							'   ?MemberUri             foaf:name   ?MemberName.' +
 							'}';   															 
 			var  ajaxData = { query : prefix + query };
 			return ajaxData;
@@ -926,7 +937,7 @@ var SWDFCommandStore = {
 					parameters.contentEl.append($('<h2>Members</h2>'));
 					$.each(parameters.JSONdata, function(i,author){
 						ViewAdapter.Graph.addNode("Member : "+author.MemberName,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri));
-						ViewAdapter.appendButton(parameters.contentEl,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri),author.MemberName,{tiny:true});
+						ViewAdapter.Text.appendButton(parameters.contentEl,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri),author.MemberName,{tiny:true});
 					});
 				}
 			}
