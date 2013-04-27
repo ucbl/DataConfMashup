@@ -40,24 +40,22 @@ var ViewAdapter = {
 		$(page.el).bind('pagehide', function(event, data) {
 			$(event.currentTarget).remove();
 		});
-		console.log($(page.el));
+		
 		return $(page.el);
 	},
 	
 	initPage : function (){
+		
 		if(ViewAdapter.mode == "text"){
+			ViewAdapter.addswitchButton();
 			$.each(ViewAdapter.commands,function(i,commandItem){
-				console.log(ViewAdapter.currentPage);
-				console.log(ViewAdapter.currentPage.find('.content'));
-				ViewAdapter.Text.generateContainer(ViewAdapter.currentPage.find('.content'),commandItem.name);	
+				ViewAdapter.Text.generateContainer(ViewAdapter.currentPage,commandItem.name);	
 			});
 		}else{
 			ViewAdapter.currentPage.find(".content").empty();
+			ViewAdapter.addswitchButton();
 			ViewAdapter.Graph.initContainer(ViewAdapter.currentPage.find(".content"),ViewAdapter.uri);
-			
-		if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
 		}
-		ViewAdapter.addswitchButton();
 	},
 	addswitchButton : function (){
 		var btnLabel = "";
@@ -101,8 +99,13 @@ var ViewAdapter = {
 			}
 		});
 		
-		ViewAdapter.currentPage.trigger("create");
+		ViewAdapter.generateJQMobileElement();
 		if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
+	},
+	
+	generateJQMobileElement : function(){
+		ViewAdapter.currentPage.trigger("create");
 	}
+	
 };
 

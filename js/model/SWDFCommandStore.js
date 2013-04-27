@@ -403,6 +403,7 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
+					
 					if(ViewAdapter.mode == "text"){
 						parameters.contentEl.append($('<h2>Sub Sessions</h2>')); 
 						$.each(parameters.JSONdata, function(i,session){
@@ -457,6 +458,7 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
+					
 					if(ViewAdapter.mode == "text"){
 						parameters.contentEl.append($('<h2>Sub tracks</h2>')); 
 						$.each(parameters.JSONdata, function(i,track){
@@ -755,8 +757,9 @@ var SWDFCommandStore = {
 			
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
-				if(ViewAdapter.mode == "text"){
-					if(_.size(parameters.JSONdata) > 0 ){
+				if(_.size(parameters.JSONdata) > 0 ){
+					if(ViewAdapter.mode == "text"){
+					
 						parameters.contentEl.append($('<h2>Related Sessions</h2>')); 
 						ViewAdapter.Text.appendList(parameters.JSONdata,
 											 {baseHref:'#event/',
@@ -766,9 +769,7 @@ var SWDFCommandStore = {
 											 parameters.contentEl,
 											 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
 
-					}
-				}else{
-				
+					}else{
 						ViewAdapter.Graph.appendList(parameters.JSONdata,
 											 {baseHref:'#event/',
 											  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
@@ -776,7 +777,7 @@ var SWDFCommandStore = {
 											 "eventLabel",
 											 parameters.contentEl,
 											 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
-
+					}
 				}
 			} 
 		}
@@ -825,8 +826,8 @@ var SWDFCommandStore = {
 											 parameters.contentEl,
 											 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];}});
 
-					}
-				}else{
+					
+					}else{
 					
 					  ViewAdapter.Graph.appendList(parameters.JSONdata,
 											 {baseHref:'#event/',
@@ -835,6 +836,7 @@ var SWDFCommandStore = {
 											 "sessionEventLabel",
 											 parameters.contentEl,
 											 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];}});
+					}
 				}
 			} 
 		}

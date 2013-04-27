@@ -59,8 +59,6 @@ var StorageManager = {
 	},
 	controlSize : function (){
 		if(this.store !== undefined){
-			
-			console.log(this.store[0]);
 			if(this.store.length > this.maxSize ){
 			
 			

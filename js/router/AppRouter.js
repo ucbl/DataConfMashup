@@ -84,6 +84,7 @@ AppRouter = Backbone.Router.extend({
 								console.log("CAll : "+commandItem.name+" ON Storage");
 								//Informations already exists so we directly call the command callBack view to render them 
 								currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : currentPage.find("#"+commandItem.name), name : name});
+								if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
 							}
 						}
 						if(doRequest){
@@ -94,7 +95,9 @@ AppRouter = Backbone.Router.extend({
 							self.executeCommand({datasource : currentDatasource, command : currentCommand,data : ajaxData, currentUri : uri, contentEl :  currentPage.find("#"+commandItem.name)});
 						}
 						
+						
 					});
+					ViewAdapter.generateJQMobileElement();
 				});
 			});
 	
@@ -138,7 +141,7 @@ AppRouter = Backbone.Router.extend({
 				success: function(data){data = command.ModelCallBack(data,self.conference.baseUri,datasource.uri,currentUri);
 										$.mobile.loading( 'hide' );
 										command.ViewCallBack({JSONdata : data, contentEl : contentEl});
-										$("[data-role = page]").trigger("create");
+										ViewAdapter.generateJQMobileElement();
 										if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
 										},
 				error: function(jqXHR, textStatus, errorThrown) { 
