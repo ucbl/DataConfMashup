@@ -34,10 +34,15 @@ ions on. After calling a command, the results are parsed with it own callback fu
 			if(parameters.JSONdata != null){
 				var authorHomepage = parameters.JSONdata;
 				if(_.size(authorHomepage) > 0 ){		  
-					var homepageUrl  = authorHomepage[0].authorHomepage;
-					ViewAdapter.Graph.addNode("Personnal page : "+homepageUrl, homepageUrl);
-					parameters.contentEl.append('<h2>Personal Page</h2>');	
-					parameters.contentEl.append('<a href="'+homepageUrl+'" >'+homepageUrl+'</a>');	
+					if(ViewAdapter.mode == "text"){
+						var homepageUrl  = authorHomepage[0].authorHomepage;
+						parameters.contentEl.append('<h2>Personal Page</h2>');	
+						parameters.contentEl.append('<a href="'+homepageUrl+'" >'+homepageUrl+'</a>');	
+					}else{
+						var homepageUrl  = authorHomepage[0].authorHomepage;
+						ViewAdapter.Graph.addNode("Personnal page : "+homepageUrl, homepageUrl);
+					
+					}
 				}
 			}
 		}

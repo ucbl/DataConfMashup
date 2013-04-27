@@ -53,7 +53,9 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					ViewAdapter.Text.appendList(parameters.JSONdata,
+					if(ViewAdapter.mode == "text"){
+
+						ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref: '#author/',
 										 hrefCllbck:function(str){return Encoder.encode(str["authorName"])+'/'+Encoder.encode(str["authorUri"])}
 										 },
@@ -61,6 +63,16 @@ var SWDFCommandStore = {
 										 parameters.contentEl,
 										 {type:"Node",labelCllbck:function(str){return "Name : "+str["authorName"];}},
 										 {autodividers:true,count :true});
+					}else{
+						ViewAdapter.Graph.appendList(parameters.JSONdata,
+										 {baseHref: '#author/',
+										 hrefCllbck:function(str){return Encoder.encode(str["authorName"])+'/'+Encoder.encode(str["authorUri"])}
+										 },
+										 "authorName",
+										 parameters.contentEl,
+										 {type:"Node",labelCllbck:function(str){return "Name : "+str["authorName"];}});
+					
+					}
 				}
 			}
 		}
@@ -97,7 +109,8 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					ViewAdapter.Text.appendList(parameters.JSONdata,
+					if(ViewAdapter.mode == "text"){
+						ViewAdapter.Text.appendList(parameters.JSONdata,
 									 {baseHref: '#publication/',
 									 hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
 									 },
@@ -106,6 +119,16 @@ var SWDFCommandStore = {
 									 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}},
 									 {autodividers:true});
 					
+					}else{
+						ViewAdapter.Graph.appendList(parameters.JSONdata,
+									 {baseHref: '#publication/',
+									 hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+									 },
+									 "publiTitle",
+									 parameters.contentEl,
+									 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
+					
+					}
 				}
 			}
 		}
@@ -143,7 +166,8 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-				  ViewAdapter.Text.appendList(parameters.JSONdata,
+					if(ViewAdapter.mode == "text"){
+						ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref:'#keyword/',
 										  hrefCllbck:function(str){return Encoder.encode(str["keyword"])},
 										  },
@@ -152,6 +176,16 @@ var SWDFCommandStore = {
 										 {type:"Node",labelCllbck:function(str){return "Publication : "+str["keyword"];}},
 										 {autodividers:true,count:true});
 
+					}else{
+						ViewAdapter.Graph.appendList(parameters.JSONdata,
+										 {baseHref:'#keyword/',
+										  hrefCllbck:function(str){return Encoder.encode(str["keyword"])},
+										  },
+										 "keyword",
+										 parameters.contentEl,
+										 {type:"Node",labelCllbck:function(str){return "Publication : "+str["keyword"];}});
+
+					}
 				}
 			} 
 		}
@@ -189,11 +223,17 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Conference publications</h2>'));
-					$.each(parameters.JSONdata, function(i,publication){
-						ViewAdapter.Graph.addNode("Publication : "+publication.publiTitle,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri));
-						ViewAdapter.Text.appendButton(parameters.contentEl,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri),publication.publiTitle);
-					});
+					if(ViewAdapter.mode == "text"){
+						parameters.contentEl.append($('<h2>Conference publications</h2>'));
+						$.each(parameters.JSONdata, function(i,publication){
+							ViewAdapter.Text.appendButton(parameters.contentEl,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri),publication.publiTitle);
+						});
+					}else{
+						$.each(parameters.JSONdata, function(i,publication){
+							ViewAdapter.Graph.addNode("Publication : "+publication.publiTitle,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri));
+						});
+					
+					}
 				}
 			}
 		}
@@ -240,20 +280,32 @@ var SWDFCommandStore = {
 			if(parameters.JSONdata != null ){
 				var publicationInfo = parameters.JSONdata;
 				if(_.size(publicationInfo) > 0 ){
-					var publiAbstract  = publicationInfo[0].publiAbstract;				
-					var publiTitle  = publicationInfo[0].publiTitle;	
-					
-					if(publiTitle!=""){
-						ViewAdapter.Graph.addLeaf("Title :"+publiTitle);
-						parameters.contentEl.append('<h2>Title</h2>');
-						parameters.contentEl.append('<p>'+publiTitle+'</p>');		
-					}
-					if(publiAbstract!=""){
-						ViewAdapter.Graph.addLeaf("Abstract :"+publiAbstract);
-						parameters.contentEl.append('<h2>Abstract</h2>');
-						parameters.contentEl.append('<p>'+publiAbstract+'</p>'); 
+					if(ViewAdapter.mode == "text"){
+						var publiAbstract  = publicationInfo[0].publiAbstract;				
+						var publiTitle  = publicationInfo[0].publiTitle;	
 						
-					}	
+						if(publiTitle!=""){
+							parameters.contentEl.append('<h2>Title</h2>');
+							parameters.contentEl.append('<p>'+publiTitle+'</p>');		
+						}
+						if(publiAbstract!=""){
+							parameters.contentEl.append('<h2>Abstract</h2>');
+							parameters.contentEl.append('<p>'+publiAbstract+'</p>'); 
+							
+						}
+					}else{
+						var publiAbstract  = publicationInfo[0].publiAbstract;				
+						var publiTitle  = publicationInfo[0].publiTitle;	
+						
+						if(publiTitle!=""){
+							ViewAdapter.Graph.addLeaf("Title :"+publiTitle);
+						}
+						if(publiAbstract!=""){
+							ViewAdapter.Graph.addLeaf("Abstract :"+publiAbstract);
+							
+						}
+					
+					}
 				}
 			}
 		}
@@ -296,11 +348,17 @@ var SWDFCommandStore = {
 
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Authors</h2>'));
-					$.each(parameters.JSONdata, function(i,author){
-						ViewAdapter.Graph.addNode("Author : "+author.authorName,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri));
-						ViewAdapter.Text.appendButton(parameters.contentEl,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri),author.authorName,{tiny:true});
-					});
+					if(ViewAdapter.mode == "text"){
+						parameters.contentEl.append($('<h2>Authors</h2>'));
+						$.each(parameters.JSONdata, function(i,author){
+							ViewAdapter.Text.appendButton(parameters.contentEl,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri),author.authorName,{tiny:true});
+						});
+					}else{
+						$.each(parameters.JSONdata, function(i,author){
+							ViewAdapter.Graph.addNode("Author : "+author.authorName,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri));
+						});
+					
+					}
 				}
 			}
 		}
@@ -345,11 +403,17 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Sub Sessions</h2>')); 
-					$.each(parameters.JSONdata, function(i,session){
-						ViewAdapter.Graph.addNode("Sub session : "+session.eventLabel,'#event/'+Encoder.encode(session.eventUri));
-						ViewAdapter.Text.appendButton(parameters.contentEl,'#event/'+Encoder.encode(session.eventUri),session.eventLabel);
-					});
+					if(ViewAdapter.mode == "text"){
+						parameters.contentEl.append($('<h2>Sub Sessions</h2>')); 
+						$.each(parameters.JSONdata, function(i,session){
+							ViewAdapter.Text.appendButton(parameters.contentEl,'#event/'+Encoder.encode(session.eventUri),session.eventLabel);
+						});
+					}else{
+						$.each(parameters.JSONdata, function(i,session){
+							ViewAdapter.Graph.addNode("Sub session : "+session.eventLabel,'#event/'+Encoder.encode(session.eventUri));
+						});
+					
+					}
 				}
 			}
 		}
@@ -393,11 +457,17 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Sub tracks</h2>')); 
-					$.each(parameters.JSONdata, function(i,track){
-						ViewAdapter.Graph.addNode("Sub track : "+track.eventLabel,'#event/'+Encoder.encode(track.eventUri));
-						ViewAdapter.Text.appendButton(parameters.contentEl,'#event/'+Encoder.encode(track.eventUri),track.eventLabel);
-					});
+					if(ViewAdapter.mode == "text"){
+						parameters.contentEl.append($('<h2>Sub tracks</h2>')); 
+						$.each(parameters.JSONdata, function(i,track){
+							ViewAdapter.Text.appendButton(parameters.contentEl,'#event/'+Encoder.encode(track.eventUri),track.eventLabel);
+						});
+					}else{
+						$.each(parameters.JSONdata, function(i,track){
+							ViewAdapter.Graph.addNode("Sub track : "+track.eventLabel,'#event/'+Encoder.encode(track.eventUri));
+						});
+					
+					}
 				}
 			}
 		}
@@ -464,42 +534,67 @@ var SWDFCommandStore = {
 				var eventInfo = parameters.JSONdata;
 					
 				if(_.size(eventInfo) > 0 ){
-							  
-					var eventLabel  = eventInfo.eventLabel;				
-					var eventLocation  = eventInfo.eventLocation;
-					var eventDescription  = eventInfo.eventDescription;
-					var eventAbstract  = eventInfo.eventAbstract;							
-					var locationName  = eventInfo.eventLocationName;	
-					var eventStart  = eventInfo.eventStart;	
-					var eventEnd  = eventInfo.eventEnd;
-				
-					if(eventDescription != ""){ 
-						ViewAdapter.Graph.addLeaf("Description :"+eventDescription);
-						parameters.contentEl.append($('<h2>Description</h2>')); 
-						parameters.contentEl.append($('<p>'+eventDescription+'</p>'));   
+					if(ViewAdapter.mode == "text"){
+								  
+						var eventLabel  = eventInfo.eventLabel;				
+						var eventLocation  = eventInfo.eventLocation;
+						var eventDescription  = eventInfo.eventDescription;
+						var eventAbstract  = eventInfo.eventAbstract;							
+						var locationName  = eventInfo.eventLocationName;	
+						var eventStart  = eventInfo.eventStart;	
+						var eventEnd  = eventInfo.eventEnd;
+					
+						if(eventDescription != ""){ 
+							parameters.contentEl.append($('<h2>Description</h2>')); 
+							parameters.contentEl.append($('<p>'+eventDescription+'</p>'));   
+						}
+						if(eventAbstract != ""){ 
+							parameters.contentEl.append($('<h2>Abstract</h2>')); 
+							parameters.contentEl.append($('<p>'+eventAbstract+'</p>'));   
+						}
+						if(eventStart != ""){ 
+							parameters.contentEl.append($('<p>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));
+						}
+						if(eventEnd != ""){
+							parameters.contentEl.append($('<p>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));  
+						} 
+						if(locationName != ""){ 
+							parameters.contentEl.append($('<p>Location : '+locationName+'</p>'));   
+						}
+						if(eventLabel !=""){ 
+							$("[data-role = page]").find("#DataConf").html(eventLabel);
+						}
+					}else{
+								  
+						var eventLabel  = eventInfo.eventLabel;				
+						var eventLocation  = eventInfo.eventLocation;
+						var eventDescription  = eventInfo.eventDescription;
+						var eventAbstract  = eventInfo.eventAbstract;							
+						var locationName  = eventInfo.eventLocationName;	
+						var eventStart  = eventInfo.eventStart;	
+						var eventEnd  = eventInfo.eventEnd;
+					
+						if(eventDescription != ""){ 
+							ViewAdapter.Graph.addLeaf("Description :"+eventDescription);
+						}
+						if(eventAbstract != ""){ 
+							ViewAdapter.Graph.addLeaf("Abstract :"+eventAbstract);
+						}
+						if(eventStart != ""){ 
+							ViewAdapter.Graph.addLeaf("Starts at :"+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a'));
+						}
+						if(eventEnd != ""){
+							ViewAdapter.Graph.addLeaf("Ends at :"+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a'));
+						} 
+						if(locationName != ""){ 
+							ViewAdapter.Graph.addLeaf("Location :"+locationName);
+						}
+						if(eventLabel !=""){ 
+							ViewAdapter.Graph.addLeaf("Label :"+eventLabel);
+							$("[data-role = page]").find("#DataConf").html(eventLabel);
+						}
+						
 					}
-					if(eventAbstract != ""){ 
-						ViewAdapter.Graph.addLeaf("Abstract :"+eventAbstract);
-						parameters.contentEl.append($('<h2>Abstract</h2>')); 
-						parameters.contentEl.append($('<p>'+eventAbstract+'</p>'));   
-					}
-					if(eventStart != ""){ 
-						parameters.contentEl.append($('<h2>Schedule</h2>')); 
-						ViewAdapter.Graph.addLeaf("Starts at :"+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a'));
-						parameters.contentEl.append($('<p>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));
-					}
-					if(eventEnd != ""){
-						ViewAdapter.Graph.addLeaf("Ends at :"+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a'));
-						parameters.contentEl.append($('<p>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));  
-					} 
-					if(locationName != ""){ 
-						ViewAdapter.Graph.addLeaf("Location :"+locationName);
-						parameters.contentEl.append($('<p>Location : '+locationName+'</p>'));   
-					}
-					if(eventLabel !=""){ 
-						ViewAdapter.Graph.addLeaf("Label :"+eventLabel);
-						$("[data-role = page]").find("#DataConf").html(eventLabel);
-					}			  
 				}
 				
 			}
@@ -541,15 +636,25 @@ var SWDFCommandStore = {
 
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Publications</h2>')); 
-					ViewAdapter.Text.appendList(parameters.JSONdata,
-										 {baseHref:'#publication/',
-										  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
-										  },
-										 "publiTitle",
-										 parameters.contentEl,
-										 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
-
+					if(ViewAdapter.mode == "text"){
+						parameters.contentEl.append($('<h2>Publications</h2>')); 
+						ViewAdapter.Text.appendList(parameters.JSONdata,
+											 {baseHref:'#publication/',
+											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+											  },
+											 "publiTitle",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
+					}else{
+						ViewAdapter.Graph.appendList(parameters.JSONdata,
+											 {baseHref:'#publication/',
+											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+											  },
+											 "publiTitle",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
+					
+					}
 				}
 			} 
 		}
@@ -602,10 +707,14 @@ var SWDFCommandStore = {
 												 "eventLabel",
 												 parameters.contentEl,
 												 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}});
-					}else{
-					
-					
-					
+					}else{ 
+						ViewAdapter.Graph.appendList(parameters.JSONdata,
+												 {baseHref:'#event/',
+												  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+												  },
+												 "eventLabel",
+												 parameters.contentEl,
+												 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}}); 
 					}
 
 				}
@@ -646,15 +755,27 @@ var SWDFCommandStore = {
 			
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
-				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Related Sessions</h2>')); 
-					ViewAdapter.Text.appendList(parameters.JSONdata,
-										 {baseHref:'#event/',
-										  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
-										  },
-										 "eventLabel",
-										 parameters.contentEl,
-										 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
+				if(ViewAdapter.mode == "text"){
+					if(_.size(parameters.JSONdata) > 0 ){
+						parameters.contentEl.append($('<h2>Related Sessions</h2>')); 
+						ViewAdapter.Text.appendList(parameters.JSONdata,
+											 {baseHref:'#event/',
+											  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+											  },
+											 "eventLabel",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
+
+					}
+				}else{
+				
+						ViewAdapter.Graph.appendList(parameters.JSONdata,
+											 {baseHref:'#event/',
+											  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+											  },
+											 "eventLabel",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
 
 				}
 			} 
@@ -694,15 +815,26 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Sub sessions</h2>')); 
-				  ViewAdapter.Text.appendList(parameters.JSONdata,
-										 {baseHref:'#event/',
-										  hrefCllbck:function(str){return Encoder.encode(str["sessionEvent"])},
-										  },
-										 "sessionEventLabel",
-										 parameters.contentEl,
-										 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];}});
+					if(ViewAdapter.mode == "text"){
+						parameters.contentEl.append($('<h2>Sub sessions</h2>')); 
+					  ViewAdapter.Text.appendList(parameters.JSONdata,
+											 {baseHref:'#event/',
+											  hrefCllbck:function(str){return Encoder.encode(str["sessionEvent"])},
+											  },
+											 "sessionEventLabel",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];}});
 
+					}
+				}else{
+					
+					  ViewAdapter.Graph.appendList(parameters.JSONdata,
+											 {baseHref:'#event/',
+											  hrefCllbck:function(str){return Encoder.encode(str["sessionEvent"])},
+											  },
+											 "sessionEventLabel",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];}});
 				}
 			} 
 		}
@@ -743,8 +875,8 @@ var SWDFCommandStore = {
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
 					if(ViewAdapter.mode == "text"){
-					parameters.contentEl.append($('<h2>Browse conference keynotes</h2>')); 
-				    ViewAdapter.Text.appendList(parameters.JSONdata,
+						parameters.contentEl.append($('<h2>Browse conference keynotes</h2>')); 
+						ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref:'#event/',
 										  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
 										  },
@@ -753,6 +885,13 @@ var SWDFCommandStore = {
 										 {type:"Node",labelCllbck:function(str){return "Keynote : "+str["eventLabel"];}});
 					}else{
 					
+				    ViewAdapter.Graph.appendList(parameters.JSONdata,
+										 {baseHref:'#event/',
+										  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+										  },
+										 "eventLabel",
+										 parameters.contentEl,
+										 {type:"Node",labelCllbck:function(str){return "Keynote : "+str["eventLabel"];}});
 					
 					
 					}
@@ -795,12 +934,17 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null ){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Keywords</h2> '));
-					$.each(parameters.JSONdata, function(i,keyword){
-						
-						ViewAdapter.Graph.addNode("Keyword : "+keyword.keyword,'#keyword/'+Encoder.encode(keyword.keyword));
-						ViewAdapter.Text.appendButton(parameters.contentEl,'#keyword/'+Encoder.encode(keyword.keyword),keyword.keyword,{tiny:true});
-					});
+					if(ViewAdapter.mode == "text"){
+						parameters.contentEl.append($('<h2>Keywords</h2> '));
+						$.each(parameters.JSONdata, function(i,keyword){
+							ViewAdapter.Text.appendButton(parameters.contentEl,'#keyword/'+Encoder.encode(keyword.keyword),keyword.keyword,{tiny:true});
+						});
+					}else{
+						$.each(parameters.JSONdata, function(i,keyword){
+							
+							ViewAdapter.Graph.addNode("Keyword : "+keyword.keyword,'#keyword/'+Encoder.encode(keyword.keyword));
+						});
+					}
 				}
 			}
 		}
@@ -839,17 +983,28 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Publications</h2>')); 
-				  ViewAdapter.Text.appendList(parameters.JSONdata,
-										 {baseHref:'#publication/',
-										  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
-										  },
-										 "publiTitle",
-										 parameters.contentEl,
-										 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
+					if(ViewAdapter.mode == "text"){
+						
+						parameters.contentEl.append($('<h2>Publications</h2>')); 
+					  ViewAdapter.Text.appendList(parameters.JSONdata,
+											 {baseHref:'#publication/',
+											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+											  },
+											 "publiTitle",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
 
+					}else{
+						ViewAdapter.Graph.appendList(parameters.JSONdata,
+											 {baseHref:'#publication/',
+											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+											  },
+											 "publiTitle",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
+
+					}
 				}
-				
 			} 
 		}
 	 },
@@ -888,13 +1043,23 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null ){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Organizations</h2>'));
-					$.each(parameters.JSONdata, function(i,organization){
-						
-						ViewAdapter.Graph.addNode("Organization : "+organization.OrganizationName,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri));
-						ViewAdapter.Text.appendButton(parameters.contentEl,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri),organization.OrganizationName,{tiny:true});
+					if(ViewAdapter.mode == "text"){
 
-					});
+						parameters.contentEl.append($('<h2>Organizations</h2>'));
+						$.each(parameters.JSONdata, function(i,organization){
+							
+							ViewAdapter.Text.appendButton(parameters.contentEl,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri),organization.OrganizationName,{tiny:true});
+
+						});
+					}else{
+						
+						$.each(parameters.JSONdata, function(i,organization){
+						
+							ViewAdapter.Graph.addNode("Organization : "+organization.OrganizationName,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri));
+						
+						});
+					
+					}
 				}
 			}
 		}
@@ -934,11 +1099,17 @@ var SWDFCommandStore = {
 
 			if(parameters.JSONdata != null ){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append($('<h2>Members</h2>'));
-					$.each(parameters.JSONdata, function(i,author){
-						ViewAdapter.Graph.addNode("Member : "+author.MemberName,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri));
-						ViewAdapter.Text.appendButton(parameters.contentEl,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri),author.MemberName,{tiny:true});
-					});
+					if(ViewAdapter.mode == "text"){
+						parameters.contentEl.append($('<h2>Members</h2>'));
+						$.each(parameters.JSONdata, function(i,author){
+							ViewAdapter.Text.appendButton(parameters.contentEl,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri),author.MemberName,{tiny:true});
+						});
+					}else{
+						$.each(parameters.JSONdata, function(i,author){
+							ViewAdapter.Graph.addNode("Member : "+author.MemberName,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri));
+						});
+					
+					}
 				}
 			}
 			

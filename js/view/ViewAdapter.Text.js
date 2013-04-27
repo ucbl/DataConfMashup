@@ -66,12 +66,7 @@ var ViewAdapterText = ViewAdapter.Text ={
 			}
 			
 			//show
-			if(currentLabel){
-				//graph node
-				if(graphPt){
-					var nodeLabel = graphPt.labelCllbck(currentData);
-					//ViewAdapter.Graph.addNode(nodeLabel,currentHref);
-				}
+			if(currentLabel){ 
 				var a = $('<a href='+currentHref+' '+(isfilter?' ':'data-corners="true" data-role="button" data-iconpos="right" data-icon="arrow-r" data-shadow="false"')+'>'+currentLabel+'</a>');
 				var li = $('<li ></li>');
 				if(isfilter){

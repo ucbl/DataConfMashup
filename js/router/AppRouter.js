@@ -81,10 +81,9 @@ AppRouter = Backbone.Router.extend({
 						if(JSONdata != null){
 							if(JSONdata.hasOwnProperty(commandItem.name)){
 								doRequest = false;
-								console.log("CAll : "+commandItem.name+" ON "+"Storage");
+								console.log("CAll : "+commandItem.name+" ON Storage");
 								//Informations already exists so we directly call the command callBack view to render them 
 								currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : currentPage.find("#"+commandItem.name), name : name});
-									
 							}
 						}
 						if(doRequest){
@@ -140,6 +139,7 @@ AppRouter = Backbone.Router.extend({
 										$.mobile.loading( 'hide' );
 										command.ViewCallBack({JSONdata : data, contentEl : contentEl});
 										$("[data-role = page]").trigger("create");
+										if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
 										},
 				error: function(jqXHR, textStatus, errorThrown) { 
 					console.log(errorThrown);

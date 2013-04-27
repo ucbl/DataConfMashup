@@ -41,29 +41,41 @@
 			if(parameters.JSONdata != null){
 				var organizationInfo = parameters.JSONdata;
 				if(_.size(organizationInfo) > 0 ){
-							  
-					var Heading  = organizationInfo[0].Heading;				
-					var Image  = organizationInfo[0].Image;	
-					var AbstractText  = organizationInfo[0].AbstractText;	
-					var FirstURL  = organizationInfo[0].FirstURL;	
+					if(ViewAdapter.mode == "text"){
+								  
+						var Heading  = organizationInfo[0].Heading;				
+						var Image  = organizationInfo[0].Image;	
+						var AbstractText  = organizationInfo[0].AbstractText;	
+						var FirstURL  = organizationInfo[0].FirstURL;	
+						
 					
-				
-					if(Heading != ""){  
-						parameters.contentEl.append('<img src="'+Image+'">');
-					} 
-					if(Image != ""){ 
-						parameters.contentEl.append('<p>'+Heading+'</p>'); 
+						if(Heading != ""){  
+							parameters.contentEl.append('<img src="'+Image+'">');
+						} 
+						if(Image != ""){ 
+							parameters.contentEl.append('<p>'+Heading+'</p>'); 
+						}
+						if(AbstractText != ""){ 
+ 							parameters.contentEl.append('<h2>Abstract</h2>');
+							parameters.contentEl.append('<p>'+AbstractText+'</p>'); 
+						}
+						if(FirstURL !== undefined){ 
+ 							parameters.contentEl.append('<h2>Homepage</h2>');
+							parameters.contentEl.append('<a href="'+FirstURL+'">'+FirstURL+'</a>'); 
+						}
+					}else{
+					 
+					 var AbstractText  = organizationInfo[0].AbstractText;	
+						var FirstURL  = organizationInfo[0].FirstURL;	
+						
+					 	if(AbstractText != ""){ 
+							ViewAdapter.Graph.addLeaf("Abstract :"+AbstractText);
+						}
+						if(FirstURL !== undefined){ 
+							ViewAdapter.Graph.addLeaf("Homepage :"+FirstURL);
+						}
+					
 					}
-					if(AbstractText != ""){ 
-						ViewAdapter.Graph.addLeaf("Abstract :"+AbstractText);
-						parameters.contentEl.append('<h2>Abstract</h2>');
-						parameters.contentEl.append('<p>'+AbstractText+'</p>'); 
-					}
-					if(FirstURL !== undefined){ 
-						ViewAdapter.Graph.addLeaf("Homepage :"+FirstURL);
-						parameters.contentEl.append('<h2>Homepage</h2>');
-						parameters.contentEl.append('<a href="'+FirstURL+'">'+FirstURL+'</a>'); 
-					}			  
 				}
 			}
 		

@@ -43,15 +43,25 @@
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append('<h2>Other Publications</h2>');
-					ViewAdapter.appendList(parameters.JSONdata,
+					if(ViewAdapter.mode == "text"){
+						parameters.contentEl.append('<h2>Other Publications</h2>');
+						ViewAdapter.Text.appendList(parameters.JSONdata,
 													 {baseHref:'#externPublication/',
 													  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},}, 
 													 "publiTitle",
 													 parameters.contentEl,
 													 {type:"Node",labelCllbck:function(str){return "OtherPubli : "+str["publiTitle"];}}
 													 );
-
+					}else{
+						ViewAdapter.Graph.appendList(parameters.JSONdata,
+													 {baseHref:'#externPublication/',
+													  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},}, 
+													 "publiTitle",
+													 parameters.contentEl,
+													 {type:"Node",labelCllbck:function(str){return "OtherPubli : "+str["publiTitle"];}}
+													 );
+					
+					}
 				}
 			} 
 		}
@@ -87,11 +97,16 @@
 		ViewCallBack : function(parameters){ 
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-					parameters.contentEl.append('<h2>Authors</h2>');
-					$.each(parameters.JSONdata, function(i,auhtor){
-						ViewAdapter.Graph.addNode("Author : "+auhtor.authorName,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri));
-						ViewAdapter.appendButton(parameters.contentEl,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri),auhtor.authorName,{tiny : true});
-					});
+					if(ViewAdapter.mode == "text"){
+						parameters.contentEl.append('<h2>Authors</h2>');
+						$.each(parameters.JSONdata, function(i,auhtor){
+							ViewAdapter.Text.appendButton(parameters.contentEl,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri),auhtor.authorName,{tiny : true});
+						});
+					}else{
+						$.each(parameters.JSONdata, function(i,auhtor){
+							ViewAdapter.Graph.addNode("Author : "+auhtor.authorName,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri));
+						});
+					}
 				}
 			}
 		}
@@ -138,39 +153,61 @@
 			if(parameters.JSONdata != null){
 				var publiInfo = parameters.JSONdata;
 				if(_.size(publiInfo) > 0 ){
-							  
-					var title  = publiInfo[0].title;				
-					var link  = publiInfo[0].publiLink;	
-					var resume  = publiInfo[0].resume;	
-					var year  = publiInfo[0].year;	
-					var publisher  = publiInfo[0].publisher;	
+					if(ViewAdapter.mode == "text"){
+								  
+						var title  = publiInfo[0].title;				
+						var link  = publiInfo[0].publiLink;	
+						var resume  = publiInfo[0].resume;	
+						var year  = publiInfo[0].year;	
+						var publisher  = publiInfo[0].publisher;	
+						
 					
-				
-					if(title != ""){  
-						ViewAdapter.Graph.addLeaf("Title :"+title);
-						parameters.contentEl.append('<h2>Title</h2>');
-						parameters.contentEl.append('<p>'+title+'</p>'); 
-					} 
-					if(resume != ""){  
-						ViewAdapter.Graph.addLeaf("Reference :"+resume);
-						parameters.contentEl.append('<h2>Reference</h2>');
-						parameters.contentEl.append('<p>'+resume+'</p>'); 
-					} 
-					if(link != ""){ 
-						ViewAdapter.Graph.addLeaf("Link : "+link);
-						parameters.contentEl.append('<h2>Link</h2>');
-						parameters.contentEl.append('<a href="'+link+'">'+link+'</p>');
+						if(title != ""){  
+							parameters.contentEl.append('<h2>Title</h2>');
+							parameters.contentEl.append('<p>'+title+'</p>'); 
+						} 
+						if(resume != ""){  
+							parameters.contentEl.append('<h2>Reference</h2>');
+							parameters.contentEl.append('<p>'+resume+'</p>'); 
+						} 
+						if(link != ""){ 
+							parameters.contentEl.append('<h2>Link</h2>');
+							parameters.contentEl.append('<a href="'+link+'">'+link+'</p>');
+						}
+						if(year != ""){ 
+							parameters.contentEl.append('<h2>Year</h2>');
+							parameters.contentEl.append('<p>'+year+'</p>'); 
+						}
+						if(publisher !=""){ 
+							parameters.contentEl.append('<h2>Publisher</h2>');
+							parameters.contentEl.append('<p>'+publisher+'</p>'); 
+						}
+					}else{
+								  
+						var title  = publiInfo[0].title;				
+						var link  = publiInfo[0].publiLink;	
+						var resume  = publiInfo[0].resume;	
+						var year  = publiInfo[0].year;	
+						var publisher  = publiInfo[0].publisher;	
+						
+					
+						if(title != ""){  
+							ViewAdapter.Graph.addLeaf("Title :"+title);
+						} 
+						if(resume != ""){  
+							ViewAdapter.Graph.addLeaf("Reference :"+resume);
+						} 
+						if(link != ""){ 
+							ViewAdapter.Graph.addLeaf("Link : "+link);
+						}
+						if(year != ""){ 
+							ViewAdapter.Graph.addLeaf("Year :"+year);
+						}
+						if(publisher !=""){ 
+							ViewAdapter.Graph.addLeaf("Publisher :"+publisher);
+						}
+					
 					}
-					if(year != ""){ 
-						ViewAdapter.Graph.addLeaf("Year :"+year);
-						parameters.contentEl.append('<h2>Year</h2>');
-						parameters.contentEl.append('<p>'+year+'</p>'); 
-					}
-					if(publisher !=""){ 
-						ViewAdapter.Graph.addLeaf("Publisher :"+publisher);
-						parameters.contentEl.append('<h2>Publisher</h2>');
-						parameters.contentEl.append('<p>'+publisher+'</p>'); 
-					}			  
 				}
 			}
 		}

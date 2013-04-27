@@ -53,6 +53,8 @@ var ViewAdapter = {
 		}else{
 			ViewAdapter.currentPage.find(".content").empty();
 			ViewAdapter.Graph.initContainer(ViewAdapter.currentPage.find(".content"),ViewAdapter.uri);
+			
+		if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
 		}
 		ViewAdapter.addswitchButton();
 	},
@@ -99,6 +101,7 @@ var ViewAdapter = {
 		});
 		
 		ViewAdapter.currentPage.trigger("create");
+		if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
 	}
 };
 
