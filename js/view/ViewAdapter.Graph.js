@@ -74,8 +74,7 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 			ViewAdapter.Graph.theUI.nodes[label]={color:"#0B614B", fontColor:"#F2F2F2", alpha:0.8,href:href};
 			ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
 			ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
-			//ViewAdapter.Graph.render();
-			//cacher le reste
+			//ViewAdapter.Graph.render(); 
 		}
     },
     
@@ -87,8 +86,7 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 			ViewAdapter.Graph.theUI.nodes[label]={color:"orange", fontColor:"#F2F2F2", alpha:0.7};
 			ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
 			ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
-			//ViewAdapter.Graph.render(); 
-			//cacher le reste
+			//ViewAdapter.Graph.render();  
 		}
     }, 
      

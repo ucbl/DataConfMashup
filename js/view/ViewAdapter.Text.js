@@ -94,7 +94,10 @@ var ViewAdapterText = ViewAdapter.Text ={
 				(option.theme ? 'data-theme="'+option.theme+'"'   : '') +
 				(option.align ? 'style="float:'+option.align+';"' : '') +
 				'data-shadow="false">'+(label==""?href:label) +'</a>'); 
-		el.append(newButton);
+		if( option.prepend)
+			el.prepend(newButton);
+		else 
+			el.append(newButton);
 		return newButton;
 	}
 }
