@@ -42,11 +42,8 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 		$(ViewAdapter.Graph.sys.renderer).on('navigate',function(event,data){
 			if(data.href!=undefined)document.location.href = data.href;
 		});
-       
-    },
-	
-	//render after each command
-    render : function(){ 
+		
+		
 		if(ViewAdapter.Graph.sys.energy()){
 			console.log("###   n nodes   ###");
 			console.log(ViewAdapter.Graph.sys.energy());
@@ -56,15 +53,20 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 				if(ViewAdapter.Graph.sys.energy().n<=1){
 					if(!ViewAdapter.reloading){
 						ViewAdapter.reloading = true;
-						console.log("################## BUG #####################"); 
-						console.log("### temporary fix... reload the page###"); 
+						console.log("################## BUG #####################");
+						console.log("### temporary fix... reload the page###");
 						window.location.reload();
 						ViewAdapter.changeMode();
 					}
 				}
-			},100);
+			},1000);
 			
 		}
+       
+    },
+	
+	//render after each command
+    render : function(){ 
 		
 			console.log("###### Graph render ######");
 			console.log(ViewAdapter.Graph.sys);
