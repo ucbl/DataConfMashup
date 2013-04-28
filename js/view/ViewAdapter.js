@@ -35,7 +35,7 @@ var ViewAdapter = {
 		if(transitionEffect !== undefined){
 			transition = transitionEffect;
 		}
-		$.mobile.changePage($(page.el), {changeHash:false, transition: transition});
+		$.mobile.changePage($(page.el), {changeHash:false, transition: transition,reverse : true});
 		
 		$(page.el).bind('pagehide', function(event, data) {
 			$(event.currentTarget).remove();

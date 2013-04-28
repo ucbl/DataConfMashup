@@ -84,7 +84,7 @@ AppRouter = Backbone.Router.extend({
 								console.log("CAll : "+commandItem.name+" ON Storage");
 								//Informations already exists so we directly call the command callBack view to render them 
 								currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : currentPage.find("#"+commandItem.name), name : name});
-								if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
+								
 							}
 						}
 						if(doRequest){
@@ -97,6 +97,7 @@ AppRouter = Backbone.Router.extend({
 						
 						
 					});
+					if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
 					ViewAdapter.generateJQMobileElement();
 				});
 			});
