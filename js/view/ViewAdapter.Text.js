@@ -14,8 +14,6 @@ var ViewAdapterText = ViewAdapter.Text ={
 		//Creating the content box of the current command
 		var contentEl = $('<div id="'+commandName+'"></div>');
 		page.find(".content").append(contentEl);
-		console.log("generate box");
-		console.log(contentEl);
     },
 	/** function appendList :
 	*  append filter list to current view using '$("[data-role = page]").find(".content")' selector (backbone)

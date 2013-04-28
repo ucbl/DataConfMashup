@@ -2,18 +2,18 @@
 * Copyright <c> Claude Bernard - University Lyon 1 -  2013
 *  License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
 *   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
-*   Description: This file provide simple function to build jquery mobile element such as button or sorted list plus some graph first attempt
+*   Description: This file provide the  link to the core of arborjs using simple function to initialize, handle clicks, redraw ... the graph.
 *   Version: 1.1
 *   Tags:  Arborjs Renderer Linked-Data Graph html5 canvas
 **/ 
  var Renderer = function(elt){
-    var dom = $(elt)
-    var canvas = dom.get(0)
+    var dom = $(elt);
+    var canvas = dom.get(0);
     var ctx = canvas.getContext("2d"); 
-    var gfx = arbor.Graphics(canvas)
-    var sys = null
+    var gfx = arbor.Graphics(canvas);
+    var sys = null;
 
-    var _vignette = null
+    var _vignette = null;
     var selected = null,
         nearest = null,
         _mouseP = null;
@@ -27,7 +27,7 @@
 
         $(window).resize(that.resize)
         that.resize()
-        that._initMouseHandling()
+        that._initMouseHandling();
       },
       resize:function(){
         canvas.width = $(window).width()
