@@ -15,6 +15,7 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
     sys:  arbor.ParticleSystem({stiffness:900, repulsion:2000, gravity:true, dt:0.015}),
 	initted : false,
 	el : '',
+	reloading : false,
     
     //generate root node
     initContainer : function(el,rootNodeLabel){
@@ -53,10 +54,13 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 			//this timeout actually catch the bug ...
 			setTimeout(function(){
 				if(ViewAdapter.Graph.sys.energy().n<=1){
-					console.log("################## BUG #####################"); 
-					console.log("### temporary fix... reload the page###"); 
-					window.location.reload();
-					ViewAdapter.changeMode();
+					if(!ViewAdapter.reloading){
+						ViewAdapter.reloading = true;
+						console.log("################## BUG #####################"); 
+						console.log("### temporary fix... reload the page###"); 
+						window.location.reload();
+						ViewAdapter.changeMode();
+					}
 				}
 			},100);
 			
