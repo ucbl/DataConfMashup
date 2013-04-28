@@ -74,7 +74,7 @@ var ViewAdapter = {
 			ViewAdapter.changeMode();
 		});
 	},
-	changeMode : function(mode){
+	changeMode : function(){
 	
 		if(ViewAdapter.mode == "text"){
 			ViewAdapter.mode = "graph";

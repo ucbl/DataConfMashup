@@ -5,7 +5,7 @@
 *   Description: This file provide simple function to build jquery mobile element such as button or sorted list plus some graph first attempt
 *   Version: 1.1
 *   Tags:  Arborjs Renderer Linked-Data Graph html5 canvas
-**/
+**/ 
  var Renderer = function(elt){
     var dom = $(elt)
     var canvas = dom.get(0)
@@ -28,12 +28,6 @@
         $(window).resize(that.resize)
         that.resize()
         that._initMouseHandling()
-
-        if (document.referrer.match(/echolalia|atlas|halfviz/)){
-          // if we got here by hitting the back button in one of the demos, 
-          // start with the demos section pre-selected
-          that.switchSection('demos')
-        }
       },
       resize:function(){
         canvas.width = $(window).width()
@@ -52,7 +46,7 @@
           var w = Math.max(20, 20+gfx.textWidth(node.name)+ (node.data.fontSize?2*(node.data.fontSize):0) )
           if (node.data.alpha===0) return
           gfx.rect(pt.x-w/2, pt.y-8, w, 20, 4, {fill:node.data.color, alpha:node.data.alpha})
-          gfx.text(node.name, pt.x, pt.y+9, {color:(node.data.fontColor?node.data.fontColor:"white"), align:"center", font:"Arial", size:(node.data.fontSize?node.data.fontSize:11)})
+          gfx.text(node.name, pt.x, pt.y+9, {color:(node.data.fontColor ? node.data.fontColor : "white"), align:"center", font:"Arial", size:(node.data.fontSize ? node.data.fontSize:11)})
         })
         that._drawVignette()
       },
@@ -165,5 +159,4 @@
   }
   
   
-  
-  
+   

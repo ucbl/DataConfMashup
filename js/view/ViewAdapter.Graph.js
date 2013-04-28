@@ -12,16 +12,17 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
     nodeLimit : 9,
     nodeCounter : 0,
     theUI : '',
-    sys:  arbor.ParticleSystem(), 
+    sys:  arbor.ParticleSystem({stiffness:900, repulsion:2000, gravity:true, dt:0.015}),
+	initted : false,
+	el : '',
     
     //generate root node
     initContainer : function(el,rootNodeLabel){
 		console.log("-----GRAPH - INIT ------"); 
 		ViewAdapter.Graph["nodeCounter"]=0;
 		ViewAdapter.Graph.rootNodeLabel=rootNodeLabel;
+		ViewAdapter.Graph.el=el;
 		
-		//canvas
-		el.append(ViewAdapter.Graph.canvas);
 
 		//root node
 		ViewAdapter.Graph["theUI"] = {nodes:{},edges:{}};
@@ -29,8 +30,11 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 		ViewAdapter.Graph.theUI.edges[rootNodeLabel]={};
 
 		//arbor.js 
-		ViewAdapter.Graph.sys.parameters({stiffness:900, repulsion:2000, gravity:true, dt:0.015});
-		ViewAdapter.Graph.sys.renderer = Renderer(ViewAdapter.Graph.canvas);
+		if(!ViewAdapter.Graph.initted){ 
+		//	delete ViewAdapter.Graph.sys.renderer;
+			ViewAdapter.Graph.sys.renderer = Renderer(ViewAdapter.Graph.canvas); 
+			ViewAdapter.Graph.initted = true;
+		}
 		
 		
 		//move to page
@@ -39,10 +43,31 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 		});
        
     },
+	
+	//render after each command
     render : function(){ 
-		console.log("###### Graph render ######");
-        console.log(ViewAdapter.Graph.theUI);
-        ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);
+		if(ViewAdapter.Graph.sys.energy()){
+			console.log("###   n nodes   ###");
+			console.log(ViewAdapter.Graph.sys.energy());
+			
+			//this timeout actually catch the bug ...
+			setTimeout(function(){
+				if(ViewAdapter.Graph.sys.energy().n<=1){
+					console.log("################## BUG #####################"); 
+					console.log("### temporary fix... reload the page###"); 
+					window.location.reload();
+					ViewAdapter.changeMode();
+				}
+			},100);
+			
+		}
+		
+			console.log("###### Graph render ######");
+			console.log(ViewAdapter.Graph.sys);
+			console.log(ViewAdapter.Graph.theUI);
+			ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);
+		//canvas
+		ViewAdapter.Graph.el.append(ViewAdapter.Graph.canvas);
     },
 	
 	
@@ -71,8 +96,11 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 		if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
 			console.log("-----GRAPH - ADD NODE------"); 
 			var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
+			
 			ViewAdapter.Graph.theUI.nodes[label]={color:"#0B614B", fontColor:"#F2F2F2", alpha:0.8,href:href};
 			ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
+			 
+			
 			ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
 			//ViewAdapter.Graph.render(); 
 		}
@@ -80,14 +108,15 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
     
     //generate info node
     addLeaf : function(label){
-		if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
+		//if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
 			console.log("-----GRAPH - ADD LEAF------"); 
 			var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
 			ViewAdapter.Graph.theUI.nodes[label]={color:"orange", fontColor:"#F2F2F2", alpha:0.7};
 			ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
+			
 			ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
 			//ViewAdapter.Graph.render();  
-		}
+		//}
     }, 
      
 };
