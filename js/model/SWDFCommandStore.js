@@ -697,10 +697,12 @@ var SWDFCommandStore = {
 		},
 			
 		ViewCallBack : function(parameters){
+		
+			Reasoner.getMoreSpecificKeywords();
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
 					if(ViewAdapter.mode == "text"){
-						console.log(parameters.contentEl);
+						
 						parameters.contentEl.append('<h2>Browse conference tracks</h2>'); 
 						ViewAdapter.Text.appendList(parameters.JSONdata,
 												 {baseHref:'#event/',

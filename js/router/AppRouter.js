@@ -38,6 +38,8 @@ AppRouter = Backbone.Router.extend({
 			StorageManager.initialize();
 			//Initialize ViewAdapter to text mode
 			ViewAdapter.initialize("text");
+			//Initialize Reasonner with ontologie
+			Reasoner.initialize('http://poster.www2012.org/onto/KeywordClasses.owl');
 			//Preparing all the routes and their actions
 		    $.each(this.routes,function(i,routeItem){
 				
@@ -47,7 +49,8 @@ AppRouter = Backbone.Router.extend({
 				
 				//Preparing the function to use when catching the current route
 				self.route(routeItem.hash, function(name, uri) {
-					
+						
+		
 					var title = "";
 					if(name !== undefined){
 						name = Encoder.decode(name);
@@ -97,8 +100,9 @@ AppRouter = Backbone.Router.extend({
 						
 						
 					});
-					if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
+					
 					ViewAdapter.generateJQMobileElement();
+				
 				});
 			});
 	
@@ -143,7 +147,7 @@ AppRouter = Backbone.Router.extend({
 										$.mobile.loading( 'hide' );
 										command.ViewCallBack({JSONdata : data, contentEl : contentEl});
 										ViewAdapter.generateJQMobileElement();
-										if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
+										
 										},
 				error: function(jqXHR, textStatus, errorThrown) { 
 					console.log(errorThrown);

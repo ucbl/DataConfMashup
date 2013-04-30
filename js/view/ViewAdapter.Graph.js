@@ -7,79 +7,59 @@
 *   Tags:  Backbone Jquery-ui-mobile Adapter Linked-Data Graph html5 canvas
 **/
 var ViewAdapterGraph = ViewAdapter.Graph = { 
-    canvas : $('<canvas style="clear:both;" id="graph">'), 
+   
     rootNodeLabel : '',
     nodeLimit : 9,
     nodeCounter : 0,
     theUI : '',
-    sys:  arbor.ParticleSystem({stiffness:900, repulsion:2000, gravity:true, dt:0.015}),
-	initted : false,
-	el : '',
-	reloading : false,
-    
+	el : '',    
+
+	
+	initSystem : function (){
+		
+		ViewAdapter.Graph.sys = arbor.ParticleSystem();
+	},
     //generate root node
     initContainer : function(el,rootNodeLabel){
-		console.log("-----GRAPH - INIT ------"); 
+		console.log("-----GRAPH - CONTAINER -- ON ------"); 
 		ViewAdapter.Graph["nodeCounter"]=0;
-		ViewAdapter.Graph.rootNodeLabel=rootNodeLabel;
 		ViewAdapter.Graph.el=el;
-		
+		ViewAdapter.Graph.rootNodeLabel=rootNodeLabel;
 
-		//root node
-		ViewAdapter.Graph["theUI"] = {nodes:{},edges:{}};
-		ViewAdapter.Graph.theUI.nodes[rootNodeLabel]={color:"red", alpha:1, rootNode:true, alone:true, mass:.5};
-		ViewAdapter.Graph.theUI.edges[rootNodeLabel]={};
-
-		//arbor.js 
-		if(!ViewAdapter.Graph.initted){ 
-		//	delete ViewAdapter.Graph.sys.renderer;
-			ViewAdapter.Graph.sys.renderer = Renderer(ViewAdapter.Graph.canvas); 
-			ViewAdapter.Graph.initted = true;
-		}
+		ViewAdapter.Graph.canvas = $('<canvas style="clear:both; id="graph">');	
+		el.append(ViewAdapter.Graph.canvas);
 		
+		  ViewAdapter.Graph["theUI"] = {nodes:{},edges:{}};
+      ViewAdapter.Graph.theUI.nodes[rootNodeLabel]={color:"red", alpha:1, rootNode:true, alone:true, mass:.5};
+      ViewAdapter.Graph.theUI.edges[rootNodeLabel]={};
+	  
+		 ViewAdapter.Graph.sys.parameters({stiffness:900, repulsion:2000, gravity:true, dt:0.015});
+		ViewAdapter.Graph.sys.renderer = Renderer(ViewAdapter.Graph.canvas);
+		ViewAdapter.Graph.sys.graft(ViewAdapter.Graph.theUI);
 		
-		//move to page
 		$(ViewAdapter.Graph.sys.renderer).on('navigate',function(event,data){
 			if(data.href!=undefined)document.location.href = data.href;
+		
 		});
+		//arbor.js 
+		//ViewAdapter.Graph.sys.renderer.gfx.clear();
 		
 		
-		if(ViewAdapter.Graph.sys.energy()){
-			console.log("###   n nodes   ###");
-			console.log(ViewAdapter.Graph.sys.energy());
-			
-			//this timeout actually catch the bug ...
-			setTimeout(function(){
-				if(ViewAdapter.Graph.sys.energy().n<=1){
-					if(!ViewAdapter.reloading){
-						ViewAdapter.reloading = true;
-						console.log("################## BUG #####################");
-						console.log("### temporary fix... reload the page###");
-						window.location.reload();
-						ViewAdapter.changeMode();
-					}
-				}
-			},1000);
-			
-		}
-       
+		console.log("-----GRAPH - INIT ------"); 
+	
+		
+		
+		//ViewAdapter.Graph.sys.renderer.init(ViewAdapter.Graph.sys);
+	//	 ViewAdapter.Graph.sys.addNode(rootNodeLabel,{color:"red", alpha:1, rootNode:true, alone:true, mass:.5});
+		//ViewAdapter.Graph.sys.parameters({friction : '1.0'});
+	
+		//move to page
+
     },
-	
-	//render after each command
-    render : function(){ 
-		
-			console.log("###### Graph render ######");
-			console.log(ViewAdapter.Graph.sys);
-			console.log(ViewAdapter.Graph.theUI);
-			ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);
-		//canvas
-		ViewAdapter.Graph.el.append(ViewAdapter.Graph.canvas);
-    },
-	
-	
+
 	appendList : function(dataList,href,labelProperty,appendToDiv,graphPt){
  
-		if(!href) var href={};
+	if(!href) var href={};
 		$.each(dataList, function(i,currentData){
 			var currentHref=href.baseHref+href.hrefCllbck(currentData);
 			var currentLabel=currentData[labelProperty];
@@ -100,29 +80,28 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
     //generate clickable node
     addNode : function(label,href){
 		if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
-			console.log("-----GRAPH - ADD NODE------"); 
+		console.log(ViewAdapter.Graph.theUI);
 			var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
+        ViewAdapter.Graph.theUI.nodes[label]={color:"#0B614B", fontColor:"#F2F2F2", alpha:0.8,href:href};
+        ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
+        ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
+       ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI); 
 			
-			ViewAdapter.Graph.theUI.nodes[label]={color:"#0B614B", fontColor:"#F2F2F2", alpha:0.8,href:href};
-			ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
-			 
-			
-			ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
-			//ViewAdapter.Graph.render(); 
 		}
     },
     
     //generate info node
     addLeaf : function(label){
-		//if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
-			console.log("-----GRAPH - ADD LEAF------"); 
-			var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
-			ViewAdapter.Graph.theUI.nodes[label]={color:"orange", fontColor:"#F2F2F2", alpha:0.7};
-			ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
-			
-			ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
-			//ViewAdapter.Graph.render();  
-		//}
+	
+		if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
+			console.log(ViewAdapter.Graph.theUI);
+		 var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
+        ViewAdapter.Graph.theUI.nodes[label]={color:"orange", fontColor:"#F2F2F2", alpha:0.7};
+        ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
+        ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
+        ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI); 
+        //cacher le reste
+		}
     }, 
      
 };

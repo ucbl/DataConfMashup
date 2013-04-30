@@ -10,6 +10,7 @@ var ViewAdapter = {
 
 	initialize : function(mode){
 		ViewAdapter.mode = mode;
+		ViewAdapter.Graph.initSystem();
 	},
 	update : function(template,title,conference,datasources,commands,uri,name){
 		ViewAdapter.currentPage = ViewAdapter.changePage(new AbstractView({templateName :  template ,title : title, model : conference }));
@@ -35,7 +36,7 @@ var ViewAdapter = {
 		if(transitionEffect !== undefined){
 			transition = transitionEffect;
 		}
-		$.mobile.changePage($(page.el), {changeHash:false, transition: transition,reverse : true});
+		$.mobile.changePage($(page.el), {changeHash:false, transition: transition});
 		
 		$(page.el).bind('pagehide', function(event, data) {
 			$(event.currentTarget).remove();
@@ -47,6 +48,7 @@ var ViewAdapter = {
 	initPage : function (){
 		
 		if(ViewAdapter.mode == "text"){
+			
 			ViewAdapter.addswitchButton();
 			$.each(ViewAdapter.commands,function(i,commandItem){
 				ViewAdapter.Text.generateContainer(ViewAdapter.currentPage,commandItem.name);	
@@ -79,6 +81,7 @@ var ViewAdapter = {
 		if(ViewAdapter.mode == "text"){
 			ViewAdapter.mode = "graph";
 		}else{
+			ViewAdapter.Graph.sys.stop();
 			ViewAdapter.mode = "text";
 		}
 		ViewAdapter.currentPage = ViewAdapter.changePage(new AbstractView({templateName :  ViewAdapter.template ,title : ViewAdapter.title, model : ViewAdapter.conference }), "flip");
@@ -100,7 +103,7 @@ var ViewAdapter = {
 		});
 		
 		ViewAdapter.generateJQMobileElement();
-		if(ViewAdapter.mode == "graph")ViewAdapter.Graph.render();
+		
 	},
 	
 	generateJQMobileElement : function(){

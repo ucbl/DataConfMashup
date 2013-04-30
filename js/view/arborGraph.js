@@ -28,6 +28,7 @@
         $(window).resize(that.resize)
         that.resize()
         that._initMouseHandling();
+		
       },
       resize:function(){
         canvas.width = $(window).width()
@@ -37,8 +38,10 @@
         that.redraw()
       },
       redraw:function(){
-        gfx.clear()
+		
+        gfx.clear();
         sys.eachEdge(function(edge, p1, p2){
+		
           if (edge.source.data.alpha * edge.target.data.alpha == 0) return
           gfx.line(p1, p2, {stroke:"#b2b19d", width:2, alpha:edge.target.data.alpha})
         })
@@ -50,6 +53,7 @@
         })
         that._drawVignette()
       },
+
       
       _drawVignette:function(){
         var w = canvas.width
