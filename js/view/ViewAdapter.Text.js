@@ -65,7 +65,7 @@ var ViewAdapterText = ViewAdapter.Text ={
 			
 			//show
 			if(currentLabel){ 
-				var a = $('<a href='+currentHref+' '+(isfilter?' ':'data-corners="true" data-role="button" data-iconpos="right" data-icon="arrow-r" data-shadow="false"')+'>'+currentLabel+'</a>');
+				var a = $('<a href='+currentHref+' '+(isfilter?' ':'data-corners="true" data-role="button" data-iconpos="right" data-icon="arrow-r" data-mini="true" data-shadow="false"')+'>'+currentLabel+'</a>');
 				var li = $('<li ></li>');
 				if(isfilter){
 					ulContainer.append(li.append(a).append($(bubble)))
@@ -91,7 +91,7 @@ var ViewAdapterText = ViewAdapter.Text ={
 				(option.tiny  ? 'data-inline="true"'              : 'data-icon="arrow-r" data-iconpos="right"') +
 				(option.theme ? 'data-theme="'+option.theme+'"'   : '') +
 				(option.align ? 'style="float:'+option.align+';"' : '') +
-				'data-shadow="false">'+(label==""?href:label) +'</a>'); 
+				'data-shadow="false" data-mini="true">'+(label==""?href:label) +'</a>'); 
 		if( option.prepend)
 			el.prepend(newButton);
 		else 

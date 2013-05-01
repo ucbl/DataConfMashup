@@ -69,6 +69,7 @@
 			    "Home" : {
 					"hash" : "",
 					"view" : "home",
+					"graphView" : "no",
 					"title": "WWW'2012 - publications",
 					"commands" : [ 
 						{
@@ -84,6 +85,7 @@
 			    "qrScan" : {
 					"hash" : "qrcScan",
 					"view" : "qrcScan",
+					"graphView" : "no",
 					"title": "Qr-code scanner",
 					"commands" : [ 
 					]
@@ -91,6 +93,7 @@
 			    "Proceedings-search-by-author" : { 
 					"hash" : "search/by-author/*uri",
 					"view" : "searchFormAuthor",
+					"graphView" : "no",
 					"title": "Search by author",
 					"commands" : [
 					    {
@@ -102,6 +105,7 @@
 			    "Proceedings-search-by-keyword" : { 
 					"hash" : "search/by-keyword/*uri",
 					"view" : "searchFormKeyword",
+					"graphView" : "no",
 					"title": "Search by keywords",
 					"commands" : [
 					    {
@@ -113,6 +117,7 @@
 			    "Proceedings-search-by-title" : { 
 					"hash" : "search/by-title/*uri",
 					"view" : "searchFormTitle",
+					"graphView" : "no",
 					"title": "Search by title",
 					"commands" : [
 					    {
@@ -124,6 +129,7 @@
 				"Event" : { 
 					"hash" : "event/*uri",
 					"view" : "event",
+					"graphView" : "yes",
 					"title": "Search in event",
 					"commands" : [
 						{
@@ -153,6 +159,7 @@
 				"Publication" : { 
 					"hash" : "publication/:name/*uri",
 					"view" : "publication",
+					"graphView" : "yes",
 					"title": "Publication",
 					"commands" : [
 						{
@@ -180,6 +187,7 @@
 				"Author" : {
 					"hash" : "author/:name/*uri",
 					"view" : "author",
+					"graphView" : "yes",
 					"title": "Author",
 					"commands" : [
 						{
@@ -208,6 +216,7 @@
 				"ExternPublication" : {
 					"hash" : "externPublication/*uri",
 					"view" : "externPublication",
+					"graphView" : "yes",
 					"title": "External publication",
 					"commands" : [
 					    {
@@ -223,6 +232,7 @@
 				"Keyword" : {
 					"hash" : "keyword/*uri",
 					"view" : "keyword",
+					"graphView" : "yes",
 					"title": "Keyword",
 					"commands" : [
 					    {
@@ -234,6 +244,7 @@
 				"Organization" : {
 					"hash" : "organization/:name/*uri",
 					"view" : "organization",
+					"graphView" : "yes",
 					"title": "Organization",
 					"commands" : [
 						{

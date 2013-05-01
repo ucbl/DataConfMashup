@@ -3,7 +3,7 @@
 *  License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
 *   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
 *   Description: This file provide simple function to build jquery mobile element such as button or sorted list plus some graph first attempt
-*   Version: 1.1
+*   Version: 1.2
 *   Tags:  Backbone Jquery-ui-mobile Adapter 
 **/
 var ViewAdapter = {
@@ -12,18 +12,18 @@ var ViewAdapter = {
 		ViewAdapter.mode = mode;
 		ViewAdapter.Graph.initSystem();
 	},
-	update : function(template,title,conference,datasources,commands,uri,name){
-		ViewAdapter.currentPage = ViewAdapter.changePage(new AbstractView({templateName :  template ,title : title, model : conference }));
-		ViewAdapter.template = template;
+	update : function(routeItem,title,conference,datasources,uri,name){
+		ViewAdapter.currentPage = ViewAdapter.changePage(new AbstractView({templateName :  routeItem.view ,title : title, model : conference }));
+		ViewAdapter.template = routeItem.view;
+		ViewAdapter.graphView = routeItem.graphView;
 		ViewAdapter.title = title;
 		ViewAdapter.conference = conference;
 		ViewAdapter.datasources = datasources;
-		ViewAdapter.commands = commands;
+		ViewAdapter.commands = routeItem.commands;
 		ViewAdapter.uri = uri;
 		ViewAdapter.name = name;
-		ViewAdapter.initPage();
+		ViewAdapter.initPage(ViewAdapter.graphView);
 		return ViewAdapter.currentPage ;
-		
 	},
 
 	/** Chaning page handling, call the rendering of the page and execute transition **/
@@ -45,11 +45,13 @@ var ViewAdapter = {
 		return $(page.el);
 	},
 	
-	initPage : function (){
+	initPage : function (showButton){
 		
-		if(ViewAdapter.mode == "text"){
-			
-			ViewAdapter.addswitchButton();
+		if(ViewAdapter.mode == "text" || showButton == "no"){
+			if(showButton == "yes"){
+				ViewAdapter.addswitchButton();
+			}
+			ViewAdapter.mode = "text";
 			$.each(ViewAdapter.commands,function(i,commandItem){
 				ViewAdapter.Text.generateContainer(ViewAdapter.currentPage,commandItem.name);	
 			});
@@ -81,11 +83,10 @@ var ViewAdapter = {
 		if(ViewAdapter.mode == "text"){
 			ViewAdapter.mode = "graph";
 		}else{
-			ViewAdapter.Graph.sys.stop();
 			ViewAdapter.mode = "text";
 		}
 		ViewAdapter.currentPage = ViewAdapter.changePage(new AbstractView({templateName :  ViewAdapter.template ,title : ViewAdapter.title, model : ViewAdapter.conference }), "flip");
-		ViewAdapter.initPage();
+		ViewAdapter.initPage(ViewAdapter.graphView);
 		
 		var JSONdata = StorageManager.pullFromStorage(ViewAdapter.uri);
 		$.each(ViewAdapter.commands,function(i,commandItem){

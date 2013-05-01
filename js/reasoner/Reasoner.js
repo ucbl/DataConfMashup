@@ -2,9 +2,9 @@
 *	Copyright <c> Claude Bernard - University Lyon 1 -  2013
 * 	License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
 *   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
-*   Description: This file provide simple function to build jquery mobile element such as button or sorted list plus some graph first attempt
-*   Version: 0.8
-*   Tags:  Backbone Jquery-ui-mobile Adapter Linked-Data Graph html5 canvas
+*   Description: Here is the interface we use to launch function of the reasoner. 
+*   Version: 1.2
+*   Tags:  mobile-reasoning
 **/
 
 var Reasoner = {
@@ -72,7 +72,7 @@ var Reasoner = {
             var arrayChildrenKeyword = KeywordClassJSON.children;
 			console.log("REASONER");
 			
-			console.log(arrayChildrenKeyword);
+			//console.log(arrayChildrenKeyword);
             /* Recommendation for poster 2012 */
             //Reasoner.loadTree(arrayChildrenKeyword,callback); 
 			 // var uriPoster = 'http://data.semanticweb.org/' + keyPosterStorage.replace("recommendation/","");    
