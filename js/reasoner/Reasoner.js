@@ -61,9 +61,9 @@ var Reasoner = {
             //console.log("Recommendation key :"+ strArrKeyword);
            // KeywordStore.arrKeyword = $.parseJSON(strArrKeyword);
             
-                		var ontology = jsw.owl.xml.parseUrl("http://poster.www2012.org/onto/KeywordClasses.owl");
-		Reasoner.reasoner = new jsw.owl.BrandT(ontology); 
-            var classeArray  = Reasoner.reasoner.classHierarchy;
+                	//	var ontology = jsw.owl.xml.parseUrl("http://poster.www2012.org/onto/KeywordClasses.owl");
+		//Reasoner.reasoner = new jsw.owl.BrandT(ontology); 
+          //  var classeArray  = Reasoner.reasoner.classHierarchy;
            // console.log(JSON.stringify(classeArray));
             var ThingClassJSON   = classeArray[0];
             // ThingClasseJSON.name[0]  // http://www.w3.org/2002/07/owl#Thing

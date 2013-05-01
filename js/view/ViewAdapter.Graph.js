@@ -8,7 +8,7 @@
 **/
 var ViewAdapterGraph = ViewAdapter.Graph = { 
    
-    rootNodeLabel : '',
+    rootNodeUri : '',
     nodeLimit : 9,
     nodeCounter : 0,
     theUI : '',
@@ -20,19 +20,26 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 	
 	/** Prepare the canvas the root node and the renderer of the graph
 	* el : The current page identifier
-	* rootNodeLabel : The current root node in use
+	* rootNodeUri : The current root node in use
 	**/
-    initContainer : function(el,rootNodeLabel){
+    initContainer : function(el,rootNodeUri,rootNodeLabel){
 		ViewAdapter.Graph["nodeCounter"]=0;
 		ViewAdapter.Graph.el=el;
-		ViewAdapter.Graph.rootNodeLabel=rootNodeLabel;
+
+		if(rootNodeLabel != undefined){
+			ViewAdapter.Graph.rootNodeUri=rootNodeLabel;
+		}else{
+			ViewAdapter.Graph.rootNodeUri=rootNodeUri;
+		}
+		//ViewAdapter.Graph.rootNodeUri=rootNodeUri;
+		
 
 		ViewAdapter.Graph.canvas = $('<canvas style="clear:both; id="graph">');	
 		el.append(ViewAdapter.Graph.canvas);
 		
 		ViewAdapter.Graph["theUI"] = {nodes:{},edges:{}};
-		ViewAdapter.Graph.theUI.nodes[rootNodeLabel]={color:"red", alpha:1, rootNode:true, alone:true, mass:.5};
-		ViewAdapter.Graph.theUI.edges[rootNodeLabel]={};
+		ViewAdapter.Graph.theUI.nodes[ViewAdapter.Graph.rootNodeUri]={color:"red", alpha:1, rootNode:true, alone:true, mass:.5};
+		ViewAdapter.Graph.theUI.edges[ViewAdapter.Graph.rootNodeUri]={};
 	  
 		 ViewAdapter.Graph.sys.parameters({stiffness:900, repulsion:2000, gravity:true, dt:0.015});
 		ViewAdapter.Graph.sys.renderer = Renderer(ViewAdapter.Graph.canvas);
@@ -62,9 +69,9 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 	/** Add node (clickable box)to the system particule and redraw the graph **/
     addNode : function(label,href){
 		if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
-			var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
+			var rootNodeUri=ViewAdapter.Graph.rootNodeUri;
 			ViewAdapter.Graph.theUI.nodes[label]={color:"#0B614B", fontColor:"#F2F2F2", alpha:0.8,href:href};
-			ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
+			ViewAdapter.Graph.theUI.edges[rootNodeUri][label] = {length:1};
 			ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
 			ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI); 
 		}
@@ -73,9 +80,9 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 	/** Add leaf (not clickable box) to the system particule and redraw the graph **/
     addLeaf : function(label){
 		if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
-			var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
+			var rootNodeUri=ViewAdapter.Graph.rootNodeUri;
 			ViewAdapter.Graph.theUI.nodes[label]={color:"orange", fontColor:"#F2F2F2", alpha:0.7};
-			ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
+			ViewAdapter.Graph.theUI.edges[rootNodeUri][label] = {length:1};
 			ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
 			ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI); 
 		}

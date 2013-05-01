@@ -58,7 +58,7 @@ var ViewAdapter = {
 		}else{
 			ViewAdapter.currentPage.find(".content").empty();
 			ViewAdapter.addswitchButton();
-			ViewAdapter.Graph.initContainer(ViewAdapter.currentPage.find(".content"),ViewAdapter.uri);
+			ViewAdapter.Graph.initContainer(ViewAdapter.currentPage.find(".content"),ViewAdapter.uri,ViewAdapter.name);
 		}
 	},
 	addswitchButton : function (){
