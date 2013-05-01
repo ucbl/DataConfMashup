@@ -9,7 +9,7 @@
 *				RUNTIME:
 *					-> Using the powerfull routing system of backbone, the router catch url changes. If a change occurs, the router execute the action prepared at initialization time
 *					and process the view changes plus the AJAX call.
-*	Version: 1.1				   
+*	Version: 1.2				   
 *   Tags:  BACKBONE, AJAX, ROUTING
 **/
 AppRouter = Backbone.Router.extend({
@@ -68,7 +68,7 @@ AppRouter = Backbone.Router.extend({
 					}
 					 
 					//Appending button and keeping track of new route in case the mode changes
-					var currentPage = ViewAdapter.update(routeItem.view ,title, self.conference, self.datasources,routeItem.commands,uri,name); 
+					var currentPage = ViewAdapter.update(routeItem ,title, self.conference, self.datasources,uri,name); 
 					
 					//We try if informations are in the local storage before call getQuery and executeCommand
 					var JSONdata = StorageManager.pullFromStorage(uri);

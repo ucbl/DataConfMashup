@@ -41,11 +41,12 @@ p{
 }
 
 #textHeader H1{
-
   text-align: center;
-  
 }
 
+#footer{
+	height: 25px!important;
+}
 
 
 
