@@ -183,7 +183,11 @@ var SWDFCommandStore = {
 										  },
 										 "keyword",
 										 parameters.contentEl,
-										 {type:"Node",labelCllbck:function(str){return "Publication : "+str["keyword"];}});
+										 {
+										    type:"Node",
+										    labelCllbck:function(str){return "Publication : "+str["keyword"];},
+										    option:{color:"#3366CC"}
+										 });
 
 					}
 				}
@@ -355,7 +359,7 @@ var SWDFCommandStore = {
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,author){
-							ViewAdapter.Graph.addNode("Author : "+author.authorName,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri));
+							ViewAdapter.Graph.addNode("Author : "+author.authorName,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri),{color:"#000015"});
 						});
 					
 					}
@@ -411,7 +415,7 @@ var SWDFCommandStore = {
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,session){
-							ViewAdapter.Graph.addNode("Sub session : "+session.eventLabel,'#event/'+Encoder.encode(session.eventUri));
+							ViewAdapter.Graph.addNode("Sub session : "+session.eventLabel,'#event/'+Encoder.encode(session.eventUri),{color:"#003399"});
 						});
 					
 					}
@@ -466,7 +470,7 @@ var SWDFCommandStore = {
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,track){
-							ViewAdapter.Graph.addNode("Sub track : "+track.eventLabel,'#event/'+Encoder.encode(track.eventUri));
+							ViewAdapter.Graph.addNode("Sub track : "+track.eventLabel,'#event/'+Encoder.encode(track.eventUri),{color:"#003399"});
 						});
 					
 					}
@@ -718,7 +722,10 @@ var SWDFCommandStore = {
 												  },
 												 "eventLabel",
 												 parameters.contentEl,
-												 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}}); 
+												 {type:"Node",
+												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
+												  option:{color:"#3366CC"},
+												 }); 
 					}
 
 				}
@@ -837,7 +844,9 @@ var SWDFCommandStore = {
 											  },
 											 "sessionEventLabel",
 											 parameters.contentEl,
-											 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];}});
+											 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];},
+												  option:{color:"#3366CC"},
+											 });
 					}
 				}
 			} 
@@ -946,7 +955,7 @@ var SWDFCommandStore = {
 					}else{
 						$.each(parameters.JSONdata, function(i,keyword){
 							
-							ViewAdapter.Graph.addNode("Keyword : "+keyword.keyword,'#keyword/'+Encoder.encode(keyword.keyword));
+							ViewAdapter.Graph.addNode("Keyword : "+keyword.keyword,'#keyword/'+Encoder.encode(keyword.keyword),{color:"#3366CC"});
 						});
 					}
 				}
@@ -1059,7 +1068,7 @@ var SWDFCommandStore = {
 						
 						$.each(parameters.JSONdata, function(i,organization){
 						
-							ViewAdapter.Graph.addNode("Organization : "+organization.OrganizationName,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri));
+							ViewAdapter.Graph.addNode("Organization : "+organization.OrganizationName,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri),{color:"#FF9999"});
 						
 						});
 					
@@ -1110,7 +1119,7 @@ var SWDFCommandStore = {
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,author){
-							ViewAdapter.Graph.addNode("Member : "+author.MemberName,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri));
+							ViewAdapter.Graph.addNode("Member : "+author.MemberName,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri),{color:"#000015"});
 						});
 					
 					}

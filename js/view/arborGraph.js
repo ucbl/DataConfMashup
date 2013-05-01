@@ -46,7 +46,8 @@
           gfx.line(p1, p2, {stroke:"#b2b19d", width:2, alpha:edge.target.data.alpha})
         })
         sys.eachNode(function(node, pt){
-          var w = Math.max(20, 20+gfx.textWidth(node.name)+ (node.data.fontSize?2*(node.data.fontSize):0) )
+        //correctly resize label box following the node.data.fontSize
+          var w = Math.max(20, 20+gfx.textWidth(node.name)+ (node.data.fontSize?((gfx.textWidth(node.name)/5)+node.data.fontSize):0) )
           if (node.data.alpha===0) return
           gfx.rect(pt.x-w/2, pt.y-8, w, 20, 4, {fill:node.data.color, alpha:node.data.alpha})
           gfx.text(node.name, pt.x, pt.y+9, {color:(node.data.fontColor ? node.data.fontColor : "white"), align:"center", font:"Arial", size:(node.data.fontSize ? node.data.fontSize:11)})

@@ -30,7 +30,7 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 		el.append(ViewAdapter.Graph.canvas);
 		
 		  ViewAdapter.Graph["theUI"] = {nodes:{},edges:{}};
-      ViewAdapter.Graph.theUI.nodes[rootNodeLabel]={color:"red", alpha:1, rootNode:true, alone:true, mass:.5};
+      ViewAdapter.Graph.theUI.nodes[rootNodeLabel]={color:"#8F0000", alpha:0.8, rootNode:true, alone:true, mass:.5};
       ViewAdapter.Graph.theUI.edges[rootNodeLabel]={};
 	  
 		 ViewAdapter.Graph.sys.parameters({stiffness:900, repulsion:2000, gravity:true, dt:0.015});
@@ -40,21 +40,7 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 		$(ViewAdapter.Graph.sys.renderer).on('navigate',function(event,data){
 			if(data.href!=undefined)document.location.href = data.href;
 		
-		});
-		//arbor.js 
-		//ViewAdapter.Graph.sys.renderer.gfx.clear();
-		
-		
-		console.log("-----GRAPH - INIT ------"); 
-	
-		
-		
-		//ViewAdapter.Graph.sys.renderer.init(ViewAdapter.Graph.sys);
-	//	 ViewAdapter.Graph.sys.addNode(rootNodeLabel,{color:"red", alpha:1, rootNode:true, alone:true, mass:.5});
-		//ViewAdapter.Graph.sys.parameters({friction : '1.0'});
-	
-		//move to page
-
+		});  
     },
 
 	appendList : function(dataList,href,labelProperty,appendToDiv,graphPt){
@@ -69,7 +55,8 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 				//graph node
 				if(graphPt){
 					var nodeLabel = graphPt.labelCllbck(currentData);
-					 ViewAdapter.Graph.addNode(nodeLabel,currentHref);
+					
+					 ViewAdapter.Graph.addNode(nodeLabel,currentHref,graphPt.option);
 				}  
 			}
 		 
@@ -78,25 +65,34 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 	},
     
     //generate clickable node
-    addNode : function(label,href){
-		if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
-		console.log(ViewAdapter.Graph.theUI);
-			var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
-        ViewAdapter.Graph.theUI.nodes[label]={color:"#0B614B", fontColor:"#F2F2F2", alpha:0.8,href:href};
-        ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
-        ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
-       ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI); 
-			
-		}
+    addNode : function(label,href,option){
+		  if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
+          if(!option)var option ={}; 
+			    var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
+          ViewAdapter.Graph.theUI.nodes[label]={color     : (option.color?option.color:"#8DE539"), 
+                                                fontColor : (option.fontColor?option.fontColor:"#F2F2F2"), 
+                                                fontSize : (option.fontSize?option.fontSize:14), 
+                                                alpha     : (option.alpha?option.alpha:0.9),
+                                                href      : href
+                                               };
+          ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
+          ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
+          ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);  
+		  }
     },
     
     //generate info node
-    addLeaf : function(label){
+    addLeaf : function(label,option){
 	
 		if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
-			console.log(ViewAdapter.Graph.theUI);
-		 var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
-        ViewAdapter.Graph.theUI.nodes[label]={color:"orange", fontColor:"#F2F2F2", alpha:0.7};
+      if(!option)var option ={}; 
+      
+		  var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
+			var rootNodeLabel=ViewAdapter.Graph.rootNodeLabel;
+        ViewAdapter.Graph.theUI.nodes[label]={color     : (option.color?option.color:"orange"), 
+                                              fontColor : (option.fontColor?option.fontColor:"#F2F2F2"), 
+                                              alpha     : (option.alpha?option.alpha:0.5),
+                                             };
         ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
         ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
         ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI); 
