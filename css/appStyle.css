@@ -43,12 +43,28 @@ p{
 #textHeader H1{
   text-align: center;
 }
+ .ui-btn-inner{
+	padding-top : .35em!important;
+	padding-bottom : .3em!important;
 
-#footer{
-	height: 25px!important;
 }
 
+.ui-btn-text{
+	padding-top : 0em!important;
+	padding-bottom : 0em!important;
 
+}
+.ui-li{
+	padding-top : 0em!important;
+	padding-bottom : 0em!important;
+
+}
+
+ #footer .ui-btn-inner{
+	padding-top : .2em!important;
+	padding-bottom : .2em!important;
+
+}
 
 
 

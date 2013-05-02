@@ -27,7 +27,6 @@ var StorageAnalyser = {
 	
 	getMostViewEntity : function(){
 		keywordStore = StorageManager.get("keyword");
-		console.log(keywordStore);
 		var maxOccurKeyword = 0;
 		var maxOccurKeywordLabel = "";
 		$.each(keywordStore, function(i,keyword){
