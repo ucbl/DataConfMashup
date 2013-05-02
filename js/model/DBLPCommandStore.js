@@ -36,7 +36,7 @@
 				JSONToken.publiUri =   $(this).find("[name = publiUri]").text();			
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getAuthorPublications",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getAuthorPublications",JSONfile);
 			return JSONfile;
 		},
 		
@@ -50,7 +50,7 @@
 													  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},}, 
 													 "publiTitle",
 													 parameters.contentEl,
-													 {type:"Node",labelCllbck:function(str){return "OtherPubli : "+str["publiTitle"];}}
+													 {type:"Node",labelCllbck:function(str){return "External paper : "+str["publiTitle"];}}
 													 );
 					}else{
 						ViewAdapter.Graph.appendList(parameters.JSONdata,
@@ -58,7 +58,7 @@
 													  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},}, 
 													 "publiTitle",
 													 parameters.contentEl,
-													 {type:"Node",labelCllbck:function(str){return "OtherPubli : "+str["publiTitle"];}}
+													 {type:"Node",labelCllbck:function(str){return "External paper : "+str["publiTitle"];}}
 													 );
 					
 					}
@@ -90,7 +90,7 @@
 				JSONToken.authorUri =   $(this).find("[name = authorUri]").text();			
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getExternPublicationAuthors",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getExternPublicationAuthors",JSONfile);
 			return JSONfile;	
 		},
 		
@@ -145,7 +145,7 @@
 				JSONToken.publiLink   = $(this).find("[name = publiLink]").text();
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getExternPublicationInfo",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getExternPublicationInfo",JSONfile);
 			return JSONfile;
 		},
 		

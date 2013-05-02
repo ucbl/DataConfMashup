@@ -38,7 +38,7 @@ AppRouter = Backbone.Router.extend({
 			StorageManager.initialize();
 			//Initialize ViewAdapter to text mode
 			ViewAdapter.initialize("text");
-			//Initialize Reasonner with ontologie
+			//Initialize Reasonner with the keywords ontology
 			Reasoner.initialize('http://poster.www2012.org/onto/KeywordClasses.owl');
 			//Preparing all the routes and their actions
 		    $.each(this.routes,function(i,routeItem){
@@ -71,7 +71,7 @@ AppRouter = Backbone.Router.extend({
 					var currentPage = ViewAdapter.update(routeItem ,title, self.conference, self.datasources,uri,name); 
 					
 					//We try if informations are in the local storage before call getQuery and executeCommand
-					var JSONdata = StorageManager.pullFromStorage(uri);
+					var JSONdata = StorageManager.pullCommandFromStorage(uri);
 				  
 					//Prepare AJAX call according to the commands declared
 					$.each(routeItem.commands,function(i,commandItem){
@@ -102,7 +102,9 @@ AppRouter = Backbone.Router.extend({
 					});
 					
 					ViewAdapter.generateJQMobileElement();
-				
+					console.log("most viewed keyword");
+					StorageAnalyser.getMostViewKeyword();
+					
 				});
 			});
 	

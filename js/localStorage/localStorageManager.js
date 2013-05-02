@@ -2,10 +2,10 @@
 *	Copyright <c> Claude Bernard - University Lyon 1 -  2013
 * 	License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
 *   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LE PEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
-*   Description: This object contains method for save and pick JSON file in local storage.
-*				 The method pushToStorage(uri, commandName,JSONdata) check if data doesn't exist in local storage, in that case save data JSONData in paramaters with the key,id.
-*				 The methode pullFromStorage(uri, commandName,id) look for the data with the Key ,id .If something exist, return the JSONFile corresponding to the key, else return undefined.
-*   Version: 1.1
+*   Description: This object contains method for save and pick JSON file in local storage/in a local javascript object if not supported.
+*				 The method pushCommandToStorage(uri, commandName,JSONdata) check if data doesn't exist in local storage, in that case save data JSONData in paramaters with the key,id.
+*				 The methode pullCommandFromStorage(uri, commandName,id) look for the data with the Key ,id .If something exist, return the JSONFile corresponding to the key, else return undefined.
+*   Version: 1.2
 *   Tags:  JSON, Local Storage
 **/
 
@@ -13,12 +13,19 @@ var StorageManager = {
 
 	initialize : function(){
 		if(!$.jStorage.storageAvailable()){
-			this.store = {};
+			this.commandStore = {};
+			this.keywordStore = {};
+		}else{
+			if(!StorageManager.get("keyword")){
+				StorageManager.set("keyword",{});
+			}
 		}
-		this.store = [];
+		//this.commandStore = [];
 		this.maxSize = 50;
+		
 	},
-	pushToStorage : function (uri,commandName, JSONdata){
+	
+	pushCommandToStorage : function (uri,commandName, JSONdata){
 		var dataContainer = StorageManager.get(uri);
 		
 		if(dataContainer != null){
@@ -26,16 +33,15 @@ var StorageManager = {
 				dataContainer[commandName] = JSONdata;
 				StorageManager.controlSize();
 				StorageManager.set(uri,dataContainer);
-				
-			}	
+			}
 		}else{
 			var newElement = {};
 			newElement[commandName] = JSONdata;
+			//newElement.cpt = 0;
 			StorageManager.set(uri,newElement);
 		}
 	},
-	pullFromStorage : function (uri){
-        
+	pullCommandFromStorage : function (uri){
 		var dataContainer = StorageManager.get(uri);
 		if(dataContainer != null){
 			return dataContainer;
@@ -43,23 +49,48 @@ var StorageManager = {
 		    return null;
 		}
 	},
-	set : function(uri,dataContainer){
-		if(this.store !== undefined){
-			this.store[uri] = dataContainer;
-		}else{
-			$.jStorage.set(uri,JSON.stringify(dataContainer));
+	pushKeywordToStorage : function (keyword){
+		var dataContainer = StorageManager.get("keyword");
+		console.log(dataContainer);
+		if(dataContainer != null){
+			if(!dataContainer.hasOwnProperty(keyword)){
+				dataContainer[keyword] = {};
+				dataContainer[keyword].cpt = 0;
+				dataContainer[keyword].label = keyword;
+				
+			}else{
+				dataContainer[keyword].cpt += 1;
+			}
+			StorageManager.set("keyword",dataContainer);
 		}
 	},
-	get : function(uri){
-		if(this.store !== undefined){
-			return this.store[uri];
+	pullKeywordFromStorage : function (){
+		var dataContainer = StorageManager.get("keyword");
+		if(dataContainer != null){
+			return keyword;
 		}else{
-			return JSON.parse($.jStorage.get(uri));
+		    return null;
+		}
+		
+	},
+	
+	set : function(key,dataContainer){
+		if(this.commandStore !== undefined){
+			this.commandStore[key] = dataContainer;
+		}else{
+			$.jStorage.set(key,JSON.stringify(dataContainer));
+		}
+	},
+	get : function(key){
+		if(this.commandStore !== undefined){
+			return this.commandStore[key];
+		}else{
+			return JSON.parse($.jStorage.get(key));
 		}
 	},
 	controlSize : function (){
-		if(this.store !== undefined){
-			if(this.store.length > this.maxSize ){
+		if(this.commandStore !== undefined){
+			if(this.commandStore.length > this.maxSize ){
 			
 			
 			}

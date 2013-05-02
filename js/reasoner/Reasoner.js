@@ -8,19 +8,10 @@
 **/
 
 var Reasoner = {
-    key:'recommendationStorage',
-    arrKeyword:{},
-    
-    arrPosterR:[{}],
-    numPosterRCall:0,        
-    numPaperRCall:0,  
-    initialize : function(ontoUrl){
-        /*$.jStorage.set(KeywordStore.key,'');
-         var strArrKeyword = $.jStorage.get(KeywordStore.key);
-         console.log(strArrKeyword);*/
-		 
-		var ontology = jsw.owl.xml.parseUrl(ontoUrl);
-		Reasoner.reasoner = new jsw.owl.BrandT(ontology); 
+
+    initialize : function(ontoUrl){		 
+		Reasoner.ontology = jsw.owl.xml.parseUrl(ontoUrl);
+		Reasoner.reasoner = new jsw.owl.BrandT(Reasoner.ontology); 
     },
     set:function(keywordClass,keywordLabel){
         if(!($.jStorage.get(KeywordStore.key))){
@@ -61,8 +52,9 @@ var Reasoner = {
             //console.log("Recommendation key :"+ strArrKeyword);
            // KeywordStore.arrKeyword = $.parseJSON(strArrKeyword);
             
-                	//	var ontology = jsw.owl.xml.parseUrl("http://poster.www2012.org/onto/KeywordClasses.owl");
-		//Reasoner.reasoner = new jsw.owl.BrandT(ontology); 
+            var ontology = jsw.owl.xml.parseUrl("http://poster.www2012.org/onto/KeywordClasses.owl");
+		    Reasoner.reasoner = new jsw.owl.BrandT(ontology); 
+			
           //  var classeArray  = Reasoner.reasoner.classHierarchy;
            // console.log(JSON.stringify(classeArray));
             var ThingClassJSON   = classeArray[0];

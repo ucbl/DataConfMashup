@@ -26,7 +26,7 @@ ions on. After calling a command, the results are parsed with it own callback fu
 			var JSONToken  = {};
 			JSONToken.authorHomepage  = dataJSON.responseData.results[0].url;
 			JSONfile[0] = JSONToken;
-			StorageManager.pushToStorage(currentUri,"getAuthorPersonalPage",JSONfile);		
+			StorageManager.pushCommandToStorage(currentUri,"getAuthorPersonalPage",JSONfile);		
 			return JSONfile;
 		},
 		

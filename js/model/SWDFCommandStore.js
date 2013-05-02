@@ -45,7 +45,7 @@ var SWDFCommandStore = {
 					JSONToken.authorName =  $(this).find("[name = authorName]").text(); 	
 					JSONfile[i] = JSONToken;
 				});
-				StorageManager.pushToStorage(currentUri,"getAllAuthors",JSONfile);
+				StorageManager.pushCommandToStorage(currentUri,"getAllAuthors",JSONfile);
 				return JSONfile;
 			}
 		},
@@ -102,7 +102,7 @@ var SWDFCommandStore = {
 				JSONToken.publiTitle =  $(this).find("[name = publiTitle]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getAllTitle",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getAllTitle",JSONfile);
 			return JSONfile;
 		},
 		
@@ -159,7 +159,7 @@ var SWDFCommandStore = {
 				JSONToken.keyword =  $(this).find("[name = keyword]").text();	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getAllKeyword",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getAllKeyword",JSONfile);
 			return JSONfile;
 		},
 		
@@ -183,7 +183,11 @@ var SWDFCommandStore = {
 										  },
 										 "keyword",
 										 parameters.contentEl,
-										 {type:"Node",labelCllbck:function(str){return "Publication : "+str["keyword"];}});
+										 {
+										    type:"Node",
+										    labelCllbck:function(str){return "Publication : "+str["keyword"];},
+										    option:{color:"#3366CC"}
+										 });
 
 					}
 				}
@@ -217,7 +221,7 @@ var SWDFCommandStore = {
 				JSONToken.publiUri =  $(this).find("[name = publiUri]").text();				
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getAuthorsProceedings",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getAuthorsProceedings",JSONfile);
 			return JSONfile;
 		},
 		ViewCallBack : function(parameters){
@@ -271,7 +275,7 @@ var SWDFCommandStore = {
 				JSONToken.publiAbstract =  $(this).find("[name = publiAbstract]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getPublicationInfo",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getPublicationInfo",JSONfile);
 			return JSONfile;
 		},
 		
@@ -340,7 +344,7 @@ var SWDFCommandStore = {
 				JSONToken.authorName =  $(this).find("[name = authorName]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getPublicationAuthor",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getPublicationAuthor",JSONfile);
 			return JSONfile;
 		},
 		
@@ -355,7 +359,7 @@ var SWDFCommandStore = {
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,author){
-							ViewAdapter.Graph.addNode("Author : "+author.authorName,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri));
+							ViewAdapter.Graph.addNode("Author : "+author.authorName,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri),{color:"#000015"});
 						});
 					
 					}
@@ -396,7 +400,7 @@ var SWDFCommandStore = {
 				JSONToken.eventLabel =  $(this).find("[name = eventLabel]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getSessionSubEvent",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getSessionSubEvent",JSONfile);
 			return JSONfile;
 		},
 		
@@ -411,7 +415,7 @@ var SWDFCommandStore = {
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,session){
-							ViewAdapter.Graph.addNode("Sub session : "+session.eventLabel,'#event/'+Encoder.encode(session.eventUri));
+							ViewAdapter.Graph.addNode("Sub session : "+session.eventLabel,'#event/'+Encoder.encode(session.eventUri),{color:"#003399"});
 						});
 					
 					}
@@ -451,7 +455,7 @@ var SWDFCommandStore = {
 				JSONToken.eventLabel =  $(this).find("[name = eventLabel]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getTrackSubEvent",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getTrackSubEvent",JSONfile);
 			return JSONfile;
 		},
 		
@@ -466,7 +470,7 @@ var SWDFCommandStore = {
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,track){
-							ViewAdapter.Graph.addNode("Sub track : "+track.eventLabel,'#event/'+Encoder.encode(track.eventUri));
+							ViewAdapter.Graph.addNode("Sub track : "+track.eventLabel,'#event/'+Encoder.encode(track.eventUri),{color:"#003399"});
 						});
 					
 					}
@@ -522,7 +526,7 @@ var SWDFCommandStore = {
 				}
 			
 			});
-			StorageManager.pushToStorage(currentUri,"getEvent",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getEvent",JSONfile);
 			return JSONfile;
 			
 		}, 
@@ -631,7 +635,7 @@ var SWDFCommandStore = {
 				JSONToken.publiTitle =  $(this).find("[name = publiTitle]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getEventPublications",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getEventPublications",JSONfile);
 			return JSONfile;
 		},
 		ViewCallBack : function(parameters){
@@ -691,7 +695,7 @@ var SWDFCommandStore = {
 				JSONToken.eventUri =  $(this).find("[name = eventUri]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getConferenceMainTrackEvent",JSONfile);
 			return JSONfile;
 			
 		},
@@ -716,7 +720,10 @@ var SWDFCommandStore = {
 												  },
 												 "eventLabel",
 												 parameters.contentEl,
-												 {type:"Node",labelCllbck:function(str){return "Track : "+str["eventLabel"];}}); 
+												 {type:"Node",
+												  labelCllbck:function(str){return "Track : "+str["eventLabel"];},
+												  option:{color:"#3366CC"},
+												 }); 
 					}
 
 				}
@@ -751,7 +758,7 @@ var SWDFCommandStore = {
 				JSONToken.eventUri =  $(this).find("[name = eventUri]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getEventRelatedPublication",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getEventRelatedPublication",JSONfile);
 			return JSONfile;
 		},
 			
@@ -760,7 +767,7 @@ var SWDFCommandStore = {
 				if(_.size(parameters.JSONdata) > 0 ){
 					if(ViewAdapter.mode == "text"){
 					
-						parameters.contentEl.append($('<h2>Related Sessions</h2>')); 
+						parameters.contentEl.append($('<h2>Sessions</h2>')); 
 						ViewAdapter.Text.appendList(parameters.JSONdata,
 											 {baseHref:'#event/',
 											  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
@@ -809,7 +816,7 @@ var SWDFCommandStore = {
 				JSONToken.sessionEventLabel =  $(this).find("[name = sessionEventLabel]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getConferenceMainSessionEvent",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getConferenceMainSessionEvent",JSONfile);
 			return JSONfile;
 		},
 		
@@ -835,7 +842,9 @@ var SWDFCommandStore = {
 											  },
 											 "sessionEventLabel",
 											 parameters.contentEl,
-											 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];}});
+											 {type:"Node",labelCllbck:function(str){return "Track : "+str["sessionEvent"];},
+												  option:{color:"#3366CC"},
+											 });
 					}
 				}
 			} 
@@ -869,7 +878,7 @@ var SWDFCommandStore = {
 				JSONToken.eventUri =  $(this).find("[name = eventUri]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getConferenceKeynoteEvent",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getConferenceKeynoteEvent",JSONfile);
 			return JSONfile;
 		},
 			
@@ -929,7 +938,7 @@ var SWDFCommandStore = {
 				JSONToken.keyword =  $(this).find("[name = keyword]").text();
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getPublicationKeywords",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getPublicationKeywords",JSONfile);
 			return JSONfile;
 		},
 		
@@ -939,12 +948,13 @@ var SWDFCommandStore = {
 					if(ViewAdapter.mode == "text"){
 						parameters.contentEl.append($('<h2>Keywords</h2> '));
 						$.each(parameters.JSONdata, function(i,keyword){
+							StorageManager.pushKeywordToStorage(keyword.keyword);
 							ViewAdapter.Text.appendButton(parameters.contentEl,'#keyword/'+Encoder.encode(keyword.keyword),keyword.keyword,{tiny:true});
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,keyword){
 							
-							ViewAdapter.Graph.addNode("Keyword : "+keyword.keyword,'#keyword/'+Encoder.encode(keyword.keyword));
+							ViewAdapter.Graph.addNode("Keyword : "+keyword.keyword,'#keyword/'+Encoder.encode(keyword.keyword),{color:"#3366CC"});
 						});
 					}
 				}
@@ -978,7 +988,7 @@ var SWDFCommandStore = {
 				JSONToken.publiTitle =  $(this).find("[name = publiTitle]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getPublicationsByKeyword",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getPublicationsByKeyword",JSONfile);
 			return JSONfile;
 		},
 		
@@ -1038,7 +1048,7 @@ var SWDFCommandStore = {
 				JSONToken.authorName =  $(this).find("[name = authorName]").text();
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getAuthorOrganization",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getAuthorOrganization",JSONfile);
 			return JSONfile;
 		},
 		
@@ -1057,7 +1067,7 @@ var SWDFCommandStore = {
 						
 						$.each(parameters.JSONdata, function(i,organization){
 						
-							ViewAdapter.Graph.addNode("Organization : "+organization.OrganizationName,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri));
+							ViewAdapter.Graph.addNode("Organization : "+organization.OrganizationName,'#organization/'+Encoder.encode(organization.OrganizationName)+'/'+Encoder.encode(organization.OrganizationUri),{color:"#FF9999"});
 						
 						});
 					
@@ -1092,7 +1102,7 @@ var SWDFCommandStore = {
 				JSONToken.MemberUri =  $(this).find("[name = MemberUri]").text(); 	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushToStorage(currentUri,"getOrganization",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getOrganization",JSONfile);
 			return JSONfile;
 		},
 		
@@ -1108,7 +1118,7 @@ var SWDFCommandStore = {
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,author){
-							ViewAdapter.Graph.addNode("Member : "+author.MemberName,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri));
+							ViewAdapter.Graph.addNode("Member : "+author.MemberName,'#author/'+Encoder.encode(author.MemberName)+'/'+Encoder.encode(author.MemberUri),{color:"#000015"});
 						});
 					
 					}

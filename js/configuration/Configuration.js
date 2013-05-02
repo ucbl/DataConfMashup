@@ -54,7 +54,7 @@
 					"commands" : "conferenceDatasourceCommands",
 				},
 				"DataPaperDatasource" : {
-					"uri" : "http://dataconf.liris.cnrs.fr:5984/datapaper/_design/public/_view/by_all",
+					"uri" : "http://dataconf.liris.cnrs.fr:5984/datapaper/_design/public/_view/by_type",
 					"crossDomainMode" : "JSONP",
 					"commands" : DPCommandStore, 
 				}
@@ -167,6 +167,10 @@
 							"name" : "getPublicationInfo",
 						},
 						{
+							"datasource" : "DataPaperDatasource",
+							"name" : "getDataPaperRessource",
+						},
+						{
 							"datasource" : "SemanticWebConferenceDatasource",
 							"name" : "getPublicationAuthor",
 						},	
@@ -178,10 +182,6 @@
 							"datasource" : "SemanticWebConferenceDatasource",
 							"name" : "getEventRelatedPublication",
 						},
-						{
-							"datasource" : "DataPaperDatasource",
-							"name" : "getDataPaper",
-						} 
 					]
 				},
 				"Author" : {
@@ -190,6 +190,14 @@
 					"graphView" : "yes",
 					"title": "Author",
 					"commands" : [
+						{
+							"datasource" : "DataPaperDatasource",
+							"name" : "getDataPaperAuthor",
+						},
+						{
+							"datasource" : "DataPaperDatasource",
+							"name" : "getDataPaperRessource",
+						},
 						{
 							"datasource" : "GoogleDataSource",
 							"name" : "getAuthorPersonalPage",
@@ -206,10 +214,7 @@
 							"datasource" : "DblpDatasource",
 							"name" : "getAuthorPublications",
 						},
-						{
-							"datasource" : "DataPaperDatasource",
-							"name" : "getDataPaper",
-						} 
+						 
 						
 					]
 				},

@@ -32,7 +32,7 @@
 			}
 			JSONfile[0] = JSONToken;
 		
-			StorageManager.pushToStorage(currentUri,"getResultOrganization",JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getResultOrganization",JSONfile);
 			return JSONfile;									
 		},
 		

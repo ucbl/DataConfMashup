@@ -2,9 +2,10 @@
 * Copyright <c> Claude Bernard - University Lyon 1 -  2013
 *  License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
 *   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
-*   Description: This file provide simple function to build jquery mobile element such as button or sorted list plus some graph first attempt
+*   Description: This object is a sort of view conrollers, it is in charge of changing the page and the switch between the two available view (graph or text)
+*                It is directly connected to the ViewAdapter.Graph and ViewAdapter.Text on which it will trigger event in right order.
 *   Version: 1.2
-*   Tags:  Backbone Jquery-ui-mobile Adapter 
+*   Tags:  arborjs   
 **/
 var ViewAdapter = {
 
@@ -88,23 +89,18 @@ var ViewAdapter = {
 		ViewAdapter.currentPage = ViewAdapter.changePage(new AbstractView({templateName :  ViewAdapter.template ,title : ViewAdapter.title, model : ViewAdapter.conference }), "flip");
 		ViewAdapter.initPage(ViewAdapter.graphView);
 		
-		var JSONdata = StorageManager.pullFromStorage(ViewAdapter.uri);
+		var JSONdata = StorageManager.pullCommandFromStorage(ViewAdapter.uri);
 		$.each(ViewAdapter.commands,function(i,commandItem){
 		
 			var currentDatasource = ViewAdapter.datasources[commandItem.datasource];
 			var currentCommand    = currentDatasource.commands[commandItem.name];
-			
-			
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty(commandItem.name)){
-					
 					currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name],contentEl : ViewAdapter.currentPage.find("#"+commandItem.name), name : ViewAdapter.name});
 				}
 			}
 		});
-		
 		ViewAdapter.generateJQMobileElement();
-		
 	},
 	
 	generateJQMobileElement : function(){

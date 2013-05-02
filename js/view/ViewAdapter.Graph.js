@@ -38,8 +38,9 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 		el.append(ViewAdapter.Graph.canvas);
 		
 		ViewAdapter.Graph["theUI"] = {nodes:{},edges:{}};
-		ViewAdapter.Graph.theUI.nodes[ViewAdapter.Graph.rootNodeUri]={color:"red", alpha:1, rootNode:true, alone:true, mass:.5};
+		ViewAdapter.Graph.theUI.nodes[ViewAdapter.Graph.rootNodeUri]={color:"#8F0000", alpha:0.8, rootNode:true, alone:true, mass:.5};
 		ViewAdapter.Graph.theUI.edges[ViewAdapter.Graph.rootNodeUri]={};
+
 	  
 		 ViewAdapter.Graph.sys.parameters({stiffness:900, repulsion:2000, gravity:true, dt:0.015});
 		ViewAdapter.Graph.sys.renderer = Renderer(ViewAdapter.Graph.canvas);
@@ -53,38 +54,60 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 	
 	/** Parsing of a result list **/
 	appendList : function(dataList,href,labelProperty,appendToDiv,graphPt){
-		if(!href) var href={};
-			$.each(dataList, function(i,currentData){
-				var currentHref=href.baseHref+href.hrefCllbck(currentData);
-				var currentLabel=currentData[labelProperty];
-				if(currentLabel){
-					if(graphPt){
-						var nodeLabel = graphPt.labelCllbck(currentData);
-						 ViewAdapter.Graph.addNode(nodeLabel,currentHref);
-					}  
-				}
-		   });
+ 
+	if(!href) var href={};
+		$.each(dataList, function(i,currentData){
+			var currentHref=href.baseHref+href.hrefCllbck(currentData);
+			var currentLabel=currentData[labelProperty];
+	    
+			//show
+			if(currentLabel){
+				//graph node
+				if(graphPt){
+					var nodeLabel = graphPt.labelCllbck(currentData);
+					
+					 ViewAdapter.Graph.addNode(nodeLabel,currentHref,graphPt.option);
+				}  
+			}
+		 
+		 
+	   });//end each  
 	},
 
-	/** Add node (clickable box)to the system particule and redraw the graph **/
-    addNode : function(label,href){
+    
+    //generate clickable node
+    addNode : function(label,href,option){
 		if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
-			var rootNodeUri=ViewAdapter.Graph.rootNodeUri;
-			ViewAdapter.Graph.theUI.nodes[label]={color:"#0B614B", fontColor:"#F2F2F2", alpha:0.8,href:href};
-			ViewAdapter.Graph.theUI.edges[rootNodeUri][label] = {length:1};
+		if(!option)var option ={}; 
+			var rootNodeLabel=ViewAdapter.Graph.rootNodeUri;
+			ViewAdapter.Graph.theUI.nodes[label]={color     : (option.color?option.color:"#53CF29"), 
+											fontColor : (option.fontColor?option.fontColor:"#F2F2F2"), 
+											fontSize : (option.fontSize?option.fontSize:14), 
+											alpha     : (option.alpha?option.alpha:0.9),
+											href      : href
+											   };
+			ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
 			ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
-			ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI); 
+			ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI);  
 		}
     },
     
-	/** Add leaf (not clickable box) to the system particule and redraw the graph **/
-    addLeaf : function(label){
+    //generate info node
+    addLeaf : function(label,option){
+	
 		if(ViewAdapter.Graph.nodeCounter<=ViewAdapter.Graph.nodeLimit){
-			var rootNodeUri=ViewAdapter.Graph.rootNodeUri;
-			ViewAdapter.Graph.theUI.nodes[label]={color:"orange", fontColor:"#F2F2F2", alpha:0.7};
-			ViewAdapter.Graph.theUI.edges[rootNodeUri][label] = {length:1};
+
+		if(!option)var option ={}; 
+
+			var rootNodeLabel=ViewAdapter.Graph.rootNodeUri;
+			ViewAdapter.Graph.theUI.nodes[label]={color     : (option.color?option.color:"orange"), 
+											  fontColor : (option.fontColor?option.fontColor:"#F2F2F2"), 
+											  alpha     : (option.alpha?option.alpha:0.5),
+											 };
+			ViewAdapter.Graph.theUI.edges[rootNodeLabel][label] = {length:1};
 			ViewAdapter.Graph["nodeCounter"]=ViewAdapter.Graph.nodeCounter+1;
 			ViewAdapter.Graph.sys.merge(ViewAdapter.Graph.theUI); 
+     
 		}
     }, 
      
