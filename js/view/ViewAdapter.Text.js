@@ -39,20 +39,17 @@ var ViewAdapterText = ViewAdapter.Text ={
 
 		var currentRank=0,counter=1;
 
-		var bubble= option.count  ?   '<span class="ui-li-count">1</span>'    :   ''  ;  
 		var ulContainer = $('<ul  id="SearchByAuthorUl" data-role="listview"'+ 
-						  (option.autodividers ? 'data-autodividers="true"':'')+
+						 // (option.autodividers ? 'data-autodividers="true"':'')+
 						  (isfilter?'data-filter="true" ':'')+
 						  'data-shadow="false"'+
-						  'data-filter-placeholder="filter ..." class="ui-listview ui-corner-all"> ');
-		
+						  'data-filter-placeholder="filter ..." class="ui-listview"> ');
 		$.each(dataList, function(i,currentData){
 			var currentHref=href.baseHref+href.hrefCllbck(currentData);
 			var currentLabel=currentData[labelProperty];
 	   
 			//count
 			if(option.count && i!=0 ){
-			
 				var lastData =ulContainer.find('> li').eq(currentRank-1).children('a'); 
 				
 				if(currentLabel.replace(counter,'')==lastData.text().replace(counter,'')){ 
@@ -66,9 +63,9 @@ var ViewAdapterText = ViewAdapter.Text ={
 			//show
 			if(currentLabel){ 
 				var a = $('<a href='+currentHref+' '+(isfilter?' ':'data-corners="true" data-role="button" data-iconpos="right" data-icon="arrow-r" data-mini="true" data-shadow="false"')+'>'+currentLabel+'</a>');
-				var li = $('<li ></li>');
+				var li = $('<li></li>');
 				if(isfilter){
-					ulContainer.append(li.append(a).append($(bubble)))
+					ulContainer.append(li.append(a));
 				}else{
 					appendToDiv.append(a);
 				}   
@@ -98,6 +95,94 @@ var ViewAdapterText = ViewAdapter.Text ={
 			el.append(newButton);
 		return newButton;
 	}
+	
+	
+		/** function appendList :
+	*  append filter list to current view using '$("[data-role = page]").find(".content")' selector (backbone)
+	* @param dataList : result obj
+	* @param baseHref : string url pattern for dynamic link generation (i.e. "#publication/")
+	* @param hrefCllbck : parsing function to get href
+	* @param labelProperty : string pattern to match with sparql result 'binding[name="'+bindingName+'"]'
+	* @param optional option : object {
+	*         autodividers : boolean add jquerymobileui autodividers
+	*         count : boolean add count support for sparql endpoint 1.0 : require "ORDER BY ASC(?bindingName)" in the sparql query.
+	*         parseUrl : parsing lat function => " parseUrl:function(url){return url.replace('foo',"")}
+	*         show : array of object {  key=bindingName => Shown 'binding[name="'+bindingName+'"]'
+	*             alt : binding name if label is empty
+	*             parseAlt : parsing alt function (see parseUrl param)
+	*          
+	*/ 
+	/*appendListAutocomplete : function(){
+
+		var ulContainer = $('<ul  id="SearchByAuthorUl" data-role="listview"'+ 
+						  (option.autodividers ? 'data-autodividers="true"':'')+
+						  (isfilter?'data-filter="true" ':'')+
+						  'data-shadow="false"'+
+						  'data-filter-placeholder="filter ..." class="ui-listview ui-corner-all"> ');
+						  
+						  
+		ulContainer.on( "listviewbeforefilter", function ( e, data ) {
+				var $ul = $( this ),
+					$input = $( data.input ),
+					value = $input.val(),
+					html = "";
+				$ul.html( "" );
+				if ( value && value.length > 2 ) {
+					$ul.html( "<li><div class='ui-loader'><span class='ui-icon ui-icon-loading'></span></div></li>" );
+					$ul.listview( "refresh" );
+					$.ajax({
+						url: "http://gd.geobytes.com/AutoCompleteCity",
+						dataType: "jsonp",
+						crossDomain: true,
+						data: {
+							q: $input.val()
+						}
+					})
+					.then( function ( response ) {
+						$.each( response, function ( i, val ) {
+							html += "<li>" + val + "</li>";
+						});
+						$ul.html( html );
+						$ul.listview( "refresh" );
+						$ul.trigger( "updatelayout");
+					});
+				}
+		});
+		/*$.each(dataList, function(i,currentData){
+			var currentHref=href.baseHref+href.hrefCllbck(currentData);
+			var currentLabel=currentData[labelProperty];
+	   
+			//count
+			if(option.count && i!=0 ){
+			
+				var lastData =ulContainer.find('> li').eq(currentRank-1).children('a'); 
+				
+				if(currentLabel.replace(counter,'')==lastData.text().replace(counter,'')){ 
+					//increment bubble
+					counter=parseInt(ulContainer.find(' li:last-child span').html())+1;   
+					ulContainer.find(' li:last-child span').html(counter);
+					currentLabel=false;
+				}else{counter=1;}
+			}
+			
+			//show
+			if(currentLabel){ 
+				var a = $('<a href='+currentHref+' '+(isfilter?' ':'data-corners="true" data-role="button" data-iconpos="right" data-icon="arrow-r" data-mini="true" data-shadow="false"')+'>'+currentLabel+'</a>');
+				var li = $('<li></li>');
+				if(isfilter){
+					ulContainer.append(li.append(a).append($(bubble)))
+				}else{
+					appendToDiv.append(a);
+				}   
+				currentRank++;
+			}
+		 
+		 
+	   });//end each
+	   if(isfilter)ulContainer.appendTo(appendToDiv);
+	},*/
+
+	
 }
 
 

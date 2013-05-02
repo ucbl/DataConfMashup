@@ -82,7 +82,7 @@
 							var out="<table>";
 							for(i=0;i<dataPaper[0].ressource.length;i++){
 							if(dataPaper[0].ressource[i].value.type==="user-photo"){
-							parameters.contentEl.append('<figure style="height:150px; width:150px; ">  <img style="height:100%; width:100%; text-align:left;" src="'+dataPaper[0].ressource[i].value.url+'" alt="'+dataPaper[0].ressource[i].value.description+'">  </figure>');
+							parameters.contentEl.append('<figure style="height:120px; width:120px; "><img style="height:100%; width:100%; clear:left;" src="'+dataPaper[0].ressource[i].value.url+'" alt="'+dataPaper[0].ressource[i].value.description+'">  </figure>');
 							}else if(dataPaper[0].ressource[i].value.type==="user-mail"){
 							out+="<tr><td>"+dataPaper[0].ressource[i].value.description+"</td><td>"+'<address><a href="maito:'+dataPaper[0].ressource[i].value.url+'">'+dataPaper[0].ressource[i].value.url+'</a></address></td></tr>';
 							}else{

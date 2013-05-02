@@ -24,7 +24,7 @@ var SWDFCommandStore = {
 			
 			//Building sparql query with prefix
 			var query =   'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>            ' +
-								'SELECT DISTINCT ?authorName  ?authorUri ?uriPubli WHERE  {                                                         ' +
+								'SELECT DISTINCT ?authorName  ?authorUri WHERE  {                                                         ' +
 								'   ?uriPubli swc:isPartOf  <'+parameters.conferenceUri+"/proceedings"+'>.										       ' + 
 								'   ?authorUri foaf:made ?uriPubli.                           											   ' +
 								'   ?authorUri foaf:name ?authorName.                               									   ' +
@@ -62,7 +62,7 @@ var SWDFCommandStore = {
 										 "authorName",
 										 parameters.contentEl,
 										 {type:"Node",labelCllbck:function(str){return "Name : "+str["authorName"];}},
-										 {autodividers:true,count :true});
+										 {autodividers:true});
 					}else{
 						ViewAdapter.Graph.appendList(parameters.JSONdata,
 										 {baseHref: '#author/',
@@ -143,7 +143,7 @@ var SWDFCommandStore = {
             var query = 	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
 							'PREFIX key:<http://www.w3.org/2004/02/skos/core#> ' +
 							'PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
-							'SELECT DISTINCT  ?keyword ?publiUri  WHERE { ' +
+							'SELECT DISTINCT  ?keyword  WHERE { ' +
 							'  	 ?publiUri       swc:isPartOf  <'+parameters.conferenceUri+"/proceedings"+'> .     '+                  
 							'  	 ?publiUri       dc:subject    ?keyword. ' +
 							'}ORDER BY ASC(?keyword) '; 
@@ -174,7 +174,7 @@ var SWDFCommandStore = {
 										 "keyword",
 										 parameters.contentEl,
 										 {type:"Node",labelCllbck:function(str){return "Publication : "+str["keyword"];}},
-										 {autodividers:true,count:true});
+										 {autodividers:true});
 
 					}else{
 						ViewAdapter.Graph.appendList(parameters.JSONdata,
