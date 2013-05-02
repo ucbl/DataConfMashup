@@ -59,7 +59,10 @@ p{
 	padding-bottom : 0em!important;
 
 }
+.ui-listview-filter{
+	margin-top: 0px;
 
+}
  #footer .ui-btn-inner{
 	padding-top : .2em!important;
 	padding-bottom : .2em!important;
