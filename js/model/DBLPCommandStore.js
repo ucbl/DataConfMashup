@@ -104,7 +104,7 @@
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,auhtor){
-							ViewAdapter.Graph.addNode("Author : "+auhtor.authorName,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri));
+							ViewAdapter.Graph.addNode("Author : "+auhtor.authorName,'#author/'+Encoder.encode(auhtor.authorName)+'/'+Encoder.encode(auhtor.authorUri),{color:"#7db9e8"});
 						});
 					}
 				}

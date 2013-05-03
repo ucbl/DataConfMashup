@@ -359,7 +359,7 @@ var SWDFCommandStore = {
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,author){
-							ViewAdapter.Graph.addNode("Author : "+author.authorName,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri),{color:"#000015"});
+							ViewAdapter.Graph.addNode("Author : "+author.authorName,'#author/'+Encoder.encode(author.authorName)+'/'+Encoder.encode(author.authorUri),{color:"#7db9e8"});
 						});
 					
 					}
@@ -725,7 +725,6 @@ var SWDFCommandStore = {
 												  option:{color:"#3366CC"},
 												 }); 
 					}
-
 				}
 			} 
 		}
@@ -993,6 +992,7 @@ var SWDFCommandStore = {
 		},
 		
 		ViewCallBack : function(parameters){
+			
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
 					if(ViewAdapter.mode == "text"){
@@ -1017,7 +1017,7 @@ var SWDFCommandStore = {
 
 					}
 				}
-			} 
+			}
 		}
 	 },
 	
@@ -1108,7 +1108,6 @@ var SWDFCommandStore = {
 		
 		ViewCallBack : function(parameters){
 			var JSONdata = parameters.JSONdata;
-
 			if(parameters.JSONdata != null ){
 				if(_.size(parameters.JSONdata) > 0 ){
 					if(ViewAdapter.mode == "text"){

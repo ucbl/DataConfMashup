@@ -79,29 +79,34 @@ AppRouter = Backbone.Router.extend({
 						var currentDatasource = self.datasources[commandItem.datasource];
 						var currentCommand    = currentDatasource.commands[commandItem.name];
 						
-						
-						var doRequest = true;
-						if(JSONdata != null){
-							if(JSONdata.hasOwnProperty(commandItem.name)){
-								doRequest = false;
-								console.log("CAll : "+commandItem.name+" ON Storage");
-								//Informations already exists so we directly call the command callBack view to render them 
-								currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : currentPage.find("#"+commandItem.name), name : name});
-								
+						if(currentDatasource.uri == "local"){
+							$("#textHeader > h1").html(uri);
+							var data = currentCommand.ModelCallBack({contentEl : currentPage.find("#"+commandItem.name),currentUri : uri});
+							currentCommand.ViewCallBack({JSONdata : data, contentEl : currentPage.find("#"+commandItem.name),currentUri : uri});
+						}else{
+							var doRequest = true;
+							if(JSONdata != null){
+								if(JSONdata.hasOwnProperty(commandItem.name)){
+									doRequest = false;
+									console.log("CAll : "+commandItem.name+" ON Storage");
+									//Informations already exists so we directly call the command callBack view to render them 
+									currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name], contentEl : currentPage.find("#"+commandItem.name), name : name});
+									
+								}
 							}
-						}
-						if(doRequest){
-							console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
-							//Retrieveing the query built by the command function "getQuery"
-							var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri, name : name});
-							//Preparing Ajax call 
-							self.executeCommand({datasource : currentDatasource, command : currentCommand,data : ajaxData, currentUri : uri, contentEl :  currentPage.find("#"+commandItem.name)});
-						}
+							if(doRequest){
+								console.log("CAll : "+commandItem.name+" ON "+commandItem.datasource);
+								//Retrieveing the query built by the command function "getQuery"
+								var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri, name : name});
+								//Preparing Ajax call 
+								self.executeCommand({datasource : currentDatasource, command : currentCommand,data : ajaxData, currentUri : uri, contentEl :  currentPage.find("#"+commandItem.name)});
+							}
 						
-						
+						}
 					});
 					
 					ViewAdapter.generateJQMobileElement();
+					
 					console.log("most viewed keyword");
 					StorageAnalyser.getMostViewKeyword();
 					

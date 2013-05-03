@@ -96,7 +96,7 @@ var ViewAdapter = {
 			var currentCommand    = currentDatasource.commands[commandItem.name];
 			if(JSONdata != null){
 				if(JSONdata.hasOwnProperty(commandItem.name)){
-					currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name],contentEl : ViewAdapter.currentPage.find("#"+commandItem.name), name : ViewAdapter.name});
+					currentCommand.ViewCallBack({JSONdata : JSONdata[commandItem.name],contentEl : ViewAdapter.currentPage.find("#"+commandItem.name), name : ViewAdapter.name, currentUri : ViewAdapter.uri});
 				}
 			}
 		});

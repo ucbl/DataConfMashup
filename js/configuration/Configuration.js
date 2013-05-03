@@ -57,6 +57,10 @@
 					"uri" : "http://dataconf.liris.cnrs.fr:5984/datapaper/_design/public/_view/by_type",
 					"crossDomainMode" : "JSONP",
 					"commands" : DPCommandStore, 
+				},
+				"ReasonerDatasource" : {
+					"uri" : "local",
+					"commands" : ReasonerCommandStore, 
 				}
 
 			}, 
@@ -214,8 +218,6 @@
 							"datasource" : "DblpDatasource",
 							"name" : "getAuthorPublications",
 						},
-						 
-						
 					]
 				},
 				"ExternPublication" : {
@@ -243,6 +245,14 @@
 					    {
 							"datasource" : "SemanticWebConferenceDatasource",
 							"name" : "getPublicationsByKeyword",
+						},
+						{
+							"datasource" : "ReasonerDatasource",
+							"name" : "getMoreSpecificKeywords",
+						},
+						{
+							"datasource" : "ReasonerDatasource",
+							"name" : "getLessSpecificKeywords",
 						}
 					]
 				},
