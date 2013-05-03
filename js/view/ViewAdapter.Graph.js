@@ -48,7 +48,6 @@ var ViewAdapterGraph = ViewAdapter.Graph = {
 		
 		$(ViewAdapter.Graph.sys.renderer).on('navigate',function(event,data){
 			if(data.href!=undefined)document.location.href = data.href;
-		
 		});
     },
 	

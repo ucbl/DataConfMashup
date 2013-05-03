@@ -28,8 +28,8 @@ var Reasoner = {
                     $.each(KeywordStore.arrKeyword,function(keywordClass,keywordLabel){                                                                             
                            // equivalent class                                   
                            if(KeywordStore.reasoner.isSubClassOf(item.names[0],keywordClass) && KeywordStore.reasoner.isSubClassOf(keywordClass,item.names[0]) && (keywordClass != item.names[0])/*doublon*/ ){
-                                 console.log(keywordClass+' is equivalent ClassOf '+item.names[0]);                            
-                                  callback(item.names[0]);
+								console.log(keywordClass+' is equivalent ClassOf '+item.names[0]);                            
+								callback(item.names[0]);
                             }
                            // keywordClass(keywordPoster) subClassOf ?Class                   
                            else if(KeywordStore.reasoner.isSubClassOf(keywordClass,item.names[0]) && (keywordClass != item.names[0])/*doublon*/){

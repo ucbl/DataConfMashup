@@ -425,7 +425,7 @@ var SWDFCommandStore = {
                                          
     },
 	
-		/** Command used to get all session's sub event of a given event  **/
+	/** Command used to get all session's sub event of a given event  **/
     getTrackSubEvent : {
 	    dataType : "XML",
 	    method : "GET", 
