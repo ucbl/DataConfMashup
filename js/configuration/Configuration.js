@@ -48,19 +48,16 @@
 					"crossDomainMode" : "JSONP",
 					"commands" : GoogleCommandStore,
 				},
-				"eventDatasource" : {
-					"uri" : "http://calendar.labs.idci.fr/api/schedule_event.jsonp?",
+				"swcEventDatasource" : {
+				  "uri" : "http://localhost/WWWConference/web/app_dev.php/api/schedule_event.jsonp",
+					//"uri" : "http://dataconf.liris.cnrs.fr/swclinker/web/app.php/api/schedule_event.jsonp",
 					"crossDomainMode" : "JSONP",
-					"commands" : "conferenceDatasourceCommands",
+					"commands" : swcEventCommandStore,
 				},
 				"DataPaperDatasource" : {
 					"uri" : "http://dataconf.liris.cnrs.fr:5984/datapaper/_design/public/_view/by_type",
 					"crossDomainMode" : "JSONP",
 					"commands" : DPCommandStore, 
-				},
-				"ReasonerDatasource" : {
-					"uri" : "local",
-					"commands" : ReasonerCommandStore, 
 				}
 
 			}, 
@@ -77,7 +74,7 @@
 					"title": "WWW'2012 - publications",
 					"commands" : [ 
 						{
-						    "datasource" : "SemanticWebConferenceDatasource",
+						    "datasource" : "swcEventDatasource",
 						    "name" : "getConferenceMainTrackEvent",
 						},
 						{
@@ -137,7 +134,7 @@
 					"title": "Search in event",
 					"commands" : [
 						{
-							"datasource" : "SemanticWebConferenceDatasource",
+							"datasource" : "swcEventDatasource",
 							"name" : "getEvent",
 						},
 						{
@@ -146,12 +143,12 @@
 						
 						},
 						{
-							"datasource" : "SemanticWebConferenceDatasource",
+							"datasource" : "swcEventDatasource",
 							"name" : "getTrackSubEvent",
 						
 						},
 						{
-							"datasource" : "SemanticWebConferenceDatasource",
+							"datasource" : "swcEventDatasource",
 							"name" : "getEventPublications",
 						},
 						{
@@ -183,7 +180,7 @@
 							"name" : "getPublicationKeywords",
 						},
 						{
-							"datasource" : "SemanticWebConferenceDatasource",
+							"datasource" : "swcEventDatasource",
 							"name" : "getEventRelatedPublication",
 						},
 					]
@@ -218,6 +215,8 @@
 							"datasource" : "DblpDatasource",
 							"name" : "getAuthorPublications",
 						},
+						 
+						
 					]
 				},
 				"ExternPublication" : {
@@ -245,14 +244,6 @@
 					    {
 							"datasource" : "SemanticWebConferenceDatasource",
 							"name" : "getPublicationsByKeyword",
-						},
-						{
-							"datasource" : "ReasonerDatasource",
-							"name" : "getMoreSpecificKeywords",
-						},
-						{
-							"datasource" : "ReasonerDatasource",
-							"name" : "getLessSpecificKeywords",
 						}
 					]
 				},
