@@ -49,8 +49,7 @@
 					"commands" : GoogleCommandStore,
 				},
 				"swcEventDatasource" : {
-				  "uri" : "http://localhost/WWWConference/web/app_dev.php/api/schedule_event.jsonp",
-					//"uri" : "http://dataconf.liris.cnrs.fr/swclinker/web/app.php/api/schedule_event.jsonp",
+					"uri" : "http://dataconf.liris.cnrs.fr/swclinker/web/app.php/api/schedule_event.jsonp",
 					"crossDomainMode" : "JSONP",
 					"commands" : swcEventCommandStore,
 				},
@@ -138,7 +137,7 @@
 							"name" : "getEvent",
 						},
 						{
-							"datasource" : "SemanticWebConferenceDatasource",
+							"datasource" : "swcEventDatasource",
 							"name" : "getSessionSubEvent",
 						
 						},

@@ -349,6 +349,64 @@ var swcEventCommandStore = {
 			} 
 		}
     },
+	
+	/** Command used to get the session events of a given Event  **/ 
+    getSessionSubEvent : {
+	    dataType : "JSONP",
+	    method : "GET", 
+	    getQuery : function(parameters){	
+	      
+		    var conferenceUri = parameters.conferenceUri; 
+	      var ajaxData = { "parent_xproperty_value" : parameters.uri,category_id:7} ; 
+	      return ajaxData; 
+		      
+	    },   
+	    ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+			var JSONfile = {};
+			$(dataXML).each(function(i){  
+				var JSONToken = {};
+				JSONToken.eventLabel =  this.name
+				for(var j=0;j<this.xproperties.length;j++){
+				  if(this.xproperties[j].xNamespace=='event_uri'){
+				                    JSONToken.eventUri =  this.xproperties[j].xValue;  
+          }
+				}
+				JSONfile[i] = JSONToken;
+			});
+				console.log(JSONfile);
+			StorageManager.pushCommandToStorage(currentUri,"getTrackSubEvent",JSONfile);
+			return JSONfile;
+			
+		},   
+		ViewCallBack : function(parameters){
+			if(parameters.JSONdata != null){
+				if(_.size(parameters.JSONdata) > 0 ){
+					if(ViewAdapter.mode == "text"){
+					
+						parameters.contentEl.append($('<h2>Related Sessions :</h2>')); 
+						ViewAdapter.Text.appendList(parameters.JSONdata,
+											 {baseHref:'#event/',
+											  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+											  },
+											 "eventLabel",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
+
+					}else{
+						ViewAdapter.Graph.appendList(parameters.JSONdata,
+											 {baseHref:'#event/',
+											  hrefCllbck:function(str){return Encoder.encode(str["eventUri"])},
+											  },
+											 "eventLabel",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "presentation : "+str["eventLabel"];}});
+					}
+				}
+			} 
+		}
+    },
+    
+    
    
 };
  
