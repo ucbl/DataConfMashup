@@ -10,6 +10,11 @@ H1 , H2 {
  H3, H4{
 	font-size : 13pt !important;
 }
+
+H4,H5{
+	margin-top:2pt;
+	margin-bottom:2pt;
+}
 a, span {
 	font-size : 10pt !important;
 }

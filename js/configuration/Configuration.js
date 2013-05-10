@@ -70,7 +70,7 @@
 			// title : the title to display on the header when showing the view
 			// commands : array of datasource/name to precise which command of which datasource to send when catching the route
 			"routes" : {
-			    "Home" : {
+		    "Home" : {
 					"hash" : "",
 					"view" : "home",
 					"graphView" : "no",
@@ -87,7 +87,7 @@
 					]
 				}, 
 		    "Schedule" : {
-					"hash" : "schedule",
+					"hash" : "schedule/*locationLabel",
 					"view" : "schedule",
 					"graphView" : "no",
 					"title": "Conference schedule",

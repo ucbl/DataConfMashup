@@ -84,13 +84,12 @@ var SWDFCommandStore = {
     
     
 
-	/** Command used to get and display  all the authors that have a publication in the conference's proceedings using the conference uri **/
+	/** Command used Schedule of the conf **/
 	getConferenceSchedule : {
  
 		dataType : "XML", 
 		method : "GET",  
-		getQuery : function(parameters) { 
-			
+		getQuery : function(parameters) {  
 			//Building sparql query with prefix
 			var query =   'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
                     PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>\
@@ -99,15 +98,13 @@ var SWDFCommandStore = {
                     PREFIX icaltzd: <http://www.w3.org/2002/12/cal/icaltzd#>\
 \
                     SELECT DISTINCT *  WHERE {\
-                       ?eventUri  icaltzd:dtstart 	?dtStart.\
-                       ?eventUri  icaltzd:dtend 	?dtEnd. \
-                       ?eventUri  rdf:type 	   ?eventType.\
-                       OPTIONAL { \
-                          ?eventUri  event:place 	?locationUri.\
-                          ?locationUri  rdfs:label 	?locationLabel.\
-                          ?eventUri rdfs:label ?eventLabel.\
-                       }\
-                    } ORDER BY ASC(?dtStart)';
+                       ?eventUri     icaltzd:dtstart 	?dtStart.\
+                       ?eventUri     icaltzd:dtend 	  ?dtEnd. \
+                       ?eventUri     rdf:type 	      ?eventType.\
+                       ?eventUri     rdfs:label       ?eventLabel.\
+                       ?eventUri     event:place     	?locationUri.\
+                       ?locationUri  rdfs:label 	    '+(parameters.uri!="null"?'"'+Encoder.decode(parameters.uri)+'"':'?locationLabel')+'.\
+                    } ORDER BY ?dtStart ?locationLabel';
                     
 			//Encapsulating query in json object to return it
 			var  ajaxData = { query : query };
@@ -134,31 +131,29 @@ var SWDFCommandStore = {
 					
 					var currentEvent = {};
 					//then push to the correct start/end slot
+					
 					 
 					currentEvent.eventUri =  $(this).find("[name = eventUri]").text(); 
-					currentEvent.locationUri =  $(this).find("[name = locationUri]").text(); 	
 					currentEvent.eventLabel =  $(this).find("[name = eventLabel]").text();
 					currentEvent.eventType =  $(this).find("[name = eventType]").text().split('#')[1];
-					
+					currentEvent.locationLabel =  $(this).find("[name = locationLabel]").text(); 	 
 					
 					//////////////////////////////
 					/// look for special event ///
 					//////////////////////////////
 					 
-					if(currentEvent.eventType=="SessionEvent" ){ 
+					if(currentEvent.eventType!="Event" && currentEvent.eventType!="TalkEvent" ){ 
 					   
 					  //retrieve current eventType slot
 					  if(!currentEndSlot.bigEvents[currentEvent.eventType]) currentEndSlot.bigEvents[currentEvent.eventType] = [];  
 					  
-					  currentEndSlot.bigEvents[currentEvent.eventType].push(currentEvent);
+			      currentEndSlot.bigEvents[currentEvent.eventType].push(currentEvent);
 					  
 					}else { 
 					
 					  currentEndSlot.events.push(currentEvent);
 					  
 					}
-					
-					
 					
 				});
 				console.log(JSONfile);
@@ -170,7 +165,7 @@ var SWDFCommandStore = {
 		ViewCallBack : function(parameters){
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
-				  var content=$('<div></div>');
+				  var content=$("<div data-role='collapsible-set'></div>");
 				  var currentDay ;
 				  for (var startAt in parameters.JSONdata) {
 				      
@@ -180,27 +175,37 @@ var SWDFCommandStore = {
 				      }
 				      currentDay = moment(startAt).format('MMMM Do YYYY');
 				      
-				      var startTime = moment(startAt).format('h:mm:ss a');
-				       
+				      var startTime = moment(startAt).format('h:mm a');
+				      
 			        for (var endAt in parameters.JSONdata[startAt]) {
+			        
+			            var lastsM = moment(endAt).diff(moment(startAt),'minutes');
+			            var lastsH = moment(endAt).diff(moment(startAt),'hours') - (lastsD*24);
+			            var lastsD = moment(endAt).diff(moment(startAt),'days'); 
+			            - (lastsH*60)- (lastsD*60*24); 
+			            var lasts  =  moment(startAt).from(moment(endAt),true); 
 			            
-			            var EndTime = moment(endAt).format('h:mm:ss a');
 			            var bigEvents = parameters.JSONdata[startAt][endAt].bigEvents;
 		              if(_.size(bigEvents)>0){
 		                var collapsible =  $("<div data-role='collapsible' >\
 		                                        <h3>\
-		                                          "+startTime+" to "+EndTime+"\
+		                                          start at "+startTime+", lasts "+lasts+"\
 		                                       </h3>\
 		                                      </div>");  
-		                
+		                var currentLocation='' ;
 		                for (var eventType in bigEvents) {
-		                
+		                    
 		                    for (var i=0 ;i<bigEvents[eventType].length;i++) {
-		                          console.log(bigEvents[eventType][i]); 
-		                          
-							            ViewAdapter.Text.appendButton(collapsible,
+	                          //console.log(bigEvents[eventType][i]); 
+	                          
+		                        if(currentLocation!=bigEvents[eventType][i].locationLabel)
+				                        collapsible.append('<a href="#schedule/'+Encoder.encode(bigEvents[eventType][i].locationLabel)+'" type="button" data-icon="search"   data-iconpos="right" data-mini="true" data-inline="true" id="add">'+bigEvents[eventType][i].locationLabel+'</a>');
+				                    currentLocation = bigEvents[eventType][i].locationLabel;
+				                        
+							              ViewAdapter.Text.appendButton(collapsible,
 							                                          '#event/'+Encoder.encode(bigEvents[eventType][i].eventUri),
-							                                          bigEvents[eventType][i].eventLabel);
+							                                          bigEvents[eventType][i].eventLabel,
+							                                          {theme:'b'});
 		                    } 
 		                }
 		                
