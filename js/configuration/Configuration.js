@@ -86,6 +86,18 @@
 						},
 					]
 				}, 
+		    "Schedule" : {
+					"hash" : "schedule",
+					"view" : "schedule",
+					"graphView" : "no",
+					"title": "Conference schedule",
+					"commands" : [
+						{
+						    "datasource" : "SemanticWebConferenceDatasource",
+						    "name" : "getConferenceSchedule",
+						},
+					]
+				}, 
 			    "qrScan" : {
 					"hash" : "qrcScan",
 					"view" : "qrcScan",

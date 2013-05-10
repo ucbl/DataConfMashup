@@ -12,6 +12,10 @@
 var SWDFCommandStore = { 
 
 
+
+
+
+
 	/** Command used to get and display  all the authors that have a publication in the conference's proceedings using the conference uri **/
 	getAllAuthors : {
 
@@ -73,6 +77,138 @@ var SWDFCommandStore = {
 										 {type:"Node",labelCllbck:function(str){return "Name : "+str["authorName"];}});
 					
 					}
+				}
+			}
+		}
+    },
+    
+    
+
+	/** Command used to get and display  all the authors that have a publication in the conference's proceedings using the conference uri **/
+	getConferenceSchedule : {
+ 
+		dataType : "XML", 
+		method : "GET",  
+		getQuery : function(parameters) { 
+			
+			//Building sparql query with prefix
+			var query =   'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+                    PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>\
+                    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+                    PREFIX event:   <http://purl.org/NET/c4dm/event.owl#> \
+                    PREFIX icaltzd: <http://www.w3.org/2002/12/cal/icaltzd#>\
+\
+                    SELECT DISTINCT *  WHERE {\
+                       ?eventUri  icaltzd:dtstart 	?dtStart.\
+                       ?eventUri  icaltzd:dtend 	?dtEnd. \
+                       ?eventUri  rdf:type 	   ?eventType.\
+                       OPTIONAL { \
+                          ?eventUri  event:place 	?locationUri.\
+                          ?locationUri  rdfs:label 	?locationLabel.\
+                          ?eventUri rdfs:label ?eventLabel.\
+                       }\
+                    } ORDER BY ASC(?dtStart)';
+                    
+			//Encapsulating query in json object to return it
+			var  ajaxData = { query : query };
+			return ajaxData;
+		},
+		//Declaring the callback function to use when sending the command
+		ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+			
+			var result = $(dataXML).find("sparql > results > result").text();
+			if( result != ""){
+				var JSONfile = {};
+				$(dataXML).find("sparql > results > result").each(function(i){
+				
+				  //retrieve current Start Slot
+					var currentStartSlot =  $(this).find("[name = dtStart]").text(); 	
+					if(!JSONfile[currentStartSlot]) JSONfile[currentStartSlot] = {}; 
+					currentStartSlot = JSONfile[currentStartSlot];
+					
+					
+				  //retrieve current End Slot
+					var currentEndSlot =  $(this).find("[name = dtEnd]").text(); 	
+					if(!currentStartSlot[currentEndSlot]) currentStartSlot[currentEndSlot] = {bigEvents:{},events:[]}; 
+					currentEndSlot = currentStartSlot[currentEndSlot];
+					
+					var currentEvent = {};
+					//then push to the correct start/end slot
+					 
+					currentEvent.eventUri =  $(this).find("[name = eventUri]").text(); 
+					currentEvent.locationUri =  $(this).find("[name = locationUri]").text(); 	
+					currentEvent.eventLabel =  $(this).find("[name = eventLabel]").text();
+					currentEvent.eventType =  $(this).find("[name = eventType]").text().split('#')[1];
+					
+					
+					//////////////////////////////
+					/// look for special event ///
+					//////////////////////////////
+					 
+					if(currentEvent.eventType=="SessionEvent" ){ 
+					   
+					  //retrieve current eventType slot
+					  if(!currentEndSlot.bigEvents[currentEvent.eventType]) currentEndSlot.bigEvents[currentEvent.eventType] = [];  
+					  
+					  currentEndSlot.bigEvents[currentEvent.eventType].push(currentEvent);
+					  
+					}else { 
+					
+					  currentEndSlot.events.push(currentEvent);
+					  
+					}
+					
+					
+					
+				});
+				console.log(JSONfile);
+				StorageManager.pushCommandToStorage(currentUri,"getConferenceSchedule",JSONfile);
+				return JSONfile;
+			}
+		},
+		
+		ViewCallBack : function(parameters){
+			if(parameters.JSONdata != null){
+				if(_.size(parameters.JSONdata) > 0 ){
+				  var content=$('<div></div>');
+				  var currentDay ;
+				  for (var startAt in parameters.JSONdata) {
+				      
+				      //if the day has changed
+				      if(currentDay != moment(startAt).format('MMMM Do YYYY')){
+				          content.append('<h3>'+moment(startAt).format('MMMM Do YYYY')+'</h3>');
+				      }
+				      currentDay = moment(startAt).format('MMMM Do YYYY');
+				      
+				      var startTime = moment(startAt).format('h:mm:ss a');
+				       
+			        for (var endAt in parameters.JSONdata[startAt]) {
+			            
+			            var EndTime = moment(endAt).format('h:mm:ss a');
+			            var bigEvents = parameters.JSONdata[startAt][endAt].bigEvents;
+		              if(_.size(bigEvents)>0){
+		                var collapsible =  $("<div data-role='collapsible' >\
+		                                        <h3>\
+		                                          "+startTime+" to "+EndTime+"\
+		                                       </h3>\
+		                                      </div>");  
+		                
+		                for (var eventType in bigEvents) {
+		                
+		                    for (var i=0 ;i<bigEvents[eventType].length;i++) {
+		                          console.log(bigEvents[eventType][i]); 
+		                          
+							            ViewAdapter.Text.appendButton(collapsible,
+							                                          '#event/'+Encoder.encode(bigEvents[eventType][i].eventUri),
+							                                          bigEvents[eventType][i].eventLabel);
+		                    } 
+		                }
+		                
+		                content.append(collapsible);
+		              }
+			        } 
+				  }
+				  parameters.contentEl.append(content); 
 				}
 			}
 		}
