@@ -10,6 +10,11 @@ H1 , H2 {
  H3, H4{
 	font-size : 13pt !important;
 }
+
+H4,H5{
+	margin-top:2pt;
+	margin-bottom:2pt;
+}
 a, span {
 	font-size : 10pt !important;
 }
@@ -69,6 +74,35 @@ p{
 
 }
 
+/* Schedule */
+
+#getConferenceSchedule .ui-btn-inner{
+	padding-top : 0!important;
+	padding-bottom : 0!important;
+
+}
+
+#getConferenceSchedule H2 {
+	padding-left:0.5em;
+	line-height:1.5em; 
+} 
+#getConferenceSchedule H2 span{ 
+	font-size : 10pt !important;
+} 
+#getConferenceSchedule p.ui-li-desc{
+	font-size : 11pt !important;
+	margin-top : 0em!important;
+	margin-bottom : 0em!important;
+}
+
+#getConferenceSchedule H3.ui-li-heading{
+	white-space : normal;
+	overflow : visible;
+	text-overflow : visible;
+	font-size : 11pt !important;
+	margin-top : 0em!important;
+	margin-bottom : 0em!important;
+}
 
 
 

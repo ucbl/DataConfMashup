@@ -40,6 +40,7 @@ AppRouter = Backbone.Router.extend({
 			ViewAdapter.initialize("text");
 			//Initialize Reasonner with the keywords ontology
 			Reasoner.initialize('http://poster.www2012.org/onto/KeywordClasses.owl');
+		
 			//Preparing all the routes and their actions
 		    $.each(this.routes,function(i,routeItem){
 				
@@ -99,7 +100,7 @@ AppRouter = Backbone.Router.extend({
 								//Retrieveing the query built by the command function "getQuery"
 								var ajaxData   = currentCommand.getQuery({conferenceUri : self.conference.baseUri, uri : uri, name : name});
 								//Preparing Ajax call 
-								self.executeCommand({datasource : currentDatasource, command : currentCommand,data : ajaxData, currentUri : uri, contentEl :  currentPage.find("#"+commandItem.name)});
+								self.executeCommand({datasource : currentDatasource, command : currentCommand,data : ajaxData, currentUri : uri, contentEl :  currentPage.find("#"+commandItem.name), name : name});
 							}
 						
 						}
@@ -135,7 +136,7 @@ AppRouter = Backbone.Router.extend({
 			var data    = parameters.data;
 			//Catching the current uri searched
 			var currentUri    = parameters.currentUri;
-
+			var name = parameters.name;
 			//Preparing the cross domain technic according to datasource definition
 			if(datasource.crossDomainMode == "CORS"){
 				jQuery.support.cors = true;
@@ -152,7 +153,7 @@ AppRouter = Backbone.Router.extend({
 				data: data,	
 				success: function(data){data = command.ModelCallBack(data,self.conference.baseUri,datasource.uri,currentUri);
 										$.mobile.loading( 'hide' );
-										command.ViewCallBack({JSONdata : data, contentEl : contentEl});
+										command.ViewCallBack({JSONdata : data, contentEl : contentEl,name : name});
 										ViewAdapter.generateJQMobileElement();
 										
 										},
