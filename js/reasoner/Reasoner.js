@@ -15,14 +15,9 @@ var Reasoner = {
     },
 
 	filterResult : function (keywordLabel, resultLabel){
-		console.log(keywordLabel);
-		console.log(resultLabel);
 		if(resultLabel == "http://www.w3.org/2002/07/owl#Thing" || resultLabel == keywordLabel.split("_").join(" ") || resultLabel=="#Keyword" ){
-			console.log("false");
 			return false;
-			
 		}
-			console.log("true");
 		return true;
 	},
 	labelToUri:function(keywordLabel){
@@ -32,5 +27,7 @@ var Reasoner = {
 	UriToLabel:function(keywordUri){
 		return keywordUri.replace("#KeywordClass_","").split("_").join(" ");
 	}
+	
+	
     
 }

@@ -8,7 +8,7 @@
  var ReasonerCommandStore = {
   
   
-	getMoreSpecificKeywords: {
+	getLessSpecificKeywords: {
 	
 		ModelCallBack : function(parameters){ 
 			var el = parameters.contentEl;
@@ -37,7 +37,6 @@
 		},
 		
 		ViewCallBack : function (parameters){
-			console.log(parameters.JSONdata);
 			if(parameters.JSONdata != null ){
 		
 				if(_.size(parameters.JSONdata) > 0 ){
@@ -56,9 +55,9 @@
 		}
 	},
 	   
-	getLessSpecificKeywords: {
+	getMoreSpecificKeywords: {
 		ModelCallBack : function(parameters){   
-			var el = parameters.contentEl;
+			
 			var keyword = Reasoner.labelToUri(parameters.currentUri);
 		
 			var queryText = 'PREFIX owl: <http://www.w3.org/2002/07/owl#> select ?o { ?o  <owl:SubClassOf> <#KeywordClass_'+keyword+'> }';
@@ -95,5 +94,7 @@
 				}
 			}
 		}
-	},
+	}
+	
+	
 };

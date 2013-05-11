@@ -30,7 +30,7 @@ var ViewAdapterText = ViewAdapter.Text ={
 	*             parseAlt : parsing alt function (see parseUrl param)
 	*          
 	*/ 
-	appendList : function(dataList,href,labelProperty,appendToDiv,graphPt,option){
+	appendList : function(dataList,href,labelProperty,appendToDiv,option){
 
 		if(!option)var option = {};
 		if(!href) var href={};
@@ -40,7 +40,7 @@ var ViewAdapterText = ViewAdapter.Text ={
 		var currentRank=0,counter=1;
 
 		var ulContainer = $('<ul  id="SearchByAuthorUl" data-role="listview"'+ 
-						 // (option.autodividers ? 'data-autodividers="true"':'')+
+						 (option.autodividers ? 'data-autodividers="true"':'')+
 						  (isfilter?'data-filter="true" ':'')+
 						  'data-shadow="false"'+
 						  'data-filter-placeholder="filter ..." class="ui-listview"> ');
@@ -71,10 +71,28 @@ var ViewAdapterText = ViewAdapter.Text ={
 				}   
 				currentRank++;
 			}
-		 
-		 
 	   });//end each
 	   if(isfilter)ulContainer.appendTo(appendToDiv);
+	},
+	
+	appendListCollapsible : function(dataList,href,labelProperty,appendToDiv,option){
+
+
+		var list =$('<ul data-role="listview"  data-autodividers="true" data-filter="true" data-shadow="false" data-filter-placeholder="filter ..." > </div>');
+		var form = $('<form class="ui-listview-filter" role"search">');
+		form.appendTo(appendToDiv);
+		list.appendTo(appendToDiv);
+		
+		
+		$.each(dataList, function(i,currentData){
+			
+			var a = $('<li data-inline="true"> <a href="'+href.baseHref+href.hrefCllbck(currentData)+'" >'+currentData[labelProperty]+'</a></li>');
+			list.append(a);
+		
+		});
+		
+		//list.appendTo(appendToDiv);
+	
 	},
 
 

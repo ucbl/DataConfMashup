@@ -81,7 +81,7 @@ AppRouter = Backbone.Router.extend({
 						
 						if(currentDatasource.uri == "local"){
 							$("#textHeader > h1").html(uri);
-							var data = currentCommand.ModelCallBack({contentEl : currentPage.find("#"+commandItem.name),currentUri : uri});
+							var data = currentCommand.ModelCallBack({currentUri : uri});
 							currentCommand.ViewCallBack({JSONdata : data, contentEl : currentPage.find("#"+commandItem.name),currentUri : uri});
 						}else{
 							var doRequest = true;
@@ -108,7 +108,7 @@ AppRouter = Backbone.Router.extend({
 					ViewAdapter.generateJQMobileElement();
 					
 					console.log("most viewed keyword");
-					StorageAnalyser.getMostViewKeyword();
+					console.log(StorageAnalyser.getMostViewKeyword());
 					
 				});
 			});

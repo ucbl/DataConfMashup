@@ -13,4 +13,5 @@ $(document).bind("mobileinit", function () {
     $.mobile.hashListeningEnabled = false;
     $.mobile.pushStateEnabled = false;
 	$.mobile.defaultPageTransition = "slidefade";
+	 $.mobile.useFastClick = true;
 });

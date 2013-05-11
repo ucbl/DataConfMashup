@@ -13,14 +13,18 @@ var StorageAnalyser = {
 	getMostViewKeyword : function(){
 		keywordStore = StorageManager.get("keyword");
 		var maxOccurKeyword = 0;
-		var maxOccurKeywordLabel = "";
+		var maxOccurKeywordLabelTab = [];
 		$.each(keywordStore, function(i,keyword){
 			if(keyword.cpt > maxOccurKeyword){
 				maxOccurKeyword = keyword.cpt;
-				maxOccurKeywordLabel = keyword.label;
 			}
-			
 		});
+		$.each(keywordStore, function(i,keyword){
+			if(keyword.cpt == maxOccurKeyword){
+				maxOccurKeywordLabelTab.push(keyword.label);
+			}
+		});
+		return maxOccurKeywordLabelTab;
 	},
 	
 	getMostViewEntity : function(){

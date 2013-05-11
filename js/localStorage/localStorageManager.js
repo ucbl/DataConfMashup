@@ -14,15 +14,11 @@ var StorageManager = {
 	initialize : function(){
 		if(!$.jStorage.storageAvailable()){
 			this.commandStore = {};
-			this.keywordStore = {};
-		}else{
-			if(!StorageManager.get("keyword")){
-				StorageManager.set("keyword",{});
-			}
+	    }
+		if(!StorageManager.get("keyword")){
+			StorageManager.set("keyword",{});
 		}
-		//this.commandStore = [];
-		this.maxSize = 50;
-		
+		this.maxSize = 20;
 	},
 	
 	pushCommandToStorage : function (uri,commandName, JSONdata){
@@ -37,13 +33,14 @@ var StorageManager = {
 		}else{
 			var newElement = {};
 			newElement[commandName] = JSONdata;
-			//newElement.cpt = 0;
+			newElement.cpt = 0;
 			StorageManager.set(uri,newElement);
 		}
 	},
 	pullCommandFromStorage : function (uri){
 		var dataContainer = StorageManager.get(uri);
 		if(dataContainer != null){
+			dataContainer.cpt +=1;
 			return dataContainer;
 		}else{
 		    return null;
@@ -51,7 +48,7 @@ var StorageManager = {
 	},
 	pushKeywordToStorage : function (keyword){
 		var dataContainer = StorageManager.get("keyword");
-		console.log(dataContainer);
+		
 		if(dataContainer != null){
 			if(!dataContainer.hasOwnProperty(keyword)){
 				dataContainer[keyword] = {};
@@ -90,15 +87,13 @@ var StorageManager = {
 	},
 	controlSize : function (){
 		if(this.commandStore !== undefined){
-			if(this.commandStore.length > this.maxSize ){
-			
-			
+			if(_.size(this.commandStore) > this.maxSize ){
+				StorageManager.initialize();
 			}
 		}else{
-		
-			if($.jStorage.index() > this.maxSize ){
-			
-				
+			if($.jStorage.index().length > this.maxSize ){
+				$.jStorage.flush();
+				StorageManager.initialize();
 			}
 		}
 	}

@@ -55,14 +55,13 @@ var SWDFCommandStore = {
 				if(_.size(parameters.JSONdata) > 0 ){
 					if(ViewAdapter.mode == "text"){
 
-						ViewAdapter.Text.appendList(parameters.JSONdata,
+						ViewAdapter.Text.appendListCollapsible(parameters.JSONdata,
 										 {baseHref: '#author/',
 										 hrefCllbck:function(str){return Encoder.encode(str["authorName"])+'/'+Encoder.encode(str["authorUri"])}
 										 },
 										 "authorName",
-										 parameters.contentEl,
-										 {type:"Node",labelCllbck:function(str){return "Name : "+str["authorName"];}},
-										 {autodividers:true});
+										 parameters.contentEl
+										 );
 					}else{
 						ViewAdapter.Graph.appendList(parameters.JSONdata,
 										 {baseHref: '#author/',
@@ -110,14 +109,13 @@ var SWDFCommandStore = {
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
 					if(ViewAdapter.mode == "text"){
-						ViewAdapter.Text.appendList(parameters.JSONdata,
+						ViewAdapter.Text.appendListCollapsible(parameters.JSONdata,
 									 {baseHref: '#publication/',
-									 hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+									 hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},
 									 },
 									 "publiTitle",
-									 parameters.contentEl,
-									 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}},
-									 {autodividers:true});
+									 parameters.contentEl
+									 );
 					
 					}else{
 						ViewAdapter.Graph.appendList(parameters.JSONdata,
@@ -172,9 +170,8 @@ var SWDFCommandStore = {
 										  hrefCllbck:function(str){return Encoder.encode(str["keyword"])},
 										  },
 										 "keyword",
-										 parameters.contentEl,
-										 {type:"Node",labelCllbck:function(str){return "Publication : "+str["keyword"];}},
-										 {autodividers:true});
+										 parameters.contentEl
+										 );
 
 					}else{
 						ViewAdapter.Graph.appendList(parameters.JSONdata,
@@ -230,7 +227,7 @@ var SWDFCommandStore = {
 					if(ViewAdapter.mode == "text"){
 						parameters.contentEl.append($('<h2>Conference publications</h2>'));
 						$.each(parameters.JSONdata, function(i,publication){
-							ViewAdapter.Text.appendButton(parameters.contentEl,'#publication/'+Encoder.encode(publication.publiTitle)+'/'+Encoder.encode(publication.publiUri),publication.publiTitle);
+							ViewAdapter.Text.appendButton(parameters.contentEl,'#publication/'+Encoder.encode(publication.publiUri),publication.publiTitle);
 						});
 					}else{
 						$.each(parameters.JSONdata, function(i,publication){
@@ -290,7 +287,8 @@ var SWDFCommandStore = {
 						
 						if(publiTitle!=""){
 							parameters.contentEl.append('<h2>Title</h2>');
-							parameters.contentEl.append('<p>'+publiTitle+'</p>');		
+							parameters.contentEl.append('<p>'+publiTitle+'</p>');
+							$("[data-role = page]").find("#DataConf").html(publiTitle);	
 						}
 						if(publiAbstract!=""){
 							parameters.contentEl.append('<h2>Abstract</h2>');
@@ -549,7 +547,39 @@ var SWDFCommandStore = {
 						var locationName  = eventInfo.eventLocationName;	
 						var eventStart  = eventInfo.eventStart;	
 						var eventEnd  = eventInfo.eventEnd;
+						var icsEvent="BEGIN:VCALENDAR\n"+
+								"VERSION:2.0\n"+
+								"PRODID://DataConf//WWW'2012//EN\n"+
+								"BEGIN:VTIMEZONE\n"+
+								"TZID:Europe/Paris\n"+
+								"BEGIN:DAYLIGHT\n"+
+								"TZOFFSETFROM:+0100\n"+
+								"RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU\n"+
+								"DTSTART:19810329T020000\n"+
+								"TZNAME:GMT+02:00\n"+
+								"TZOFFSETTO:+0200\n"+
+								"END:DAYLIGHT\n"+
+								"BEGIN:STANDARD\n"+
+								"TZOFFSETFROM:+0200\n"+
+								"RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\n"+
+								"DTSTART:19961027T030000\n"+
+								"TZNAME:GMT+01:00\n"+
+								"TZOFFSETTO:+0100\n"+
+								"END:STANDARD\n"+
+								"END:VTIMEZONE\n"+
+								"BEGIN:VEVENT\n"+
+								"CATEGORIES:"+eventLabel+"\n"+
+								"DTSTART;TZID=Europe/Paris:"+eventStart+"\n"+
+								"DTEND;TZID=Europe/Paris:"+eventEnd+"\n"+
+								"SUMMARY:"+eventAbstract+"\n"+
+								"DESCRIPTION:"+eventLabel+"\n"+
+								"LOCATION:"+locationName+"\n"+
+								"END:VEVENT\n"+
+								"END:VCALENDAR";
+								
 					
+						
+						var isDefined = false;
 						if(eventDescription != ""){ 
 							parameters.contentEl.append($('<h2>Description</h2>')); 
 							parameters.contentEl.append($('<p>'+eventDescription+'</p>'));   
@@ -560,6 +590,7 @@ var SWDFCommandStore = {
 						}
 						if(eventStart != ""){ 
 							parameters.contentEl.append($('<p>Starts at : '+moment(eventStart).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));
+							isDefined = true;
 						}
 						if(eventEnd != ""){
 							parameters.contentEl.append($('<p>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));  
@@ -569,6 +600,14 @@ var SWDFCommandStore = {
 						}
 						if(eventLabel !=""){ 
 							$("[data-role = page]").find("#DataConf").html(eventLabel);
+						}
+						if(isDefined){
+							var icsButton = $('<button data-role="button" data-inline="true" data-icon="gear" data-iconpos="right">Add to calendar</button>');
+							icsButton.click(function(){
+								var blob = new Blob([icsEvent], {type: "text/calendar;charset=utf-8"});
+								saveAs(blob, "icsEvent.ics");
+							});
+							parameters.contentEl.append(icsButton);
 						}
 					}else{
 								  
@@ -646,15 +685,15 @@ var SWDFCommandStore = {
 						parameters.contentEl.append($('<h2>Publications</h2>')); 
 						ViewAdapter.Text.appendList(parameters.JSONdata,
 											 {baseHref:'#publication/',
-											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+											  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},
 											  },
 											 "publiTitle",
-											 parameters.contentEl,
-											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
+											 parameters.contentEl
+											 );
 					}else{
 						ViewAdapter.Graph.appendList(parameters.JSONdata,
 											 {baseHref:'#publication/',
-											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+											  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},
 											  },
 											 "publiTitle",
 											 parameters.contentEl,
@@ -967,14 +1006,22 @@ var SWDFCommandStore = {
 		method : "GET",
 		getQuery : function(parameters){
 			var conferenceUri = parameters.conferenceUri;  
-			var keyword = parameters.uri.split('_').join(' ');
+			var keyword = parameters.uri;
+			var upperKeyword = toTitleCase(parameters.uri);
+			var fullUpperKeyword = parameters.uri.toUpperCase();
 			
 			var prefix =   	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
 							'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                          ' ;
 			var query =   	'SELECT DISTINCT ?publiUri ?publiTitle  WHERE {                                 ' +
-							'    ?publiUri       swc:isPartOf  <'+conferenceUri+'/proceedings>.            ' +
+							' {   ?publiUri       swc:isPartOf  <'+conferenceUri+'/proceedings>.             ' +
 							'    ?publiUri       dc:subject     "'+keyword+'".                              ' +
-							'    ?publiUri       dc:title     ?publiTitle.                                  ' +
+							'    ?publiUri       dc:title     ?publiTitle.                                 } ' +
+							'UNION {   ?publiUri       swc:isPartOf  <'+conferenceUri+'/proceedings>.             ' +
+							'    ?publiUri       dc:subject     "'+upperKeyword+'".                              ' +
+							'    ?publiUri       dc:title     ?publiTitle.                                 } ' +
+							'UNION {   ?publiUri       swc:isPartOf  <'+conferenceUri+'/proceedings>.             ' +
+							'    ?publiUri       dc:subject     "'+fullUpperKeyword+'".                              ' +
+							'    ?publiUri       dc:title     ?publiTitle.                                 } ' +
 							'}ORDER BY ASC(?publiTitle) ';
 			var  ajaxData = { query : prefix + query };
 			return ajaxData;
@@ -993,6 +1040,9 @@ var SWDFCommandStore = {
 		
 		ViewCallBack : function(parameters){
 			
+			if(parameters.name != undefined){
+				StorageManager.pushKeywordToStorage(parameters.name);
+			}
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
 					if(ViewAdapter.mode == "text"){
@@ -1000,16 +1050,16 @@ var SWDFCommandStore = {
 						parameters.contentEl.append($('<h2>Publications</h2>')); 
 					  ViewAdapter.Text.appendList(parameters.JSONdata,
 											 {baseHref:'#publication/',
-											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+											  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},
 											  },
 											 "publiTitle",
-											 parameters.contentEl,
-											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
+											 parameters.contentEl
+											);
 
 					}else{
 						ViewAdapter.Graph.appendList(parameters.JSONdata,
 											 {baseHref:'#publication/',
-											  hrefCllbck:function(str){return Encoder.encode(str["publiTitle"])+'/'+Encoder.encode(str["publiUri"])},
+											  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},
 											  },
 											 "publiTitle",
 											 parameters.contentEl,
@@ -1125,10 +1175,124 @@ var SWDFCommandStore = {
 			}
 			
 		}
-	}
+	},
+	
+	/** Command used to get all publications linked to a keyword  **/ 
+	getRecommendedPublications : {
+		dataType : "XML",
+		method : "GET",
+		getQuery : function(parameters){
+			var conferenceUri = parameters.conferenceUri;  
+			var mostViewedKeyword = StorageAnalyser.getMostViewKeyword();
+			console.log(mostViewedKeyword);
+			var KeywordsString = "";
+			$.each(mostViewedKeyword, function(i,keyword){
+				var JSONTabLessSpecific = ReasonerCommandStore.getLessSpecificKeywords.ModelCallBack({currentUri : keyword});
+				var JSONTabMoreSpecific = ReasonerCommandStore.getMoreSpecificKeywords.ModelCallBack({currentUri : keyword});
+				console.log(JSONTabLessSpecific);
+				console.log(JSONTabMoreSpecific);
+				var searchTab = [];
+				
+				$.each(JSONTabLessSpecific, function(i,keyword){
+					
+					searchTab.push(keyword.label);
+				});
+				console.log(searchTab);
+				var brotherTab = [];
+				$.each(searchTab, function(i,keyword){
+					if(keyword != "www"){
+						$.each(ReasonerCommandStore.getMoreSpecificKeywords.ModelCallBack({currentUri : keyword}), function(i,keyword){
+							brotherTab.push(keyword.label);
+						});
+					}
+				});
+				
+				$.merge(searchTab,brotherTab);
+				
+				$.each(JSONTabMoreSpecific, function(i,keyword){
+					searchTab.push(keyword.label);
+				});
+				
+				
+				console.log(searchTab);
+				var first = true;
+				$.each(searchTab, function(i,keyword){
+					if(keyword != undefined){
+						
+						if(first != true){
+							KeywordsString += "UNION";
+						}
+						KeywordsString += " {?publiUri  swc:isPartOf  <http://data.semanticweb.org/conference/www/2012/proceedings>;  dc:subject '"+toTitleCase(keyword)+"';       dc:title     ?publiTitle. } ";
+						KeywordsString += "UNION {?publiUri  swc:isPartOf  <http://data.semanticweb.org/conference/www/2012/proceedings>;  dc:subject '"+keyword.toUpperCase()+"';      dc:title     ?publiTitle. } ";
+						KeywordsString += "UNION{?publiUri  swc:isPartOf  <http://data.semanticweb.org/conference/www/2012/proceedings>;  dc:subject '"+keyword+"';   dc:title     ?publiTitle. } ";
+						
+						if( i > 5 ){
+							return false;
+						}
+						
+						first = false;
+					}
+				});
+			});
+			var prefix =   	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>   ' +
+							'PREFIX dc: <http://purl.org/dc/elements/1.1/>                                                          ' ;
+			var query =   	'SELECT DISTINCT ?publiUri ?publiTitle  WHERE {                                 ' +
+							KeywordsString +
+							'}ORDER BY ASC(?publiTitle) ';
+			var  ajaxData = { query : prefix + query };
+			return ajaxData;
+		},
+		ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){ 
+			var JSONfile = {};
+			$(dataXML).find("sparql > results > result").each(function(i){  
+				var JSONToken = {};
+				JSONToken.publiUri =  $(this).find("[name = publiUri]").text();
+				JSONToken.publiTitle =  $(this).find("[name = publiTitle]").text(); 	
+				JSONfile[i] = JSONToken;
+			});
+			StorageManager.pushCommandToStorage(currentUri,"getPublicationsByKeyword",JSONfile);
+			return JSONfile;
+		},
+		
+		ViewCallBack : function(parameters){
+			
+			if(parameters.JSONdata != null){
+				if(_.size(parameters.JSONdata) > 0 ){
+					if(ViewAdapter.mode == "text"){
+						
+						parameters.contentEl.append($('<h2>You seem interested by : '+StorageAnalyser.getMostViewKeyword()+'</h2>')); 
+					  ViewAdapter.Text.appendList(parameters.JSONdata,
+											 {baseHref:'#publication/',
+											  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},
+											  },
+											 "publiTitle",
+											 parameters.contentEl
+											 );
+
+					}else{
+						ViewAdapter.Graph.appendList(parameters.JSONdata,
+											 {baseHref:'#publication/',
+											  hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},
+											  },
+											 "publiTitle",
+											 parameters.contentEl,
+											 {type:"Node",labelCllbck:function(str){return "Publication : "+str["publiTitle"];}});
+
+					}
+				}else{
+					parameters.contentEl.append($('<h2>Please keep on visiting publications, we don\'t have enough information yet</h2>')); 
+				}
+			}
+		}
+	 },
 
 
    
 };
- 
+
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+} 
+
 

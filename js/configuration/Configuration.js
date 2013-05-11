@@ -161,7 +161,7 @@
 					]
 				},
 				"Publication" : { 
-					"hash" : "publication/:name/*uri",
+					"hash" : "publication/*uri",
 					"view" : "publication",
 					"graphView" : "yes",
 					"title": "Publication",
@@ -269,6 +269,30 @@
 						{
 							"datasource" : "SemanticWebConferenceDatasource",
 							"name" : "getOrganization",
+						}
+					]
+				},
+				"Recommendation" : {
+					"hash" : "recommendation",
+					"view" : "recommendation",
+					"graphView" : "no",
+					"title": "Recommendation",
+					"commands" : [
+						{
+							"datasource" : "SemanticWebConferenceDatasource",
+							"name" : "getRecommendedPublications",
+						}
+					]
+				},
+				"Calendar" : {
+					"hash" : "calendar",
+					"view" : "Calendar",
+					"graphView" : "no",
+					"title": "Calendar",
+					"commands" : [
+						{
+							/*"datasource" : "SemanticWebConferenceDatasource",
+							"name" : "getRecommendedPublications",*/
 						}
 					]
 				}
