@@ -53,6 +53,11 @@ p{
 	padding-bottom : .3em!important;
 
 }
+#getConferenceSchedule .ui-btn-inner{
+	padding-top : 0!important;
+	padding-bottom : 0!important;
+
+}
 
 .ui-btn-text{
 	padding-top : 0em!important;
@@ -62,6 +67,11 @@ p{
 .ui-li{
 	padding-top : 0em!important;
 	padding-bottom : 0em!important;
+
+}
+p.ui-li-desc{
+	margin-top : 0em!important;
+	margin-bottom : 0em!important;
 
 }
 .ui-listview-filter{
