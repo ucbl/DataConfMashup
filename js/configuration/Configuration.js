@@ -106,8 +106,24 @@
 					"commands" : [ 
 					]
 				}, 
+				"Proceedings-search-by-author-list" : { 
+					"hash" : "search/search-by-author-choice/*uri",
+					"view" : "authorLetterList",
+					"graphView" : "no",
+					"title": "Author search",
+					"commands" : [
+					]
+				},
+				"Proceedings-search-by-keyword-list" : { 
+					"hash" : "search/search-by-keyword-choice/*uri",
+					"view" : "keywordLetterList",
+					"graphView" : "no",
+					"title": "Keyword search",
+					"commands" : [
+					]
+				},
 			    "Proceedings-search-by-author" : { 
-					"hash" : "search/by-author/*uri",
+					"hash" : "search/by-author/:name/*uri",
 					"view" : "searchFormAuthor",
 					"graphView" : "no",
 					"title": "Search by author",
@@ -119,7 +135,7 @@
 					]
 				},
 			    "Proceedings-search-by-keyword" : { 
-					"hash" : "search/by-keyword/*uri",
+					"hash" : "search/by-keyword/:name/*uri",
 					"view" : "searchFormKeyword",
 					"graphView" : "no",
 					"title": "Search by keywords",

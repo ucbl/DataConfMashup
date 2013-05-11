@@ -151,7 +151,7 @@ AppRouter = Backbone.Router.extend({
 				cache: false,
 				dataType: command.dataType,
 				data: data,	
-				success: function(data){data = command.ModelCallBack(data,self.conference.baseUri,datasource.uri,currentUri);
+				success: function(data){data = command.ModelCallBack(data,self.conference.baseUri,datasource.uri,currentUri,name);
 										$.mobile.loading( 'hide' );
 										command.ViewCallBack({JSONdata : data, contentEl : contentEl,name : name});
 										ViewAdapter.generateJQMobileElement();

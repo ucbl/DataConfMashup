@@ -27,18 +27,19 @@ var SWDFCommandStore = {
 		getQuery : function(parameters) { 
 			
 			//Building sparql query with prefix
-			var query =   'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>            ' +
-								'SELECT DISTINCT ?authorName  ?authorUri WHERE  {                                                         ' +
-								'   ?uriPubli swc:isPartOf  <'+parameters.conferenceUri+"/proceedings"+'>.										       ' + 
-								'   ?authorUri foaf:made ?uriPubli.                           											   ' +
-								'   ?authorUri foaf:name ?authorName.                               									   ' +
+			var query =   'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>  ' +
+								'SELECT DISTINCT ?authorName  ?authorUri ?uriPubli WHERE  { ' +
+								'   ?uriPubli swc:isPartOf  <'+parameters.conferenceUri+"/proceedings"+'>.' + 
+								'   ?authorUri foaf:made ?uriPubli.  ' +
+								'   ?authorUri foaf:name ?authorName.  ' +
+								'   FILTER REGEX( ?authorName , "^'+parameters.name+'","i").'+ 
 								'} ORDER BY ASC(?authorName) '; 
 			//Encapsulating query in json object to return it
 			var  ajaxData = { query : query };
 			return ajaxData;
 		},
 		//Declaring the callback function to use when sending the command
-		ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri){
+		ModelCallBack : function(dataXML,conferenceUri,datasourceUri, currentUri,name){
 			
 			var result = $(dataXML).find("sparql > results > result").text();
 			if( result != ""){
@@ -49,7 +50,7 @@ var SWDFCommandStore = {
 					JSONToken.authorName =  $(this).find("[name = authorName]").text(); 	
 					JSONfile[i] = JSONToken;
 				});
-				StorageManager.pushCommandToStorage(currentUri,"getAllAuthors",JSONfile);
+				
 				return JSONfile;
 			}
 		},
@@ -59,12 +60,13 @@ var SWDFCommandStore = {
 				if(_.size(parameters.JSONdata) > 0 ){
 					if(ViewAdapter.mode == "text"){
 
-						ViewAdapter.Text.appendListCollapsible(parameters.JSONdata,
+						ViewAdapter.Text.appendList(parameters.JSONdata,
 										 {baseHref: '#author/',
 										 hrefCllbck:function(str){return Encoder.encode(str["authorName"])+'/'+Encoder.encode(str["authorUri"])}
 										 },
 										 "authorName",
-										 parameters.contentEl
+										 parameters.contentEl,
+										{autodividers:true,count :true}
 										 );
 					}else{
 						ViewAdapter.Graph.appendList(parameters.JSONdata,
