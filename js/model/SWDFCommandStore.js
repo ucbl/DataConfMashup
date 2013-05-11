@@ -259,12 +259,13 @@ var SWDFCommandStore = {
 			if(parameters.JSONdata != null){
 				if(_.size(parameters.JSONdata) > 0 ){
 					if(ViewAdapter.mode == "text"){
-						ViewAdapter.Text.appendListCollapsible(parameters.JSONdata,
+						ViewAdapter.Text.appendList(parameters.JSONdata,
 									 {baseHref: '#publication/',
 									 hrefCllbck:function(str){return Encoder.encode(str["publiUri"])},
 									 },
 									 "publiTitle",
-									 parameters.contentEl
+									 parameters.contentEl,
+									 {autodividers:true,count :false}
 									 );
 					
 					}else{
@@ -291,9 +292,10 @@ var SWDFCommandStore = {
             var query = 	'PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> ' +
 							'PREFIX key:<http://www.w3.org/2004/02/skos/core#> ' +
 							'PREFIX dc: <http://purl.org/dc/elements/1.1/> ' +
-							'SELECT DISTINCT  ?keyword  WHERE { ' +
+							'SELECT DISTINCT  ?keyword ?publiUri WHERE { ' +
 							'  	 ?publiUri       swc:isPartOf  <'+parameters.conferenceUri+"/proceedings"+'> .     '+                  
 							'  	 ?publiUri       dc:subject    ?keyword. ' +
+							'   FILTER REGEX( ?keyword , "^'+parameters.name+'","i").'+ 
 							'}ORDER BY ASC(?keyword) '; 
 							
 			var  ajaxData = { query : query };
@@ -307,7 +309,7 @@ var SWDFCommandStore = {
 				JSONToken.keyword =  $(this).find("[name = keyword]").text();	
 				JSONfile[i] = JSONToken;
 			});
-			StorageManager.pushCommandToStorage(currentUri,"getAllKeyword",JSONfile);
+			
 			return JSONfile;
 		},
 		
@@ -320,7 +322,8 @@ var SWDFCommandStore = {
 										  hrefCllbck:function(str){return Encoder.encode(str["keyword"])},
 										  },
 										 "keyword",
-										 parameters.contentEl
+										 parameters.contentEl,
+										 {autodividers:true,count :true}
 										 );
 
 					}else{

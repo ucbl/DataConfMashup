@@ -31,12 +31,12 @@ var ViewAdapterText = ViewAdapter.Text ={
 	*          
 	*/ 
 	appendList : function(dataList,href,labelProperty,appendToDiv,option){
-
+		
 		if(!option)var option = {};
 		if(!href) var href={};
 		//limit of results to enable the filter mode
 		var isfilter = _.size(dataList) > 10 ? true : false; 
-
+	
 		var currentRank=0,counter=1;
 
 		var ulContainer = $('<ul  id="SearchByAuthorUl" data-role="listview"'+ 
@@ -44,24 +44,14 @@ var ViewAdapterText = ViewAdapter.Text ={
 						  (isfilter?'data-filter="true" ':'')+
 						  'data-shadow="false"'+
 						  'data-filter-placeholder="filter ..." class="ui-listview"> ');
+		var remainder = "";
+		var bubbleRemainder = "";
 		$.each(dataList, function(i,currentData){
 			var currentHref=href.baseHref+href.hrefCllbck(currentData);
 			var currentLabel=currentData[labelProperty];
-	   
-			//count
-			if(option.count && i!=0 ){
-				var lastData =ulContainer.find('> li').eq(currentRank-1).children('a'); 
-				
-				if(currentLabel.replace(counter,'')==lastData.text().replace(counter,'')){ 
-					//increment bubble
-					counter=parseInt(ulContainer.find(' li:last-child span').html())+1;   
-					ulContainer.find(' li:last-child span').html(counter);
-					currentLabel=false;
-				}else{counter=1;}
-			}
-			
+			console.log(currentLabel);
 			//show
-			if(currentLabel){ 
+			if(currentLabel != remainder){ 
 				var a = $('<a href='+currentHref+' '+(isfilter?' ':'data-corners="true" data-role="button" data-iconpos="right" data-icon="arrow-r" data-mini="true" data-shadow="false"')+'>'+currentLabel+'</a>');
 				var li = $('<li></li>');
 				if(isfilter){
@@ -69,8 +59,23 @@ var ViewAdapterText = ViewAdapter.Text ={
 				}else{
 					appendToDiv.append(a);
 				}   
-				currentRank++;
+				
+				
+				
 			}
+			if(option.count){
+				if(currentLabel == remainder){
+					var currentCount = parseInt(bubbleRemainder.text())+1;
+					$(bubbleRemainder).html(currentCount);
+				}else{
+				
+					var bubble = $('<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">1</span>');
+					a.append(bubble);
+					bubbleRemainder = bubble;
+				}
+			}
+			remainder = currentLabel;
+			
 	   });//end each
 	   if(isfilter)ulContainer.appendTo(appendToDiv);
 	},
