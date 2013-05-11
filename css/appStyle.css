@@ -53,11 +53,6 @@ p{
 	padding-bottom : .3em!important;
 
 }
-#getConferenceSchedule .ui-btn-inner{
-	padding-top : 0!important;
-	padding-bottom : 0!important;
-
-}
 
 .ui-btn-text{
 	padding-top : 0em!important;
@@ -67,11 +62,6 @@ p{
 .ui-li{
 	padding-top : 0em!important;
 	padding-bottom : 0em!important;
-
-}
-p.ui-li-desc{
-	margin-top : 0em!important;
-	margin-bottom : 0em!important;
 
 }
 .ui-listview-filter{
@@ -84,6 +74,27 @@ p.ui-li-desc{
 
 }
 
+/* Schedule */
+
+#getConferenceSchedule .ui-btn-inner{
+	padding-top : 0!important;
+	padding-bottom : 0!important;
+
+}
+
+#getConferenceSchedule H2 {
+	padding-left:0.5em;
+	line-height:1.8em; 
+	font-size : 15pt !important;
+} 
+#getConferenceSchedule H2 span{ 
+	font-size : 13pt !important;
+} 
+#getConferenceSchedule p.ui-li-desc{
+	margin-top : 0em!important;
+	margin-bottom : 0em!important;
+
+}
 
 
 

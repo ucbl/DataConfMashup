@@ -177,7 +177,7 @@ var SWDFCommandStore = {
 				      
 				      //if the day has changed
 				      if(currentDay != moment(startAt).format('MMMM Do YYYY')){
-				          currentCollabsible = $('<div data-role="collapsible" data-theme="b"   ><h2 style="padding-left:10px;line-height:1.5em;" >'+moment(startAt).format('MMMM Do YYYY')+'</h2></div>');
+				          currentCollabsible = $('<div data-role="collapsible" data-theme="b" ><h2>'+moment(startAt).format('MMMM Do YYYY')+'</h2></div>');
 				          currentUl = $('<ul data-role="listview" data-inset="true" ></ul>');
 				          //content.append(currentUl);
 				          content.append(currentCollabsible); 
@@ -203,9 +203,9 @@ var SWDFCommandStore = {
 	                          //console.log(bigEvents[eventType][i]);
 	                          var LocationHtml= ''; 
 	                          
-	                          if(bigEvents[eventType][i].locationLabel==""){
+	                          if(parameters.name && parameters.name!="null" && parameters.name!=""){
 	                              LocationHtml = '<p><strong>'+parameters.name+'</strong></p>';
-	                            }else{
+                            }else{
 	                              LocationHtml = '<p><strong>'+bigEvents[eventType][i].locationLabel+'</strong></p>';
 	                              LocationHtml += '<p><a href="#schedule/'+Encoder.encode(bigEvents[eventType][i].locationLabel)+'" data-role="button" data-icon="search" data-inline="true">'+bigEvents[eventType][i].locationLabel+'</a></p>';
                             }
@@ -714,7 +714,7 @@ var SWDFCommandStore = {
 							parameters.contentEl.append($('<p>Ends at : '+moment(eventEnd).format('MMMM Do YYYY, h:mm:ss a')+'</p>'));  
 						} 
 						if(locationName != ""){ 
-							parameters.contentEl.append($('<p>Location : '+locationName+'</p>'));   
+							parameters.contentEl.append($('<p>Location : <a href="#schedule/'+Encoder.encode(locationName)+'" data-role="button" data-icon="search" data-inline="true">'+locationName+'</a></p>'));   
 						}
 						if(eventLabel !=""){ 
 							$("[data-role = page]").find("#DataConf").html(eventLabel);
