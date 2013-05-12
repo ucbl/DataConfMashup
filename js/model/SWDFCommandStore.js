@@ -669,10 +669,10 @@ var SWDFCommandStore = {
 				JSONfile["eventAbstract"] =  $(dataXML).find("[name = eventAbstract]").text(); 
 				JSONfile["eventLocationName"] =  $(dataXML).find("[name = locationName]").text();
 				if($(dataXML).find("[name = eventStart]").text() != ""){
-					JSONfile["eventStart"] =  $(dataXML).find("[name = eventStart]").text(); 
+					JSONfile["eventStart"] =  $(dataXML).find("[name = eventStart]").text();
 					JSONfile["eventEnd"] =  $(dataXML).find("[name = eventEnd]").text();
 				}else{
-					JSONfile["eventStart"] =  $(dataXML).find("[name = eventStartCal]").text(); 
+					JSONfile["eventStart"] =  $(dataXML).find("[name = eventStartCal]").text();
 					JSONfile["eventEnd"] =  $(dataXML).find("[name = eventEndCal]").text();
 				}
 			
@@ -698,11 +698,13 @@ var SWDFCommandStore = {
 						var eventDescription  = eventInfo.eventDescription;
 						var eventAbstract  = eventInfo.eventAbstract;							
 						var locationName  = eventInfo.eventLocationName;	
-						var eventStart  = eventInfo.eventStart;	
+						var eventStart = eventInfo.eventStart;
 						var eventEnd  = eventInfo.eventEnd;
+						var eventStartICS  = eventInfo.eventStart.replace("+02:00","").replace(/-/g,"").replace(/:/g,""); 	
+						var eventEndICS  = eventInfo.eventEnd.replace("+02:00","").replace(/-/g,"").replace(/:/g,""); 
 						var icsEvent="BEGIN:VCALENDAR\n"+
 								"VERSION:2.0\n"+
-								"PRODID://DataConf//WWW2012//EN\n"+
+								"PRODID: //DataConf//WWW'2012//EN\n"+
 								"BEGIN:VTIMEZONE\n"+
 								"TZID:Europe/Paris\n"+
 								"BEGIN:DAYLIGHT\n"+
@@ -722,9 +724,9 @@ var SWDFCommandStore = {
 								"END:VTIMEZONE\n"+
 								"BEGIN:VEVENT\n"+
 								"CATEGORIES:"+eventLabel+"\n"+
-								"DTSTART;TZID=Europe/Paris:"+eventStart+"\n"+
-								"DTEND;TZID=Europe/Paris:"+eventEnd+"\n"+
-								"SUMMARY:"+eventAbstract.replace(/[\n]/gi, " ")+"\n"+
+								"DTSTART;TZID=Europe/Paris:"+eventStartICS+"\n"+
+								"DTEND;TZID=Europe/Paris:"+eventEndICS+"\n"+
+								"SUMMARY:"+eventAbstract+"\n"+
 								"DESCRIPTION:"+eventLabel+"\n"+
 								"LOCATION:"+locationName+"\n"+
 								"END:VEVENT\n"+

@@ -40,7 +40,7 @@ AppRouter = Backbone.Router.extend({
 			//Initialize ViewAdapter to text mode
 			ViewAdapter.initialize("text");
 			//Initialize Reasonner with the keywords ontology
-			Reasoner.initialize('http://poster.www2012.org/onto/KeywordClasses.owl');
+			Reasoner.initialize('http://localhost/DataConfMashup/ontology/ontoKeyword_min.owl');
 			
 		
 			//Preparing all the routes and their actions

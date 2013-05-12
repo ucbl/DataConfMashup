@@ -15,6 +15,7 @@ var Reasoner = {
     initialize : function(ontoUrl){		 
 		Reasoner.ontology = jsw.owl.xml.parseUrl(ontoUrl);
 		Reasoner.reasoner = new jsw.owl.BrandT(Reasoner.ontology);
+		
     },
 
 	filterResult : function (keywordLabel, resultLabel){
