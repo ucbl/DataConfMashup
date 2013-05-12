@@ -3,7 +3,7 @@
 *   License : This file is part of the DataConf application, which is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. See details at : http://liris.cnrs.fr/lionel.medini/wiki/doku.php?id=dataconf&#licensing 
 *   Author: Lionel MEDINI(supervisor), Florian BACLE, Fiona LEPEUTREC, Benoît DURANT-DE-LA-PASTELLIERE, NGUYEN Hoang Duy Tan
 *   Description: Simple object containing function to encode and decode a string in 64 base, ut8, and using encodeURIComponent function from javascript.
-*   Version: 1.1
+*   Version: 1.2
 *   Tags:  base64 encoding decoding
 **/
 var Encoder = {

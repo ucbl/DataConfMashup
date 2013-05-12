@@ -7,7 +7,7 @@
 *				 To declare a request, each commands can use the parameters declared for the route they are called in (see Configuration.js). This parameter can be a name or an uri and represents
 *				 the entity which we want informat.lirs.cnrs.fr
 ions on. After calling a command, the results are parsed with it own callback function. It is the role of the router to call those commands according to the configuration file.
-*   Version: 1.1
+*   Version: 1.2
 *   Tags:  JSON, AJAX
 **/
  var GoogleCommandStore = {

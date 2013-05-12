@@ -36,7 +36,9 @@ var ViewAdapterText = ViewAdapter.Text ={
 		if(!href) var href={};
 		//limit of results to enable the filter mode
 		var isfilter = _.size(dataList) > 10 ? true : false; 
-	
+		if(option.autodividers == "force"){
+			isfilter = true;
+		}
 		var currentRank=0,counter=1;
 
 		var ulContainer = $('<ul  id="SearchByAuthorUl" data-role="listview"'+ 
