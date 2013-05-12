@@ -702,7 +702,7 @@ var SWDFCommandStore = {
 						var eventEnd  = eventInfo.eventEnd;
 						var icsEvent="BEGIN:VCALENDAR\n"+
 								"VERSION:2.0\n"+
-								"PRODID://DataConf//WWW'2012//EN\n"+
+								"PRODID://DataConf//WWW2012//EN\n"+
 								"BEGIN:VTIMEZONE\n"+
 								"TZID:Europe/Paris\n"+
 								"BEGIN:DAYLIGHT\n"+
@@ -724,7 +724,7 @@ var SWDFCommandStore = {
 								"CATEGORIES:"+eventLabel+"\n"+
 								"DTSTART;TZID=Europe/Paris:"+eventStart+"\n"+
 								"DTEND;TZID=Europe/Paris:"+eventEnd+"\n"+
-								"SUMMARY:"+eventAbstract+"\n"+
+								"SUMMARY:"+eventAbstract.replace(/[\n]/gi, " ")+"\n"+
 								"DESCRIPTION:"+eventLabel+"\n"+
 								"LOCATION:"+locationName+"\n"+
 								"END:VEVENT\n"+

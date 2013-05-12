@@ -34,12 +34,14 @@ AppRouter = Backbone.Router.extend({
 				console.log(datasourceItem);
 			});
 	
+		
 			//Initialize storage manager
 			StorageManager.initialize();
 			//Initialize ViewAdapter to text mode
 			ViewAdapter.initialize("text");
 			//Initialize Reasonner with the keywords ontology
 			Reasoner.initialize('http://poster.www2012.org/onto/KeywordClasses.owl');
+			
 		
 			//Preparing all the routes and their actions
 		    $.each(this.routes,function(i,routeItem){
