@@ -49,7 +49,7 @@ var ViewAdapterText = ViewAdapter.Text ={
 		$.each(dataList, function(i,currentData){
 			var currentHref=href.baseHref+href.hrefCllbck(currentData);
 			var currentLabel=currentData[labelProperty];
-			console.log(currentLabel);
+			
 			//show
 			if(currentLabel != remainder){ 
 				var a = $('<a href='+currentHref+' '+(isfilter?' ':'data-corners="true" data-role="button" data-iconpos="right" data-icon="arrow-r" data-mini="true" data-shadow="false"')+'>'+currentLabel+'</a>');

@@ -13,12 +13,12 @@ var StorageManager = {
 
 	initialize : function(){
 		if(!$.jStorage.storageAvailable()){
-			this.commandStore = {};
+			this.commandStore = [];
 	    }
 		if(!StorageManager.get("keyword")){
 			StorageManager.set("keyword",{});
 		}
-		this.maxSize = 20;
+		this.maxSize = 50;
 	},
 	
 	pushCommandToStorage : function (uri,commandName, JSONdata){
