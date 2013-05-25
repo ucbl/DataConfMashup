@@ -20,9 +20,11 @@
 			var prefix =  '  PREFIX akt:  <http://www.aktors.org/ontology/portal#>   ';  
 								
 			var query =   ' SELECT DISTINCT ?publiUri ?publiTitle WHERE { '+
-							'	?publiUri akt:has-author ?o       '+
-							'	?o akt:full-name "'+authorName+'". '+
-							'	?publiUri  akt:has-title ?publiTitle.  '+
+							'OPTIONAL{	?publiUri akt:has-author <'+parameters.uri+'>   '+
+							'	?publiUri  akt:has-title ?publiTitle. } '+
+							' {	?publiUri akt:has-author ?o       '+
+							'	?o akt:full-name "'+parameters.name+'". '+
+							'	?publiUri  akt:has-title ?publiTitle.  }'+
 							'} ';
 			var  ajaxData = { query : prefix + query };
 			return ajaxData;

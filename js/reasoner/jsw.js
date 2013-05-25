@@ -224,10 +224,19 @@ pnNameNs = "([" + pnCharsBase + "][" + pnChars + ".]*[" + pnChars + "])?:",
 pnLocal = "([" + pnCharsU + "0-9](?:[" + pnChars + ".]*[" + pnChars + "])?)?",
 varRegExp = "[?$][" + pnCharsU + "0-9][" + pnCharsU + "0-9\\u00B7\\u0300-\\u036F" +
 "\\u203F-\\u2040]*",
-string = "'((?:[^\\x27\\x5C\\xA\\xD]|\\[tbnrf\\\"'])*)'|" +
-'"((?:[^\\x22\\x5C\\xA\\xD]|\\[tbnrf\\"\'])*)"|' +
-'"""((?:(?:"|"")?(?:[^"\\]|\\[tbnrf\\"\']))*)"""|' +
-"'''((?:(?:'|'')?(?:[^'\\]|\\[tbnrf\\\"']))*)'''",
+//CHANGEMENT Lionel
+//Bug in \\[tbnrf\\\"'] -> not interpreted in JS as [\t\b\n...]
+//Added an echar variable (as in the spec) and used it in the string variable
+echar = "[\\t\\b\\n\\r\\f\\\\\\" + '"' + "\\']",
+string = "'((?:[^\\x27\\x5C\\xA\\xD]|" + echar + ")*)'|" +
+'"((?:[^\\x22\\x5C\\xA\\xD]|' + echar + ')*)"|' +
+'"""((?:(?:"|"")?(?:[^"\\]|' + echar + '))*)"""|' +
+"'''((?:(?:'|'')?(?:[^'\\]|" + echar + "))*)'''",
+//Ancien code
+//string = "'((?:[^\\x27\\x5C\\xA\\xD]|\\[tbnrf\\\"'])*)'|" +
+//'"((?:[^\\x22\\x5C\\xA\\xD]|\\[tbnrf\\"\'])*)"|' +
+//'"""((?:(?:"|"")?(?:[^"\\]|\\[tbnrf\\"\']))*)"""|' +
+//"'''((?:(?:'|'')?(?:[^'\\]|\\[tbnrf\\\"']))*)'''",
 iriRef = '<[^<>"{}|^`\\][\\x00-\\x20]*>',
 prefixedName = pnNameNs + pnLocal,
 exponent = '[eE][+-]?[0-9]+';
@@ -951,9 +960,11 @@ jsw.owl.xml = {
 * @param onError Function to be called in case if the parsing error occurs.
 * @return Ontology object representing the ontology parsed.
 */
-parse: function (owlXml, onError) {
+//CHANGEMENT Lionel
+// node is now passed as a parameter (cannot access the DOMParser function in a worker)
+parse: function (node, onError) {
 var exprTypes = jsw.owl.ExpressionTypes, // Cash reference to the constants.
-node, // Will hold the current node being parsed.
+//node, // Will hold the current node being parsed.
 ontology = new jsw.owl.Ontology(), // The ontology to be returned.
 statements = ontology.axioms; // Will contain all statements.
 
@@ -1440,7 +1451,9 @@ throw 'Incorrect format of Prefix element!';
 ontology.addPrefix(prefixName, prefixIri);
 }
 
-node = jsw.util.xml.parseString(owlXml).documentElement.firstChild;
+//CHANGEMENT Lionel
+// node is now passed as a parameter (cannot access the DOMParser function in a worker)
+//node = jsw.util.xml.parseString(owlXml).documentElement.firstChild;
 
 // OWL/XML Prefix statements (if any) should be at the start of the document. We need them
 // to expand abbreviated entity IRIs.
@@ -1523,7 +1536,7 @@ return ontology;
 * @param onError Function to be called in case if the parsing error occurs.
 * @return Ontology object representing the ontology parsed.
 */
-parseUrl: function (url, onError) {
+/*parseUrl: function (url, onError) {
 var newUrl = jsw.util.string.trim(url),
 owlXml;
 
@@ -1533,7 +1546,7 @@ throw '"' + url + '" is not a valid URL!';
 
 owlXml = new jsw.util.TextFile(url).getText();
 return this.parse(owlXml);
-},
+},*/
 
 /**
 * Builds an OWL/XML string representing the given ontology.
@@ -1844,6 +1857,545 @@ return owlXml;
 }
 };
 
+// AJOUT Lionel
+/** An object allowing to work with a JSON serialization of the OWL/XML format. */
+jsw.owl.json = {
+/**
+* (CHANGEMENT Lionel) Parses the given object into an Ontology object.
+*
+* @param the node parameter as a JSON serialization of the DOM document node
+* @param onError Function to be called in case if the parsing error occurs.
+* @return Ontology object representing the ontology parsed.
+*/
+parse: function (docElement, onError) {
+var exprTypes = jsw.owl.ExpressionTypes, // Cash reference to the constants.
+docIterator, // Iterator on the docElement.childNodes array
+docLimit = docElement.childNodes.length, // iterator limit
+node, // Will hold the current node being parsed.
+ontology = new jsw.owl.Ontology(), // The ontology to be returned.
+statements = ontology.axioms; // Will contain all statements.
+
+/**
+* Parses XML element representing some entity into the object. Throws an exception if the
+* name of the given element is not equal to typeName.
+*
+* @param type Type of the entity represented by the XML element.
+* @param typeName Name of the OWL/XML element which corresponds to the given entity type.
+* @param element XML element representing some entity.
+* @param isDeclared (optional) Indicates whether the entity has been just declared in the ontology.
+* False by default.
+* @return Object representing the entity parsed.
+*/
+function parseEntity(type, typeName, element, isDeclared) {
+var abbrIri, colonPos, entity, iri;
+
+if (element.nodeName !== typeName) {
+throw typeName + ' element expected, but not found!';
+}
+
+abbrIri = element.attributes.abbreviatedIRI;
+iri = element.attributes.IRI;
+
+// If both attributes or neither are defined on the entity, it is an error.
+
+if ((!iri && !abbrIri) || (iri && abbrIri)) {
+throw 'Exactly one of IRI or abbreviatedIRI attribute must be present in ' +
+element.nodeName + ' element!';
+}
+
+if (!abbrIri) {
+entity = {
+'type': type,
+'IRI': iri
+};
+} else {
+colonPos = abbrIri.indexOf(':');
+
+if (colonPos < 0) {
+throw 'Abbreviated IRI "' + abbrIri + '" does not contain a prefix name!';
+}
+
+if (colonPos === abbrIri.length - 1) {
+throw 'Abbreviated IRI "' + abbrIri + '" does not contain anything after ' +
+'the prefix!';
+}
+
+iri = ontology.resolveAbbreviatedIRI(
+abbrIri.substring(0, colonPos),
+abbrIri.substring(colonPos + 1)
+);
+
+// Store information about abbreviated entity IRI, so that it can be used when
+// writing the ontology back in OWL/XML.
+entity = {
+'type': type,
+'IRI': iri,
+'abbrIRI': abbrIri
+};
+}
+
+ontology.registerEntity(type, iri, isDeclared);
+return entity;
+}
+
+/**
+* Parses XML element representing class intersection expression.
+*
+* @param element XML element representing class intersection expression.
+* @return Object representing the class intersection expression.
+*/
+function parseObjIntersectExpr(element) {
+var classExprs = [],
+node, i, limit = element.childNodes.length;
+
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+classExprs.push(parseClassExpr(node));
+}
+
+return {
+'type': exprTypes.CE_INTERSECT,
+'args': classExprs
+};
+}
+
+/**
+* Parses XML element representing ObjectSomeValuesFrom expression.
+*
+* @param element XML element representing the ObjectSomeValuesFrom expression.
+* @return Object representing the expression parsed.
+*/
+function parseSomeValuesFromExpr(element) {
+var oprop, classExpr, node, i, limit = element.childNodes.length;
+
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+
+if (!oprop) {
+oprop = parseEntity(exprTypes.ET_OPROP, 'ObjectProperty', node);
+} else if (!classExpr) {
+classExpr = parseClassExpr(node);
+} else {
+throw 'The format of ObjectSomeValuesFrom expression is incorrect!';
+}
+}
+
+if (!oprop || !classExpr) {
+throw 'The format of ObjectSomeValuesFrom expression is incorrect!';
+}
+
+return {
+'type': exprTypes.CE_OBJ_VALUES_FROM,
+'opropExpr': oprop,
+'classExpr': classExpr
+
+};
+}
+
+/**
+* Parses the given XML node into the class expression.
+*
+* @param element XML node containing class expression to parse.
+* @return An object representing the class expression parsed.
+*/
+function parseClassExpr(element) {
+switch (element.nodeName) {
+case 'ObjectIntersectionOf':
+return parseObjIntersectExpr(element);
+case 'ObjectSomeValuesFrom':
+return parseSomeValuesFromExpr(element);
+default:
+return parseEntity(exprTypes.ET_CLASS, 'Class', element);
+}
+}
+
+/**
+* Parses an XML element representing the object property chain into the object.
+*
+* @param element Element representing an object property chain.
+* @return Object representing the object property chain parsed.
+*/
+function parseOpropChain(element) {
+var args = [],
+node, i, limit = element.childNodes.length,
+opropType = exprTypes.ET_OPROP;
+
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+args.push(parseEntity(opropType, 'ObjectProperty', node));
+}
+
+if (args.length < 2) {
+throw 'The object property chain should contain at least 2 object properties!';
+}
+
+return {
+'type': exprTypes.OPE_CHAIN,
+'args': args
+};
+}
+
+/**
+* Parses XML element representing SubObjectPropertyOf axiom into the object.
+*
+* @param element OWL/XML element representing SubObjectPropertyOf axiom.
+*/
+function parseSubOpropAxiom(element) {
+var firstArg, secondArg, node, i, limit = element.childNodes.length, opropType;
+
+opropType = exprTypes.ET_OPROP;
+
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+
+if (!firstArg) {
+if (node.nodeName === 'ObjectPropertyChain') {
+firstArg = parseOpropChain(node);
+} else {
+firstArg = parseEntity(opropType, 'ObjectProperty', node);
+}
+} else if (!secondArg) {
+secondArg = parseEntity(opropType, 'ObjectProperty', node);
+} else {
+throw 'The format of SubObjectPropertyOf axiom is incorrect!';
+}
+}
+
+if (!firstArg || !secondArg) {
+throw 'The format of SubObjectPropertyOf axiom is incorrect!';
+}
+
+statements.push({
+'type': exprTypes.AXIOM_OPROP_SUB,
+'args': [firstArg, secondArg]
+});
+}
+
+/**
+* Parse XML element representing a class axiom into the object.
+*
+* @param type Type of the class axiom to parse.
+* @param element XML element representing the class axiom to parse.
+* @param minExprCount Minimum number of times the class expressions should occur in the
+* axiom.
+* @param maxExprCount Maximum number of times the class expressions should occur in the
+* axiom.
+*/
+function parseClassAxiom(type, element, minExprCount, maxExprCount) {
+var args = [],
+node, i, limit = element.childNodes.length;
+
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+args.push(parseClassExpr(node));
+}
+
+if (!isNaN(minExprCount) && args.length < minExprCount) {
+throw 'Class axiom contains less than ' + minExprCount + ' class expressions!';
+}
+
+if (!isNaN(maxExprCount) && args.length > maxExprCount) {
+throw 'Class axiom contains more than ' + maxExprCount + ' class expressions!';
+}
+
+statements.push({
+'type': type,
+'args': args
+});
+}
+
+/**
+* Parses EquivalentObjectProperties XML element into the corresponding object.
+*
+* @param element OWL/XML element representing the EquivalentObjectProperties axiom.
+*/
+function parseEqOpropAxiom(element) {
+var args = [],
+node, i, limit = element.childNodes.length,
+opropType = exprTypes.ET_OPROP;
+
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+args.push(parseEntity(opropType, 'ObjectProperty', node));
+}
+
+if (args.length < 2) {
+throw 'EquivalentObjectProperties axiom contains less than 2 child elements!';
+}
+
+statements.push({
+'type': exprTypes.AXIOM_OPROP_EQ,
+'args': args
+});
+}
+
+/**
+* Parses the given XML element into the object property axiom of the given type.
+*
+* @param type Type of an object property axiom represented by the element.
+* @param element XML element to parse into the axiom object.
+*/
+function parseOpropAxiom(type, element) {
+var node, i, limit = element.childNodes.length,
+oprop;
+
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+if (!oprop) {
+oprop = parseEntity(exprTypes.ET_OPROP, 'ObjectProperty', node);
+} else {
+throw 'Unexpected element ' + node.nodeName + ' found inside the object ' +
+'property axiom element!';
+}
+}
+
+if (!oprop) {
+throw 'Object property axiom does not contain an argument!';
+}
+
+statements.push({
+'type': type,
+'objectProperty': oprop
+});
+}
+
+/**
+* Parses Declaration OWL/XML element into the corresponding entity object within the
+* ontology.
+*
+* @param element OWL/XML Declaration element to parse.
+*/
+function parseDeclaration(element) {
+var found = false,
+node, i, limit = element.childNodes.length,
+nodeName;
+
+// This will not detect (and report) declarations of other entity types. On purpose.
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+nodeName = node.nodeName;
+
+if (found) {
+throw 'Unexpected element "' + nodeName + '" found in Declaration element!';
+}
+
+switch (nodeName) {
+case 'Class':
+parseEntity(exprTypes.ET_CLASS, 'Class', node, true);
+found = true;
+break;
+case 'ObjectProperty':
+parseEntity(exprTypes.ET_OPROP, 'ObjectProperty', node, true);
+found = true;
+break;
+case 'NamedIndividual':
+parseEntity(exprTypes.ET_INDIVIDUAL, 'NamedIndividual', node, true);
+found = true;
+break;
+}
+}
+}
+
+/**
+* Parses ClassAssertion XML element into the corresponding object.
+*
+* @param element OWL/XML ClassAssertion element.
+*/
+function parseClassAssertion(element) {
+var classExpr, individual, node, i, limit = element.childNodes.length;
+
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+
+if (!classExpr) {
+classExpr = parseClassExpr(node);
+} else if (!individual) {
+individual = parseEntity(exprTypes.ET_INDIVIDUAL, 'NamedIndividual', node);
+} else {
+throw 'Incorrect format of the ClassAssertion element!';
+}
+
+}
+
+if (!classExpr || !individual) {
+throw 'Incorrect format of the ClassAssertion element!';
+}
+
+statements.push({
+'type': exprTypes.FACT_CLASS,
+'individual': individual,
+'classExpr': classExpr
+});
+}
+
+/**
+* Parses ObjectPropertyAssertion OWL/XML element into the corresponding object.
+*
+* @param element OWL/XML ObjectPropertyAssertion element to parse.
+*/
+function parseObjectPropertyAssertion(element) {
+var individualType, leftIndividual, node, i, limit = element.childNodes.length, objectProperty, rightIndividual;
+
+individualType = exprTypes.ET_INDIVIDUAL;
+
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+
+if (!objectProperty) {
+objectProperty = parseEntity(exprTypes.ET_OPROP, 'ObjectProperty', node);
+} else if (!leftIndividual) {
+leftIndividual = parseEntity(individualType, 'NamedIndividual', node);
+} else if (!rightIndividual) {
+rightIndividual = parseEntity(individualType, 'NamedIndividual', node);
+} else {
+throw 'Incorrect format of the ObjectPropertyAssertion element!';
+}
+
+}
+
+if (!objectProperty || !leftIndividual || !rightIndividual) {
+throw 'Incorrect format of the ObjectPropertyAssertion element!';
+}
+
+statements.push({
+'type': exprTypes.FACT_OPROP,
+'leftIndividual': leftIndividual,
+'objectProperty': objectProperty,
+'rightIndividual': rightIndividual
+});
+}
+
+/**
+* Parses OWL/XML element representing an assertion about individuals into the corresponding
+* object.
+*
+* @param element OWL/XML element to parse.
+*/
+function parseIndividualAssertion(element, type) {
+var individuals, individualType, node, i, limit = element.childNodes.length;
+
+individualType = exprTypes.ET_INDIVIDUAL;
+individuals = [];
+
+for(i=0;i<limit;i++) {
+node = element.childNodes[i];
+individuals.push(parseEntity(individualType, 'NamedIndividual', node));
+}
+
+if (individuals.length < 2) {
+throw 'Incorrect format of the ' + element.nodeName + ' element!';
+}
+
+statements.push({
+'type': type,
+'individuals': individuals
+});
+}
+
+/**
+* Parses the given OWL/XML Prefix element and adds the information about this prefix to the
+* ontology.
+*
+* @param element OWL/XML Prefix element.
+*/
+function parsePrefixDefinition(element) {
+var prefixName = element.attributes.name,
+prefixIri = element.attributes.IRI;
+
+if (prefixName === null || !prefixIri) {
+throw 'Incorrect format of Prefix element!';
+}
+
+ontology.addPrefix(prefixName, prefixIri);
+}
+
+// OWL/XML Prefix statements (if any) should be at the start of the document. We need them to expand abbreviated entity IRIs.
+for(docIterator=0;docIterator<docLimit;docIterator++) {
+node = docElement.childNodes[docIterator];
+if (node.nodeName === 'Prefix') {
+parsePrefixDefinition(node);
+} else {
+break;
+}
+}
+
+// Axioms / facts (if any) follow next.
+for(docIterator;docIterator<docLimit;docIterator++) {
+node = docElement.childNodes[docIterator];
+
+try {
+switch (node.nodeName) {
+case 'Declaration':
+parseDeclaration(node);
+break;
+case 'SubClassOf':
+parseClassAxiom(exprTypes.AXIOM_CLASS_SUB, node, 2, 2);
+break;
+case 'EquivalentClasses':
+parseClassAxiom(exprTypes.AXIOM_CLASS_EQ, node, 2);
+break;
+case 'DisjointClasses':
+parseClassAxiom(exprTypes.AXIOM_CLASS_DISJOINT, node, 2);
+break;
+case 'SubObjectPropertyOf':
+parseSubOpropAxiom(node);
+break;
+case 'EquivalentObjectProperties':
+parseEqOpropAxiom(node);
+break;
+case 'ReflexiveObjectProperty':
+parseOpropAxiom(exprTypes.AXIOM_OPROP_REFL, node);
+break;
+case 'TransitiveObjectProperty':
+parseOpropAxiom(exprTypes.AXIOM_OPROP_TRAN, node);
+break;
+case 'ClassAssertion':
+parseClassAssertion(node);
+break;
+case 'ObjectPropertyAssertion':
+parseObjectPropertyAssertion(node);
+break;
+case 'SameIndividual':
+parseIndividualAssertion(node, exprTypes.FACT_SAME_INDIVIDUAL);
+break;
+case 'DifferentIndividuals':
+parseIndividualAssertion(node, exprTypes.FACT_DIFFERENT_INDIVIDUALS);
+break;
+case 'Prefix':
+throw 'Prefix elements should be at the start of the document!';
+}
+} catch (ex) {
+if (!onError || !onError(ex)) {
+throw ex;
+}
+}
+
+}
+
+return ontology;
+},
+
+/**
+* Parses the OWL/XML ontology located at the given url.
+*
+* @param url URL of the OWL/XML ontology to be parsed.
+* @param onError Function to be called in case if the parsing error occurs.
+* @return Ontology object representing the ontology parsed.
+*/
+/*parseUrl: function (url, onError) {
+var newUrl = jsw.util.string.trim(url),
+owlXml;
+
+if (!jsw.util.string.isUrl(newUrl)) {
+throw '"' + url + '" is not a valid URL!';
+}
+
+owlJson = new jsw.util.TextFile(url).getText();
+return this.parse(owlJson);
+},*/
+
+};
+
 /** Allows to work with SQL representation of queries against RDF data. */
 jsw.owl.TrimQueryABox = function () {
 /** The object storing ABox data. */
@@ -1926,7 +2478,7 @@ rightIndividual : { type: 'String' }}
 * @return SQL representation of the given RDF query.
 */
 createSql: function (query) {
-var from, limit, objectField, orderBy, predicate, predicateType, predicateValue, rdfTypeIri, /* AJOUT Lionel */ subClassOfIri,
+var from, limit, objectField, orderBy, predicate, predicateType, predicateValue, rdfTypeIri, /* AJOUT Lionel subClassOfIri, */
 select, subjectField, table, triple, triples, tripleCount, tripleIndex, exprTypes,
 variable, vars, varCount, varField, varFields, varIndex, where;
 
@@ -1934,7 +2486,7 @@ from = '';
 where = '';
 rdfTypeIri = jsw.rdf.IRIs.TYPE;
 //AJOUT Lionel
-subClassOfIri = jsw.rdf.IRIs.SUBCLASS;
+//subClassOfIri = jsw.rdf.IRIs.SUBCLASS;
 
 exprTypes = query.ExpressionTypes;
 varFields = {};
@@ -4032,50 +4584,6 @@ return regexp.test(str);
 */
 trim: function (str) {
 return str.replace(/^\s*/, '').replace(/\s*$/, '');
-}
-};
-
-/** An object containing utility methods for working with XML. */
-jsw.util.xml = {
-/**
-* Parses string into the XML DOM object in a browser-independent way.
-*
-* @param xml String containing the XML text to parse.
-* @return XML DOM object representing the parsed XML.
-*/
-parseString: function (xml) {
-var xmlDoc, error;
-
-xml = jsw.util.string.trim(xml);
-
-if (window.DOMParser) {
-xmlDoc = new DOMParser().parseFromString(xml, 'text/xml');
-
-if (xmlDoc.documentElement.nodeName === 'parsererror') { // Firefox
-throw xmlDoc.documentElement.childNodes[0].nodeValue;
-} else if (xmlDoc.documentElement.childNodes[0] &&
-xmlDoc.documentElement.childNodes[0].childNodes[0] &&
-xmlDoc.documentElement.childNodes[0].childNodes[0].nodeName === 'parsererror') {
-// Chrome
-throw xmlDoc.documentElement.childNodes[0].childNodes[0].childNodes[1].innerText;
-}
-
-return xmlDoc;
-} else { // IE
-xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
-xmlDoc.async = 'false';
-xmlDoc.loadXML(xml);
-
-error = xmlDoc.parseError;
-
-if (error.errorCode !== 0) {
-throw 'Can not parse the given onotology OWL/XML:' +
-'\nError in line ' + error.line + ' position ' + error.linePos +
-'\nError Reason: ' + error.reason;
-}
-}
-
-return xmlDoc;
 }
 };
 

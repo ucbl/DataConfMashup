@@ -281,7 +281,7 @@
 						{
 							"datasource" : "ReasonerDatasource",
 							"name" : "getLessSpecificKeywords",
-						}
+						},
 					]
 				},
 				"Organization" : {

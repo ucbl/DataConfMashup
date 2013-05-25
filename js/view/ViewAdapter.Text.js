@@ -112,6 +112,7 @@ var ViewAdapterText = ViewAdapter.Text ={
 			$(  '<a href="'+href+'" data-role="button" ' +
 				(option.tiny  ? 'data-inline="true"'              : 'data-icon="arrow-r" data-iconpos="right"') +
 				(option.theme ? 'data-theme="'+option.theme+'"'   : '') +
+				(option.color ? 'style="float:'+option.color+';"' : '') +
 				(option.align ? 'style="float:'+option.align+';"' : '') +
 				'data-shadow="false" data-mini="true">'+(label==""?href:label) +'</a>'); 
 		if( option.prepend)
@@ -122,7 +123,7 @@ var ViewAdapterText = ViewAdapter.Text ={
 	}
 	
 	
-		/** function appendList :
+	/** function appendList :
 	*  append filter list to current view using '$("[data-role = page]").find(".content")' selector (backbone)
 	* @param dataList : result obj
 	* @param baseHref : string url pattern for dynamic link generation (i.e. "#publication/")
